@@ -5,69 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Escala Louvor IMESC</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      background: #f4f6f9;
-    }
-    header {
-      background: #1f3c88;
-      color: white;
-      text-align: center;
-      padding: 20px;
-    }
-    h2 {
-      margin-top: 40px;
-      text-align: center;
-    }
-    .container {
-      width: 95%;
-      max-width: 1000px;
-      margin: auto;
-    }
-    .card {
-      background: white;
-      border-radius: 12px;
-      padding: 15px;
-      margin: 15px 0;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-    }
-    button {
-      margin-top: 10px;
-      padding: 8px 12px;
-      border: none;
-      border-radius: 8px;
-      background: #1f3c88;
-      color: white;
-      cursor: pointer;
-    }
-    button:hover {
-      opacity: 0.9;
-    }
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.6);
-      justify-content: center;
-      align-items: center;
-    }
-    .modal-content {
-      background: white;
-      padding: 20px;
-      border-radius: 12px;
-      width: 90%;
-      max-width: 500px;
-    }
-    .close {
-      float: right;
-      cursor: pointer;
-      font-weight: bold;
-      color: red;
-    }
+    body { font-family: Arial, sans-serif; margin: 0; background: #f4f6f9; }
+    header { background: #1f3c88; color: white; text-align: center; padding: 20px; }
+    h2 { margin-top: 40px; text-align: center; }
+    .container { width: 95%; max-width: 1000px; margin: auto; }
+    .card { background: white; border-radius: 12px; padding: 15px; margin: 15px 0; box-shadow: 0 4px 10px rgba(0,0,0,0.08); }
+    button { margin-top: 10px; padding: 8px 12px; border: none; border-radius: 8px; background: #1f3c88; color: white; cursor: pointer; }
+    button:hover { opacity: 0.9; }
+    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); justify-content: center; align-items: center; }
+    .modal-content { background: white; padding: 20px; border-radius: 12px; width: 90%; max-width: 500px; max-height: 80vh; overflow-y: auto; }
+    .close { float: right; cursor: pointer; font-weight: bold; color: red; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th, td { border-bottom: 1px solid #ddd; padding: 6px; text-align: left; font-size: 14px; }
+    th { background: #f0f0f0; }
   </style>
 </head>
 <body>
@@ -85,7 +35,7 @@
     Líder: Akemi<br>
     Vocal: Sheila, Rafael<br>
     Bateria: Davy<br>
-    <button onclick="openModal()">Ver Repertório</button>
+    <button onclick="openModal('08-03-2026')">Ver Repertório</button>
   </div>
 
   <div class="card">
@@ -93,108 +43,100 @@
     Líder: Lincoln<br>
     Vocal: Monique, Manu Ceia<br>
     Bateria: Nana<br>
-    <button onclick="openModal()">Ver Repertório</button>
+    <button onclick="openModal('15-03-2026-manha')">Ver Repertório</button>
   </div>
 
-    <div class="card">
+  <div class="card">
     <strong>22/03/2026</strong><br>
     Líder: Jakson<br>
     Vocal: Fabi, Mônica<br>
     Bateria: Isaque<br>
-    <button onclick="openModal()">Ver Repertório</button>
+    <button onclick="openModal('22-03-2026')">Ver Repertório</button>
   </div>
 
-      <div class="card">
-    <strong>22/03/2026</strong><br>
+  <div class="card">
+    <strong>29/03/2026</strong><br>
     Líder: Lincoln<br>
     Vocal: Raphael, Manu<br>
     Bateria: Davy<br>
-    <button onclick="openModal()">Ver Repertório</button>
+    <button onclick="openModal('29-03-2026-manha')">Ver Repertório</button>
   </div>
 
   <h2>Domingo Noite</h2>
 
-<div class="card">
-  <strong>01/03/2026</strong><br>
-  Líder: Lincoln<br>
-  Vocal: Aline, Miriam, Beto<br>
-  Bateria: Davy<br>
-  <button onclick="openModal()">Ver Repertório</button>
-</div>
+  <div class="card">
+    <strong>01/03/2026</strong><br>
+    Líder: Lincoln<br>
+    Vocal: Aline, Miriam, Beto<br>
+    Bateria: Davy<br>
+    <button onclick="openModal('01-03-2026-noite')">Ver Repertório</button>
+  </div>
 
-<div class="card">
-  <strong>08/03/2026</strong><br>
-  Líder: Akemi<br>
-  Vocal: Sheila, Monica, Rafael<br>
-  Bateria: Nana<br>
-  <button onclick="openModal()">Ver Repertório</button>
-</div>  
-  
-<div class="card">
-  <strong>15/03/2026</strong><br>
-  Líder: Culto dos Jovens<br>
-  Vocal: —<br>
-  Bateria: —<br>
-  <button onclick="openModal()">Ver Repertório</button>
-</div>
+  <div class="card">
+    <strong>08/03/2026</strong><br>
+    Líder: Akemi<br>
+    Vocal: Sheila, Monica, Rafael<br>
+    Bateria: Nana<br>
+    <button onclick="openModal('08-03-2026-noite')">Ver Repertório</button>
+  </div>
 
-<div class="card">
-  <strong>22/03/2026</strong><br>
-  Líder: Jakson<br>
-  Vocal: Fabi, Akemi, Claudio<br>
-  Bateria: Isaue<br>
-  <button onclick="openModal()">Ver Repertório</button>
-</div>
+  <div class="card">
+    <strong>15/03/2026</strong><br>
+    Líder: Culto dos Jovens<br>
+    Vocal: —<br>
+    Bateria: —<br>
+    <button onclick="openModal('15-03-2026-noite')">Ver Repertório</button>
+  </div>
 
-<div class="card">
-  <strong>29/03/2026 (Praça)</strong><br>
-  Líder: Luiziane<br>
-  Vocal: Aline, Wendel, Lincoln<br>
-  Bateria: Davy<br>
-  <button onclick="openModal()">Ver Repertório</button>
-</div>
+  <div class="card">
+    <strong>22/03/2026</strong><br>
+    Líder: Jakson<br>
+    Vocal: Fabi, Akemi, Claudio<br>
+    Bateria: Isaque<br>
+    <button onclick="openModal('22-03-2026-noite')">Ver Repertório</button>
+  </div>
+
+  <div class="card">
+    <strong>29/03/2026 (Praça)</strong><br>
+    Líder: Luiziane<br>
+    Vocal: Aline, Wendel, Lincoln<br>
+    Bateria: Davy<br>
+    <button onclick="openModal('29-03-2026-noite')">Ver Repertório</button>
+  </div>
 
   <h2>Quarta Profética</h2>
 
-<div class="card">
-  <strong>04/04/2026</strong><br>
-  Líder: Akemi<br>
-  Vocal: Miriam, Rafael<br>
-  Bateria: Isaque<br>
-  <button onclick="openModal()">Ver Repertório</button>
-</div>
+  <div class="card">
+    <strong>04/03/2026</strong><br>
+    Líder: Akemi<br>
+    Vocal: Miriam, Rafael<br>
+    Bateria: Isaque<br>
+    <button onclick="openModal('04-03-2026-quarta')">Ver Repertório</button>
+  </div>
 
-<div class="card">
-  <strong>11/04/2026</strong><br>
-  Líder: Lincoln<br>
-  Vocal: Monique, Dani<br>
-  Bateria: Isaque<br>
-  <button onclick="openModal()">Ver Repertório</button>
-</div>
+  <div class="card">
+    <strong>11/03/2026</strong><br>
+    Líder: Lincoln<br>
+    Vocal: Monique, Dani<br>
+    Bateria: Isaque<br>
+    <button onclick="openModal('11-03-2026-quarta')">Ver Repertório</button>
+  </div>
 
-<div class="card">
-  <strong>18/04/2026</strong><br>
-  Líder: Luiziane<br>
-  Vocal: Sheila, Raphael<br>
-  Bateria: Isaque<br>
-  <button onclick="openModal()">Ver Repertório</button>
-</div>
+  <div class="card">
+    <strong>18/03/2026</strong><br>
+    Líder: Luiziane<br>
+    Vocal: Sheila, Raphael<br>
+    Bateria: Isaque<br>
+    <button onclick="openModal('18-03-2026-quarta')">Ver Repertório</button>
+  </div>
 
-<div class="card">
-  <strong>25/04/2026</strong><br>
-  Líder: Lincoln<br>
-  Vocal: Manu, Fabi<br>
-  Bateria: Isaque<br>
-  <button onclick="openModal()">Ver Repertório</button>
-</div>
-
-<div class="card">
-  <strong>01/05/2026</strong><br>
-  Líder: Akemi<br>
-  Vocal: Manu Ceia, Lincoln<br>
-  Bateria: Isaque<br>
-  <button onclick="openModal()">Ver Repertório</button>
-</div>
+  <div class="card">
+    <strong>25/03/2026</strong><br>
+    Líder: Lincoln<br>
+    Vocal: Manu, Fabi<br>
+    Bateria: Isaque<br>
+    <button onclick="openModal('25-03-2026-quarta')">Ver Repertório</button>
+  </div>
 
 </div>
 
@@ -202,28 +144,71 @@
   <div class="modal-content">
     <span class="close" onclick="closeModal()">X</span>
     <h3>Repertório</h3>
-    <p><strong>Música:</strong> Bondade de Deus</p>
-    <p><strong>Artista:</strong> Isaias Saad</p>
-    <p><strong>Tom:</strong> G</p>
-
-    <hr>
-
-    <p><strong>Música:</strong> A Casa é Sua</p>
-    <p><strong>Artista:</strong> Casa Worship</p>
-    <p><strong>Tom:</strong> A</p>
+    <div id="conteudoRepertorio"></div>
   </div>
 </div>
 
 <script>
-  function openModal() {
-    document.getElementById("repertorioModal").style.display = "flex";
+  const repertorios = {
+    '15-03-2026-manha': [
+      ['Consagração', 'Aline Barros', 'A'],
+      ['Oferta - Te Agradeço', 'Diante do Trono', 'D']
+    ],
+    '29-03-2026-manha': [
+      ['Nada Mais', 'Gabriel Guedes', 'C'],
+      ['Oferta - Te Agradeço', 'Diante do Trono', 'D']
+    ],
+    '01-03-2026-noite': [
+      ['Digno de Tudo', 'Fernanda Ferro', 'D'],
+      ['Gratidão', 'Get Worship', 'B'],
+      ['Oferta - Louve', 'Lukas Agustinho', 'A'],
+      ['Santo Pra Sempre', 'Gabriel Guedes', 'C'],
+      ['Ceia - Jesus Filho de Deus', 'Get Worship', 'B']
+    ],
+    '04-03-2026-quarta': [
+      ['Aclame ao Senhor', 'Diante do Trono', 'Tom de contralto'],
+      ['Grande é o Senhor', 'Adhemar de Campos', 'Tom ?'],
+      ['Jesus', 'Arianne', 'Tom ?'],
+      ['Oferta - Te Agradeço', 'Diante do Trono', '—']
+    ],
+    '11-03-2026-quarta': [
+      ['Caminho no Deserto', 'Soraya Moraes', 'D'],
+      ['Com Muito Louvor', 'Cassiane', 'D'],
+      ['Oferta - Leão de Judá', 'Congregacional', 'F#m']
+    ],
+    '25-03-2026-quarta': [
+      ['Acende Outra Vez', 'Jefferson e Suellen', 'D#m'],
+      ['A Boa Parte', 'FHOP', 'E'],
+      ['Oferta - Leão de Judá', 'Congregacional', 'F#m']
+    ]
+  };
+
+  function openModal(data) {
+    const modal = document.getElementById('repertorioModal');
+    const conteudo = document.getElementById('conteudoRepertorio');
+    conteudo.innerHTML = '';
+
+    if (!repertorios[data]) {
+      conteudo.innerHTML = '<p><strong>AGUARDANDO MINISTRO DIVULGAR</strong></p>';
+    } else {
+      let tabela = '<table><tr><th>#</th><th>Música</th><th>Artista</th><th>Tom</th></tr>';
+      repertorios[data].forEach((musica, index) => {
+        tabela += `<tr><td>${index + 1}</td><td>${musica[0]}</td><td>${musica[1]}</td><td>${musica[2]}</td></tr>`;
+      });
+      tabela += '</table>';
+      conteudo.innerHTML = tabela;
+    }
+
+    modal.style.display = 'flex';
   }
+
   function closeModal() {
-    document.getElementById("repertorioModal").style.display = "none";
+    document.getElementById('repertorioModal').style.display = 'none';
   }
 </script>
 
 </body>
 </html>
+
 
 
