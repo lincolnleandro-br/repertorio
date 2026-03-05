@@ -252,6 +252,7 @@ Bateria: Isaque<br>
 <input id="musicaNome" placeholder="Música">
 <input id="musicaArtista" placeholder="Artista">
 <input id="musicaTom" placeholder="Tom">
+<input id="musicaObs" placeholder="Observação (Solista, Medley, Versão...)">
 <input id="musicaYoutube" placeholder="Link Youtube">
 <input id="musicaSpotify" placeholder="Link Spotify">
 <input id="musicaCifra" placeholder="Link Cifra">
@@ -517,6 +518,7 @@ window.adicionarMusica = function(){
 const musica=document.getElementById("musicaNome").value;
 const artista=document.getElementById("musicaArtista").value;
 const tom=document.getElementById("musicaTom").value;
+const obs=document.getElementById("musicaObs").value;
 const youtube=document.getElementById("musicaYoutube").value;
 const spotify=document.getElementById("musicaSpotify").value;
 const cifra=document.getElementById("musicaCifra").value;
@@ -525,6 +527,7 @@ const nova={
 musica,
 artista,
 tom,
+obs,
 youtube,
 spotify,
 cifra
@@ -535,6 +538,7 @@ push(ref(db,"repertorios/"+repertorioAtual),nova);
 document.getElementById("musicaNome").value="";
 document.getElementById("musicaArtista").value="";
 document.getElementById("musicaTom").value="";
+document.getElementById("musicaObs").value="";
 document.getElementById("musicaYoutube").value="";
 document.getElementById("musicaSpotify").value="";
 document.getElementById("musicaCifra").value="";
@@ -560,7 +564,7 @@ return;
 
 let html="<table>";
 
-html+="<tr><th>#</th><th>Música</th><th>Artista</th><th>Tom</th><th>Ações</th></tr>";
+html+="<tr><th>#</th><th>Música</th><th>Artista</th><th>Tom</th><th>Obs</th><th>Ações</th></tr>";
 
 let i=1;
 
@@ -576,6 +580,7 @@ html+=`
 <td>${m.musica}</td>
 <td>${m.artista}</td>
 <td>${m.tom}</td>
+<td>${m.obs || ""}</td>
 
 <td>
 
@@ -621,4 +626,5 @@ remove(ref(db,"repertorios/"+repertorioAtual+"/"+id));
 
 </body>
 </html>
+
 
