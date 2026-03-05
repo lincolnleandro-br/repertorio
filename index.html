@@ -291,6 +291,40 @@ form.style.display=form.style.display=="none"?"block":"none";
 
 }
 
+function pesquisarMusica(){
+
+const termo = document.getElementById("buscarMusica").value.toLowerCase();
+
+const resultado = bancoMusicas.filter(m =>
+m.musica.toLowerCase().includes(termo) ||
+m.artista.toLowerCase().includes(termo)
+);
+
+let html="";
+
+resultado.slice(0,10).forEach(m=>{
+
+html+=`
+<div onclick="selecionarMusica('${m.musica}','${m.artista}')" style="cursor:pointer;padding:5px;border-bottom:1px solid #ddd">
+${m.musica} - ${m.artista}
+</div>
+`;
+
+});
+
+document.getElementById("resultadoBusca").innerHTML=html;
+
+}
+
+function selecionarMusica(musica,artista){
+
+document.getElementById("musicaNome").value = musica;
+document.getElementById("musicaArtista").value = artista;
+
+document.getElementById("resultadoBusca").innerHTML = "";
+
+}
+  
 function adicionarMusica(){
 
 const musica=document.getElementById("musicaNome").value;
@@ -318,6 +352,10 @@ document.getElementById("musicaTom").value="";
 document.getElementById("musicaYoutube").value="";
 document.getElementById("musicaSpotify").value="";
 document.getElementById("musicaCifra").value="";
+
+<input type="text" id="buscarMusica" placeholder="Pesquisar música..." onkeyup="pesquisarMusica()">
+
+<div id="resultadoBusca"></div>
 
 }
 
@@ -465,8 +503,17 @@ alert("Repertório copiado!");
 
 }
 
+let bancoMusicas = [];
+
+fetch("musicas.json")
+.then(response => response.json())
+.then(data => {
+bancoMusicas = data;
+});
+
 </script>
 
 </body>
 </html>
+
 
