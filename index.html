@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Escala Louvor IMESC - Março 2026</title>
 
 <style>
@@ -104,6 +105,10 @@ padding:6px;
 margin:3px 0;
 }
 
+#resultadoBusca div:hover{
+background:#eee;
+}
+
 </style>
 </head>
 
@@ -137,7 +142,7 @@ Violão: Miguel<br>
 <div class="card">
 <strong>22/03/2026</strong><br>
 Líder: Jakson<br>
-Vocal: Fabi, Mônica<br>
+Vocal: Fabi, Monica<br>
 Bateria: Isaque<br>
 <button onclick="openModal('22-03-2026')">Ver Repertório</button>
 </div>
@@ -236,11 +241,13 @@ Bateria: Isaque<br>
 <h3>Repertório</h3>
 
 <button onclick="mostrarFormulario()">➕ Adicionar Música</button>
-
 <button onclick="compartilharWhatsapp()">📲 Compartilhar</button>
 <button onclick="copiarRepertorio()">📋 Copiar Repertório</button>
 
 <div id="formMusica" style="display:none">
+
+<input type="text" id="buscarMusica" placeholder="Pesquisar música..." onkeyup="pesquisarMusica()">
+<div id="resultadoBusca"></div>
 
 <input id="musicaNome" placeholder="Música">
 <input id="musicaArtista" placeholder="Artista">
@@ -262,21 +269,21 @@ Bateria: Isaque<br>
 <script>
 
 let repertorios = JSON.parse(localStorage.getItem("repertorios")) || {};
-
 let repertorioAtual = null;
+let bancoMusicas = [];
+
+fetch("musicas.json")
+.then(r=>r.json())
+.then(data=>bancoMusicas=data);
 
 function salvar(){
 localStorage.setItem("repertorios",JSON.stringify(repertorios));
 }
 
 function openModal(data){
-
 repertorioAtual=data;
-
 document.getElementById("modal").style.display="flex";
-
 renderTabela();
-
 }
 
 function closeModal(){
@@ -284,18 +291,15 @@ document.getElementById("modal").style.display="none";
 }
 
 function mostrarFormulario(){
-
-const form=document.getElementById("formMusica");
-
-form.style.display=form.style.display=="none"?"block":"none";
-
+const f=document.getElementById("formMusica");
+f.style.display=f.style.display=="none"?"block":"none";
 }
 
 function pesquisarMusica(){
 
-const termo = document.getElementById("buscarMusica").value.toLowerCase();
+const termo=document.getElementById("buscarMusica").value.toLowerCase();
 
-const resultado = bancoMusicas.filter(m =>
+const resultado=bancoMusicas.filter(m=>
 m.musica.toLowerCase().includes(termo) ||
 m.artista.toLowerCase().includes(termo)
 );
@@ -303,13 +307,7 @@ m.artista.toLowerCase().includes(termo)
 let html="";
 
 resultado.slice(0,10).forEach(m=>{
-
-html+=`
-<div onclick="selecionarMusica('${m.musica}','${m.artista}')" style="cursor:pointer;padding:5px;border-bottom:1px solid #ddd">
-${m.musica} - ${m.artista}
-</div>
-`;
-
+html+=`<div onclick="selecionarMusica('${m.musica}','${m.artista}')">${m.musica} - ${m.artista}</div>`;
 });
 
 document.getElementById("resultadoBusca").innerHTML=html;
@@ -318,23 +316,23 @@ document.getElementById("resultadoBusca").innerHTML=html;
 
 function selecionarMusica(musica,artista){
 
-document.getElementById("musicaNome").value = musica;
-document.getElementById("musicaArtista").value = artista;
+document.getElementById("musicaNome").value=musica;
+document.getElementById("musicaArtista").value=artista;
 
-document.getElementById("resultadoBusca").innerHTML = "";
+document.getElementById("resultadoBusca").innerHTML="";
 
 }
-  
+
 function adicionarMusica(){
 
-const musica=document.getElementById("musicaNome").value;
-const artista=document.getElementById("musicaArtista").value;
-const tom=document.getElementById("musicaTom").value;
-const youtube=document.getElementById("musicaYoutube").value;
-const spotify=document.getElementById("musicaSpotify").value;
-const cifra=document.getElementById("musicaCifra").value;
-
-const nova={musica,artista,tom,youtube,spotify,cifra};
+const nova={
+musica:musicaNome.value,
+artista:musicaArtista.value,
+tom:musicaTom.value,
+youtube:musicaYoutube.value,
+spotify:musicaSpotify.value,
+cifra:musicaCifra.value
+};
 
 if(!repertorios[repertorioAtual]){
 repertorios[repertorioAtual]=[];
@@ -343,45 +341,35 @@ repertorios[repertorioAtual]=[];
 repertorios[repertorioAtual].push(nova);
 
 salvar();
-
 renderTabela();
 
-document.getElementById("musicaNome").value="";
-document.getElementById("musicaArtista").value="";
-document.getElementById("musicaTom").value="";
-document.getElementById("musicaYoutube").value="";
-document.getElementById("musicaSpotify").value="";
-document.getElementById("musicaCifra").value="";
-
-<input type="text" id="buscarMusica" placeholder="Pesquisar música..." onkeyup="pesquisarMusica()">
-
-<div id="resultadoBusca"></div>
+musicaNome.value="";
+musicaArtista.value="";
+musicaTom.value="";
+musicaYoutube.value="";
+musicaSpotify.value="";
+musicaCifra.value="";
 
 }
 
-function removerMusica(index){
-
-repertorios[repertorioAtual].splice(index,1);
-
+function removerMusica(i){
+repertorios[repertorioAtual].splice(i,1);
 salvar();
-
 renderTabela();
-
 }
 
-function editarMusica(index){
+function editarMusica(i){
 
-const m=repertorios[repertorioAtual][index];
+const m=repertorios[repertorioAtual][i];
 
-document.getElementById("musicaNome").value=m.musica;
-document.getElementById("musicaArtista").value=m.artista;
-document.getElementById("musicaTom").value=m.tom;
-document.getElementById("musicaYoutube").value=m.youtube;
-document.getElementById("musicaSpotify").value=m.spotify;
-document.getElementById("musicaCifra").value=m.cifra;
+musicaNome.value=m.musica;
+musicaArtista.value=m.artista;
+musicaTom.value=m.tom;
+musicaYoutube.value=m.youtube;
+musicaSpotify.value=m.spotify;
+musicaCifra.value=m.cifra;
 
-removerMusica(index);
-
+removerMusica(i);
 mostrarFormulario();
 
 }
@@ -391,21 +379,16 @@ function renderTabela(){
 const conteudo=document.getElementById("conteudoRepertorio");
 
 if(!repertorios[repertorioAtual] || repertorios[repertorioAtual].length==0){
-
 conteudo.innerHTML="<p><strong>AGUARDANDO MINISTRO DIVULGAR</strong></p>";
-
 return;
-
 }
 
 let html="<table>";
-
 html+="<tr><th>#</th><th>Música</th><th>Artista</th><th>Tom</th><th>Ações</th></tr>";
 
 repertorios[repertorioAtual].forEach((m,i)=>{
 
 html+=`
-
 <tr draggable="true"
 ondragstart="drag(event,${i})"
 ondrop="drop(event,${i})"
@@ -434,54 +417,44 @@ ondragover="allowDrop(event)">
 <button onclick="removerMusica(${i})">🗑</button>
 
 </td>
-
-</tr>
-
-`;
-
+</tr>`;
 });
 
 html+="</table>";
-
 conteudo.innerHTML=html;
 
 }
 
 let dragIndex;
 
-function allowDrop(ev){ ev.preventDefault(); }
+function allowDrop(e){e.preventDefault();}
+function drag(e,i){dragIndex=i;}
 
-function drag(ev,index){ dragIndex=index; }
+function drop(e,i){
 
-function drop(ev,index){
-
-ev.preventDefault();
+e.preventDefault();
 
 const item=repertorios[repertorioAtual][dragIndex];
 
 repertorios[repertorioAtual].splice(dragIndex,1);
-
-repertorios[repertorioAtual].splice(index,0,item);
+repertorios[repertorioAtual].splice(i,0,item);
 
 salvar();
-
 renderTabela();
 
 }
 
 function compartilharWhatsapp(){
 
-let texto="🎶 Repertório do Culto\n\n";
-
 if(!repertorios[repertorioAtual]) return;
+
+let texto="🎶 Repertório do Culto\n\n";
 
 repertorios[repertorioAtual].forEach((m,i)=>{
 texto+=`${i+1}. ${m.musica} - ${m.artista} (Tom ${m.tom})\n`;
 });
 
-const url="https://wa.me/?text="+encodeURIComponent(texto);
-
-window.open(url,"_blank");
+window.open("https://wa.me/?text="+encodeURIComponent(texto));
 
 }
 
@@ -492,9 +465,7 @@ if(!repertorios[repertorioAtual]) return;
 let texto="🎶 Repertório do Culto\n\n";
 
 repertorios[repertorioAtual].forEach((m,i)=>{
-
 texto+=`${i+1}. ${m.musica} - ${m.artista} (Tom ${m.tom})\n`;
-
 });
 
 navigator.clipboard.writeText(texto);
@@ -503,17 +474,7 @@ alert("Repertório copiado!");
 
 }
 
-let bancoMusicas = [];
-
-fetch("musicas.json")
-.then(response => response.json())
-.then(data => {
-bancoMusicas = data;
-});
-
 </script>
 
 </body>
 </html>
-
-
