@@ -265,12 +265,21 @@ tabela += `
 <td>${musica.musica}</td>
 <td>${musica.artista}</td>
 <td>${musica.tom}</td>
-<td>
-<a href="${musica.youtube}" target="_blank">▶</a>
-<a href="${musica.spotify}" target="_blank">🎧</a>
-<a href="${musica.cifra}" target="_blank">🎸</a>
+<td class="links">
+
+<a href="${musica.youtube}" target="_blank">
+<img src="youtube.png" width="25">
+</a>
+
+<a href="${musica.spotify}" target="_blank">
+<img src="spotify.png" width="25">
+</a>
+
+<a href="${musica.cifra}" target="_blank">
+<img src="cifra.png" width="25">
+</a>
+
 </td>
-</tr>
 `;
 
 });
@@ -294,6 +303,7 @@ document.getElementById('repertorioModal').style.display = 'none';
 </script>
 </body>
 </html>
+
 
 
 
