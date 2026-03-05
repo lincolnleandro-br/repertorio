@@ -149,66 +149,152 @@
 </div>
 
 <script>
-  const repertorios = {
-    '15-03-2026-manha': [
-      ['Consagração', 'Aline Barros', 'A'],
-      ['Oferta - Te Agradeço', 'Diante do Trono', 'D']
-    ],
-    '29-03-2026-manha': [
-      ['Nada Mais', 'Gabriel Guedes', 'C'],
-      ['Oferta - Te Agradeço', 'Diante do Trono', 'D']
-    ],
-    '01-03-2026-noite': [
-      ['Digno de Tudo', 'Fernanda Ferro', 'D'],
-      ['Gratidão', 'Get Worship', 'B'],
-      ['Oferta - Louve', 'Lukas Agustinho', 'A'],
-      ['Santo Pra Sempre', 'Gabriel Guedes', 'C'],
-      ['Ceia - Jesus Filho de Deus', 'Get Worship', 'B']
-    ],
-    '04-03-2026-quarta': [
-      ['Aclame ao Senhor', 'Diante do Trono', 'Tom de contralto'],
-      ['Grande é o Senhor', 'Adhemar de Campos', 'Tom ?'],
-      ['Jesus', 'Arianne', 'Tom ?'],
-      ['Oferta - Te Agradeço', 'Diante do Trono', '—']
-    ],
-    '11-03-2026-quarta': [
-      ['Caminho no Deserto', 'Soraya Moraes', 'D'],
-      ['Com Muito Louvor', 'Cassiane', 'D'],
-      ['Oferta - Leão de Judá', 'Congregacional', 'F#m']
-    ],
-    '25-03-2026-quarta': [
-      ['Acende Outra Vez', 'Jefferson e Suellen', 'D#m'],
-      ['A Boa Parte', 'FHOP', 'E'],
-      ['Oferta - Leão de Judá', 'Congregacional', 'F#m']
-    ]
-  };
 
-  function openModal(data) {
-    const modal = document.getElementById('repertorioModal');
-    const conteudo = document.getElementById('conteudoRepertorio');
-    conteudo.innerHTML = '';
+const repertorios = {
+'15-03-2026-manha': [
+{
+musica:'Consagração',
+artista:'Aline Barros',
+tom:'A',
+youtube:'https://www.youtube.com/results?search_query=Consagração+Aline+Barros',
+spotify:'https://open.spotify.com/search/consagração%20aline%20barros',
+cifra:'https://www.cifraclub.com.br/aline-barros/consagracao/'
+},
+{
+musica:'Oferta - Te Agradeço',
+artista:'Diante do Trono',
+tom:'D',
+youtube:'https://www.youtube.com/results?search_query=Te+Agradeço+Diante+do+Trono',
+spotify:'https://open.spotify.com/search/te%20agradeco%20diante%20do%20trono',
+cifra:'https://www.cifraclub.com.br/diante-do-trono/te-agradeco/'
+}
+],
 
-    if (!repertorios[data]) {
-      conteudo.innerHTML = '<p><strong>AGUARDANDO MINISTRO DIVULGAR</strong></p>';
-    } else {
-      let tabela = '<table><tr><th>#</th><th>Música</th><th>Artista</th><th>Tom</th></tr>';
-      repertorios[data].forEach((musica, index) => {
-        tabela += `<tr><td>${index + 1}</td><td>${musica[0]}</td><td>${musica[1]}</td><td>${musica[2]}</td></tr>`;
-      });
-      tabela += '</table>';
-      conteudo.innerHTML = tabela;
-    }
+'29-03-2026-manha': [
+{
+musica:'Nada Mais',
+artista:'Gabriel Guedes',
+tom:'C',
+youtube:'https://www.youtube.com/results?search_query=Nada+Mais+Gabriel+Guedes',
+spotify:'https://open.spotify.com/search/nada%20mais%20gabriel%20guedes',
+cifra:'https://www.cifraclub.com.br/gabriel-guedes/nada-mais/'
+},
+{
+musica:'Oferta - Te Agradeço',
+artista:'Diante do Trono',
+tom:'D',
+youtube:'https://www.youtube.com/results?search_query=Te+Agradeço+Diante+do+Trono',
+spotify:'https://open.spotify.com/search/te%20agradeco%20diante%20do%20trono',
+cifra:'https://www.cifraclub.com.br/diante-do-trono/te-agradeco/'
+}
+],
 
-    modal.style.display = 'flex';
-  }
+'01-03-2026-noite': [
+{
+musica:'Digno de Tudo',
+artista:'Fernanda Ferro',
+tom:'D',
+youtube:'https://www.youtube.com/results?search_query=Digno+de+Tudo+Fernanda+Ferro',
+spotify:'https://open.spotify.com/search/digno%20de%20tudo%20fernanda%20ferro',
+cifra:'#'
+},
+{
+musica:'Gratidão',
+artista:'Get Worship',
+tom:'B',
+youtube:'https://www.youtube.com/results?search_query=Gratidão+Get+Worship',
+spotify:'https://open.spotify.com/search/gratidão%20get%20worship',
+cifra:'#'
+},
+{
+musica:'Oferta - Louve',
+artista:'Lukas Agustinho',
+tom:'A',
+youtube:'https://www.youtube.com/results?search_query=Louve+Lukas+Agustinho',
+spotify:'https://open.spotify.com/search/louve%20lukas%20agustinho',
+cifra:'#'
+},
+{
+musica:'Santo Pra Sempre',
+artista:'Gabriel Guedes',
+tom:'C',
+youtube:'https://www.youtube.com/results?search_query=Santo+Pra+Sempre+Gabriel+Guedes',
+spotify:'https://open.spotify.com/search/santo%20pra%20sempre%20gabriel%20guedes',
+cifra:'#'
+},
+{
+musica:'Ceia - Jesus Filho de Deus',
+artista:'Get Worship',
+tom:'B',
+youtube:'https://www.youtube.com/results?search_query=Jesus+Filho+de+Deus+Get+Worship',
+spotify:'https://open.spotify.com/search/jesus%20filho%20de%20deus%20get%20worship',
+cifra:'#'
+}
+]
+};
 
-  function closeModal() {
-    document.getElementById('repertorioModal').style.display = 'none';
-  }
+function openModal(data) {
+
+const modal = document.getElementById('repertorioModal');
+const conteudo = document.getElementById('conteudoRepertorio');
+
+conteudo.innerHTML = '';
+
+if (!repertorios[data]) {
+
+conteudo.innerHTML = '<p><strong>AGUARDANDO MINISTRO DIVULGAR</strong></p>';
+
+} else {
+
+let tabela = `
+<table>
+<tr>
+<th>#</th>
+<th>Música</th>
+<th>Artista</th>
+<th>Tom</th>
+<th>Links</th>
+</tr>
+`;
+
+repertorios[data].forEach((musica, index) => {
+
+tabela += `
+<tr>
+<td>${index + 1}</td>
+<td>${musica.musica}</td>
+<td>${musica.artista}</td>
+<td>${musica.tom}</td>
+<td>
+<a href="${musica.youtube}" target="_blank">▶</a>
+<a href="${musica.spotify}" target="_blank">🎧</a>
+<a href="${musica.cifra}" target="_blank">🎸</a>
+</td>
+</tr>
+`;
+
+});
+
+tabela += '</table>';
+
+conteudo.innerHTML = tabela;
+
+}
+
+modal.style.display = 'flex';
+
+}
+
+function closeModal() {
+
+document.getElementById('repertorioModal').style.display = 'none';
+
+}
+
 </script>
-
 </body>
 </html>
+
 
 
 
