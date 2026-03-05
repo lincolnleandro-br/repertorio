@@ -476,5 +476,149 @@ alert("Repertório copiado!");
 
 </script>
 
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getDatabase, ref, push, onValue, remove, update } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDpFm6Q9KeQFuRgHwYD5OfFMJ9SYvdOW_Y",
+  authDomain: "louvor-imesc.firebaseapp.com",
+  databaseURL: "https://louvor-imesc-default-rtdb.firebaseio.com",
+  projectId: "louvor-imesc",
+  storageBucket: "louvor-imesc.firebasestorage.app",
+  messagingSenderId: "546684488381",
+  appId: "1:546684488381:web:bb71634e1dadf21e0d85d4"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+let repertorioAtual = null;
+
+window.openModal = function(data){
+
+repertorioAtual = data;
+
+document.getElementById("modal").style.display="flex";
+
+carregarRepertorio();
+
+}
+
+window.closeModal = function(){
+
+document.getElementById("modal").style.display="none";
+
+}
+
+window.adicionarMusica = function(){
+
+const musica=document.getElementById("musicaNome").value;
+const artista=document.getElementById("musicaArtista").value;
+const tom=document.getElementById("musicaTom").value;
+const youtube=document.getElementById("musicaYoutube").value;
+const spotify=document.getElementById("musicaSpotify").value;
+const cifra=document.getElementById("musicaCifra").value;
+
+const nova={
+musica,
+artista,
+tom,
+youtube,
+spotify,
+cifra
+};
+
+push(ref(db,"repertorios/"+repertorioAtual),nova);
+
+document.getElementById("musicaNome").value="";
+document.getElementById("musicaArtista").value="";
+document.getElementById("musicaTom").value="";
+document.getElementById("musicaYoutube").value="";
+document.getElementById("musicaSpotify").value="";
+document.getElementById("musicaCifra").value="";
+
+}
+
+function carregarRepertorio(){
+
+const repertorioRef = ref(db,"repertorios/"+repertorioAtual);
+
+onValue(repertorioRef,(snapshot)=>{
+
+const dados = snapshot.val();
+
+const conteudo=document.getElementById("conteudoRepertorio");
+
+if(!dados){
+
+conteudo.innerHTML="<p><strong>AGUARDANDO MINISTRO DIVULGAR</strong></p>";
+return;
+
+}
+
+let html="<table>";
+
+html+="<tr><th>#</th><th>Música</th><th>Artista</th><th>Tom</th><th>Ações</th></tr>";
+
+let i=1;
+
+for(const id in dados){
+
+const m=dados[id];
+
+html+=`
+
+<tr>
+
+<td>${i}</td>
+<td>${m.musica}</td>
+<td>${m.artista}</td>
+<td>${m.tom}</td>
+
+<td>
+
+<a href="${m.youtube}" target="_blank">
+<img src="youtube.png" width="22">
+</a>
+
+<a href="${m.spotify}" target="_blank">
+<img src="spotify.png" width="22">
+</a>
+
+<a href="${m.cifra}" target="_blank">
+<img src="cifra.png" width="22">
+</a>
+
+<button onclick="removerMusica('${id}')">🗑</button>
+
+</td>
+
+</tr>
+
+`;
+
+i++;
+
+}
+
+html+="</table>";
+
+conteudo.innerHTML=html;
+
+});
+
+}
+
+window.removerMusica = function(id){
+
+remove(ref(db,"repertorios/"+repertorioAtual+"/"+id));
+
+}
+
+</script>
+
 </body>
 </html>
+
