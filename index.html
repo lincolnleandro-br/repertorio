@@ -1,311 +1,387 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Escala Louvor IMESC</title>
-  <style>
-    body { font-family: Arial, sans-serif; margin: 0; background: #f4f6f9; }
-    header { background: #1f3c88; color: white; text-align: center; padding: 20px; }
-    h2 { margin-top: 40px; text-align: center; }
-    .container { width: 95%; max-width: 1000px; margin: auto; }
-    .card { background: white; border-radius: 12px; padding: 15px; margin: 15px 0; box-shadow: 0 4px 10px rgba(0,0,0,0.08); }
-    button { margin-top: 10px; padding: 8px 12px; border: none; border-radius: 8px; background: #1f3c88; color: white; cursor: pointer; }
-    button:hover { opacity: 0.9; }
-    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); justify-content: center; align-items: center; }
-    .modal-content { background: white; padding: 20px; border-radius: 12px; width: 90%; max-width: 500px; max-height: 80vh; overflow-y: auto; }
-    .close { float: right; cursor: pointer; font-weight: bold; color: red; }
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-    th, td { border-bottom: 1px solid #ddd; padding: 6px; text-align: left; font-size: 14px; }
-    th { background: #f0f0f0; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Escala Louvor IMESC</title>
+
+<style>
+
+body{
+font-family:Arial;
+margin:0;
+background:#f4f6f9;
+}
+
+header{
+background:#1f3c88;
+color:white;
+text-align:center;
+padding:20px;
+}
+
+.container{
+width:95%;
+max-width:1000px;
+margin:auto;
+}
+
+.card{
+background:white;
+border-radius:10px;
+padding:15px;
+margin:15px 0;
+box-shadow:0 4px 10px rgba(0,0,0,0.1);
+}
+
+button{
+padding:8px 12px;
+border:none;
+border-radius:6px;
+background:#1f3c88;
+color:white;
+cursor:pointer;
+margin-top:5px;
+}
+
+button:hover{
+opacity:0.9;
+}
+
+.modal{
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.6);
+justify-content:center;
+align-items:center;
+}
+
+.modal-content{
+background:white;
+padding:20px;
+border-radius:10px;
+width:95%;
+max-width:700px;
+max-height:80vh;
+overflow:auto;
+}
+
+.close{
+float:right;
+cursor:pointer;
+color:red;
+font-weight:bold;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:10px;
+}
+
+th,td{
+border-bottom:1px solid #ddd;
+padding:8px;
+font-size:14px;
+}
+
+th{
+background:#eee;
+}
+
+input{
+width:100%;
+padding:6px;
+margin:3px 0;
+}
+
+.links img{
+width:22px;
+}
+
+</style>
 </head>
+
 <body>
 
 <header>
-  <h1>Escala Louvor IMESC - Março 2026</h1>
+<h1>Escala Louvor IMESC</h1>
 </header>
 
 <div class="container">
 
-  <h2>Domingo Manhã</h2>
+<div class="card">
+<strong>15/03/2026</strong><br>
+Líder: Lincoln<br>
+Vocal: Monique, Manu Ceia<br>
+Bateria: Nana<br>
+<button onclick="openModal('15-03-2026')">Ver Repertório</button>
+</div>
 
-  <div class="card">
-    <strong>08/03/2026</strong><br>
-    Líder: Akemi<br>
-    Vocal: Sheila, Rafael<br>
-    Bateria: Davy<br>
-    <button onclick="openModal('08-03-2026')">Ver Repertório</button>
-  </div>
-
-  <div class="card">
-    <strong>15/03/2026</strong><br>
-    Líder: Lincoln<br>
-    Vocal: Monique, Manu Ceia<br>
-    Bateria: Nana<br>
-    <button onclick="openModal('15-03-2026-manha')">Ver Repertório</button>
-  </div>
-
-  <div class="card">
-    <strong>22/03/2026</strong><br>
-    Líder: Jakson<br>
-    Vocal: Fabi, Mônica<br>
-    Bateria: Isaque<br>
-    <button onclick="openModal('22-03-2026')">Ver Repertório</button>
-  </div>
-
-  <div class="card">
-    <strong>29/03/2026</strong><br>
-    Líder: Lincoln<br>
-    Vocal: Raphael, Manu<br>
-    Bateria: Davy<br>
-    <button onclick="openModal('29-03-2026-manha')">Ver Repertório</button>
-  </div>
-
-  <h2>Domingo Noite</h2>
-
-  <div class="card">
-    <strong>01/03/2026</strong><br>
-    Líder: Lincoln<br>
-    Vocal: Aline, Miriam, Beto<br>
-    Bateria: Davy<br>
-    <button onclick="openModal('01-03-2026-noite')">Ver Repertório</button>
-  </div>
-
-  <div class="card">
-    <strong>08/03/2026</strong><br>
-    Líder: Akemi<br>
-    Vocal: Sheila, Monica, Rafael<br>
-    Bateria: Nana<br>
-    <button onclick="openModal('08-03-2026-noite')">Ver Repertório</button>
-  </div>
-
-  <div class="card">
-    <strong>15/03/2026</strong><br>
-    Líder: Culto dos Jovens<br>
-    Vocal: —<br>
-    Bateria: —<br>
-    <button onclick="openModal('15-03-2026-noite')">Ver Repertório</button>
-  </div>
-
-  <div class="card">
-    <strong>22/03/2026</strong><br>
-    Líder: Jakson<br>
-    Vocal: Fabi, Akemi, Claudio<br>
-    Bateria: Isaque<br>
-    <button onclick="openModal('22-03-2026-noite')">Ver Repertório</button>
-  </div>
-
-  <div class="card">
-    <strong>29/03/2026 (Praça)</strong><br>
-    Líder: Luziane<br>
-    Vocal: Aline, Wendel, Lincoln<br>
-    Bateria: Davy<br>
-    <button onclick="openModal('29-03-2026-noite')">Ver Repertório</button>
-  </div>
-
-  <h2>Quarta Profética</h2>
-
-  <div class="card">
-    <strong>04/03/2026</strong><br>
-    Líder: Akemi<br>
-    Vocal: Miriam, Rafael<br>
-    Bateria: Isaque<br>
-    <button onclick="openModal('04-03-2026-quarta')">Ver Repertório</button>
-  </div>
-
-  <div class="card">
-    <strong>11/03/2026</strong><br>
-    Líder: Lincoln<br>
-    Vocal: Monique, Dani<br>
-    Bateria: Isaque<br>
-    <button onclick="openModal('11-03-2026-quarta')">Ver Repertório</button>
-  </div>
-
-  <div class="card">
-    <strong>18/03/2026</strong><br>
-    Líder: Luziane<br>
-    Vocal: Sheila, Raphael<br>
-    Bateria: Isaque<br>
-    <button onclick="openModal('18-03-2026-quarta')">Ver Repertório</button>
-  </div>
-
-  <div class="card">
-    <strong>25/03/2026</strong><br>
-    Líder: Lincoln<br>
-    Vocal: Manu, Fabi<br>
-    Bateria: Isaque<br>
-    <button onclick="openModal('25-03-2026-quarta')">Ver Repertório</button>
-  </div>
+<div class="card">
+<strong>22/03/2026</strong><br>
+Líder: Jakson<br>
+Vocal: Fabi, Mônica<br>
+Bateria: Isaque<br>
+<button onclick="openModal('22-03-2026')">Ver Repertório</button>
+</div>
 
 </div>
 
-<div class="modal" id="repertorioModal">
-  <div class="modal-content">
-    <span class="close" onclick="closeModal()">X</span>
-    <h3>Repertório</h3>
-    <div id="conteudoRepertorio"></div>
-  </div>
+<div class="modal" id="modal">
+
+<div class="modal-content">
+
+<span class="close" onclick="closeModal()">X</span>
+
+<h3>Repertório</h3>
+
+<button onclick="mostrarFormulario()">➕ Adicionar Música</button>
+
+<button onclick="compartilharWhatsapp()">📲 Compartilhar</button>
+
+<div id="formMusica" style="display:none">
+
+<input id="musicaNome" placeholder="Música">
+
+<input id="musicaArtista" placeholder="Artista">
+
+<input id="musicaTom" placeholder="Tom">
+
+<input id="musicaYoutube" placeholder="Link Youtube">
+
+<input id="musicaSpotify" placeholder="Link Spotify">
+
+<input id="musicaCifra" placeholder="Link Cifra">
+
+<button onclick="adicionarMusica()">Salvar Música</button>
+
+</div>
+
+<div id="conteudoRepertorio"></div>
+
+</div>
 </div>
 
 <script>
 
-const repertorios = {
-'15-03-2026-manha': [
-{
-musica:'Consagração',
-artista:'Aline Barros',
-tom:'A',
-youtube:'https://www.youtube.com/results?search_query=Consagração+Aline+Barros',
-spotify:'https://open.spotify.com/search/consagração%20aline%20barros',
-cifra:'https://www.cifraclub.com.br/aline-barros/consagracao/'
-},
-{
-musica:'Oferta - Te Agradeço',
-artista:'Diante do Trono',
-tom:'D',
-youtube:'https://www.youtube.com/results?search_query=Te+Agradeço+Diante+do+Trono',
-spotify:'https://open.spotify.com/search/te%20agradeco%20diante%20do%20trono',
-cifra:'https://www.cifraclub.com.br/diante-do-trono/te-agradeco/'
+let repertorios = JSON.parse(localStorage.getItem("repertorios")) || {};
+
+let repertorioAtual = null;
+
+function salvar(){
+
+localStorage.setItem("repertorios",JSON.stringify(repertorios));
+
 }
-],
 
-'29-03-2026-manha': [
-{
-musica:'Nada Mais',
-artista:'Gabriel Guedes',
-tom:'C',
-youtube:'https://www.youtube.com/results?search_query=Nada+Mais+Gabriel+Guedes',
-spotify:'https://open.spotify.com/search/nada%20mais%20gabriel%20guedes',
-cifra:'https://www.cifraclub.com.br/gabriel-guedes/nada-mais/'
-},
-{
-musica:'Oferta - Te Agradeço',
-artista:'Diante do Trono',
-tom:'D',
-youtube:'https://www.youtube.com/results?search_query=Te+Agradeço+Diante+do+Trono',
-spotify:'https://open.spotify.com/search/te%20agradeco%20diante%20do%20trono',
-cifra:'https://www.cifraclub.com.br/diante-do-trono/te-agradeco/'
+function openModal(data){
+
+repertorioAtual=data;
+
+const modal=document.getElementById("modal");
+
+modal.style.display="flex";
+
+renderTabela();
+
 }
-],
 
-'01-03-2026-noite': [
-{
-musica:'Digno de Tudo',
-artista:'Fernanda Ferro',
-tom:'D',
-youtube:'https://www.youtube.com/results?search_query=Digno+de+Tudo+Fernanda+Ferro',
-spotify:'https://open.spotify.com/search/digno%20de%20tudo%20fernanda%20ferro',
-cifra:'#'
-},
-{
-musica:'Gratidão',
-artista:'Get Worship',
-tom:'B',
-youtube:'https://www.youtube.com/results?search_query=Gratidão+Get+Worship',
-spotify:'https://open.spotify.com/search/gratidão%20get%20worship',
-cifra:'#'
-},
-{
-musica:'Oferta - Louve',
-artista:'Lukas Agustinho',
-tom:'A',
-youtube:'https://www.youtube.com/results?search_query=Louve+Lukas+Agustinho',
-spotify:'https://open.spotify.com/search/louve%20lukas%20agustinho',
-cifra:'#'
-},
-{
-musica:'Santo Pra Sempre',
-artista:'Gabriel Guedes',
-tom:'C',
-youtube:'https://www.youtube.com/results?search_query=Santo+Pra+Sempre+Gabriel+Guedes',
-spotify:'https://open.spotify.com/search/santo%20pra%20sempre%20gabriel%20guedes',
-cifra:'#'
-},
-{
-musica:'Ceia - Jesus Filho de Deus',
-artista:'Get Worship',
-tom:'B',
-youtube:'https://www.youtube.com/results?search_query=Jesus+Filho+de+Deus+Get+Worship',
-spotify:'https://open.spotify.com/search/jesus%20filho%20de%20deus%20get%20worship',
-cifra:'#'
+function closeModal(){
+
+document.getElementById("modal").style.display="none";
+
 }
-]
-};
 
-function openModal(data) {
+function mostrarFormulario(){
 
-const modal = document.getElementById('repertorioModal');
-const conteudo = document.getElementById('conteudoRepertorio');
+const form=document.getElementById("formMusica");
 
-conteudo.innerHTML = '';
+form.style.display=form.style.display=="none"?"block":"none";
 
-if (!repertorios[data]) {
+}
 
-conteudo.innerHTML = '<p><strong>AGUARDANDO MINISTRO DIVULGAR</strong></p>';
+function adicionarMusica(){
 
-} else {
+const musica=document.getElementById("musicaNome").value;
 
-let tabela = `
-<table>
-<tr>
-<th>#</th>
-<th>Música</th>
-<th>Artista</th>
-<th>Tom</th>
-<th>Links</th>
-</tr>
-`;
+const artista=document.getElementById("musicaArtista").value;
 
-repertorios[data].forEach((musica, index) => {
+const tom=document.getElementById("musicaTom").value;
 
-tabela += `
-<tr>
-<td>${index + 1}</td>
-<td>${musica.musica}</td>
-<td>${musica.artista}</td>
-<td>${musica.tom}</td>
+const youtube=document.getElementById("musicaYoutube").value;
+
+const spotify=document.getElementById("musicaSpotify").value;
+
+const cifra=document.getElementById("musicaCifra").value;
+
+const nova={musica,artista,tom,youtube,spotify,cifra};
+
+if(!repertorios[repertorioAtual]){
+
+repertorios[repertorioAtual]=[];
+
+}
+
+repertorios[repertorioAtual].push(nova);
+
+salvar();
+
+renderTabela();
+
+}
+
+function removerMusica(index){
+
+repertorios[repertorioAtual].splice(index,1);
+
+salvar();
+
+renderTabela();
+
+}
+
+function editarMusica(index){
+
+const m=repertorios[repertorioAtual][index];
+
+document.getElementById("musicaNome").value=m.musica;
+
+document.getElementById("musicaArtista").value=m.artista;
+
+document.getElementById("musicaTom").value=m.tom;
+
+document.getElementById("musicaYoutube").value=m.youtube;
+
+document.getElementById("musicaSpotify").value=m.spotify;
+
+document.getElementById("musicaCifra").value=m.cifra;
+
+removerMusica(index);
+
+mostrarFormulario();
+
+}
+
+function renderTabela(){
+
+const conteudo=document.getElementById("conteudoRepertorio");
+
+if(!repertorios[repertorioAtual] || repertorios[repertorioAtual].length==0){
+
+conteudo.innerHTML="<p><strong>AGUARDANDO MINISTRO DIVULGAR</strong></p>";
+
+return;
+
+}
+
+let html="<table>";
+
+html+="<tr><th>#</th><th>Música</th><th>Artista</th><th>Tom</th><th>Links</th><th>Ações</th></tr>";
+
+repertorios[repertorioAtual].forEach((m,i)=>{
+
+html+=`
+
+<tr draggable="true"
+
+ondragstart="drag(event,${i})"
+
+ondrop="drop(event,${i})"
+
+ondragover="allowDrop(event)">
+
+<td>${i+1}</td>
+
+<td>${m.musica}</td>
+
+<td>${m.artista}</td>
+
+<td>${m.tom}</td>
+
 <td class="links">
 
-<a href="${musica.youtube}" target="_blank">
-<img src="youtube.png" width="25">
-</a>
+<a href="${m.youtube}" target="_blank">▶</a>
 
-<a href="${musica.spotify}" target="_blank">
-<img src="spotify.png" width="25">
-</a>
+<a href="${m.spotify}" target="_blank">🎧</a>
 
-<a href="${musica.cifra}" target="_blank">
-<img src="cifra.png" width="25">
-</a>
+<a href="${m.cifra}" target="_blank">🎼</a>
 
 </td>
+
+<td>
+
+<button onclick="editarMusica(${i})">✏</button>
+
+<button onclick="removerMusica(${i})">🗑</button>
+
+</td>
+
+</tr>
+
 `;
 
 });
 
-tabela += '</table>';
+html+="</table>";
 
-conteudo.innerHTML = tabela;
-
-}
-
-modal.style.display = 'flex';
+conteudo.innerHTML=html;
 
 }
 
-function closeModal() {
+let dragIndex;
 
-document.getElementById('repertorioModal').style.display = 'none';
+function allowDrop(ev){
+
+ev.preventDefault();
+
+}
+
+function drag(ev,index){
+
+dragIndex=index;
+
+}
+
+function drop(ev,index){
+
+ev.preventDefault();
+
+const item=repertorios[repertorioAtual][dragIndex];
+
+repertorios[repertorioAtual].splice(dragIndex,1);
+
+repertorios[repertorioAtual].splice(index,0,item);
+
+salvar();
+
+renderTabela();
+
+}
+
+function compartilharWhatsapp(){
+
+let texto="🎶 Repertório do Culto\n\n";
+
+if(!repertorios[repertorioAtual]) return;
+
+repertorios[repertorioAtual].forEach((m,i)=>{
+
+texto+=`${i+1}. ${m.musica} - ${m.artista} (Tom ${m.tom})\n`;
+
+});
+
+const url="https://wa.me/?text="+encodeURIComponent(texto);
+
+window.open(url,"_blank");
 
 }
 
 </script>
+
 </body>
 </html>
-
-
-
-
-
-
