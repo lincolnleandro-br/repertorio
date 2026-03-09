@@ -566,7 +566,21 @@
       </div>
     </section>
   </main>
+<div class="modal" id="modalRepertorio">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div>
+        <h3 id="modalTitulo">Repertório do Culto</h3>
+        <p id="modalSubtitulo" class="muted">Carregando...</p>
+      </div>
+      <button class="modal-close" onclick="fecharModal()">✕</button>
+    </div>
 
+    <div id="modalConteudo">
+      <div class="empty-state">Carregando repertório...</div>
+    </div>
+  </div>
+</div>
   <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
   import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
@@ -848,25 +862,12 @@ function renderRepertorio(lista) {
   setupRepertorio();
   setupInformacoes();
 </script>
-<div class="modal" id="modalRepertorio">
-  <div class="modal-box">
-    <div class="modal-header">
-      <div>
-        <h3 id="modalTitulo">Repertório do Culto</h3>
-        <p id="modalSubtitulo" class="muted">Carregando...</p>
-      </div>
-      <button class="modal-close" onclick="fecharModal()">✕</button>
-    </div>
 
-    <div id="modalConteudo">
-      <div class="empty-state">Carregando repertório...</div>
-    </div>
-  </div>
-</div>
   
   
 </body>
 </html>
+
 
 
 
