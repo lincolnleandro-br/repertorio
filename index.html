@@ -239,30 +239,50 @@ window.openPage=function(page){
 
 /* ESCALA */
 
-const escalaRef=ref(db,"escalas/2026-03");
+const configRef=ref(db,"config/mesAtivo");
+
+onValue(configRef,(configSnapshot)=>{
+
+const mesAtivo=configSnapshot.val();
+
+if(!mesAtivo){
+ document.getElementById("listaEscala").innerHTML="<div class='card'>Nenhum mês ativo configurado.</div>";
+ return;
+}
+
+const escalaRef=ref(db,`escalas/${mesAtivo}/cultos`);
 
 onValue(escalaRef,(snapshot)=>{
 
 const dados=snapshot.val();
 
-if(!dados) return;
+if(!dados){
+ document.getElementById("listaEscala").innerHTML="<div class='card'>Nenhuma escala encontrada para o mês ativo.</div>";
+ return;
+}
 
-let html="";
+let html=`<div class="card"><strong>Mês ativo:</strong> ${mesAtivo}</div>`;
 
 Object.values(dados).forEach(culto=>{
 
+const vocal=Array.isArray(culto.vocal) ? culto.vocal.join(", ") : (culto.vocal || "");
+
 html+=`
 <div class="card">
-<strong>${culto.data}</strong><br>
+<strong>${culto.label || culto.data || ""}</strong><br>
+Categoria: ${culto.categoria || ""}<br>
 Líder: ${culto.lider || ""}<br>
-Vocal: ${culto.vocal || ""}<br>
-Bateria: ${culto.bateria || ""}
+Vocal: ${vocal}<br>
+Bateria: ${culto.bateria || ""}<br>
+Violão: ${culto.violao || ""}
 </div>
 `;
 
 });
 
 document.getElementById("listaEscala").innerHTML=html;
+
+});
 
 });
 
