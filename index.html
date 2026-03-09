@@ -1,349 +1,685 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Milouv | Ministério de Louvor</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Milouv | Ministério de Louvor</title>
 
-<style>
+  <style>
+    :root{
+      --bg:#f4f6f9;
+      --surface:#ffffff;
+      --surface-soft:#f8fafc;
+      --primary:#1f3c88;
+      --primary-2:#2c5bd3;
+      --primary-soft:#dbeafe;
+      --text:#1f2937;
+      --muted:#6b7280;
+      --border:#e5e7eb;
+      --success:#166534;
+      --warning:#b45309;
+      --danger:#b91c1c;
+      --shadow-sm:0 6px 18px rgba(15,23,42,0.06);
+      --shadow-md:0 10px 30px rgba(15,23,42,0.08);
+      --shadow-lg:0 18px 40px rgba(15,23,42,0.12);
+      --radius-sm:10px;
+      --radius-md:16px;
+      --radius-lg:22px;
+      --container:1100px;
+    }
 
-:root{
---bg:#f4f6f9;
---card:#ffffff;
---primary:#1f3c88;
---border:#e5e7eb;
---text:#1f2937;
---muted:#6b7280;
---radius:14px;
---shadow:0 8px 25px rgba(0,0,0,0.08);
-}
+    *{
+      box-sizing:border-box;
+    }
 
-body{
-margin:0;
-font-family:Arial, Helvetica, sans-serif;
-background:var(--bg);
-color:var(--text);
-}
+    html{
+      scroll-behavior:smooth;
+    }
 
-header{
-background:linear-gradient(135deg,#1f3c88,#2c5bd3);
-color:white;
-padding:30px 20px;
-text-align:center;
-}
+    body{
+      margin:0;
+      font-family:Arial, Helvetica, sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      line-height:1.5;
+    }
 
-nav{
-background:white;
-border-bottom:1px solid var(--border);
-display:flex;
-justify-content:center;
-gap:30px;
-padding:12px;
-}
+    img{
+      max-width:100%;
+      display:block;
+    }
 
-nav button{
-background:none;
-border:none;
-font-weight:bold;
-cursor:pointer;
-color:var(--primary);
-font-size:15px;
-}
+    a{
+      color:inherit;
+      text-decoration:none;
+    }
 
-.container{
-width:95%;
-max-width:1100px;
-margin:auto;
-padding:30px 0;
-}
+    button,
+    input,
+    select,
+    textarea{
+      font:inherit;
+    }
 
-.page{
-display:none;
-}
+    header{
+      background:linear-gradient(135deg,var(--primary),var(--primary-2));
+      color:white;
+      padding:48px 20px;
+      text-align:center;
+      box-shadow:var(--shadow-md);
+    }
 
-.page.active{
-display:block;
-}
+    header h1{
+      margin:0 0 10px;
+      font-size:clamp(2rem,4vw,3rem);
+      font-weight:700;
+    }
 
-.grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-gap:20px;
-}
+    header p{
+      margin:0;
+      font-size:1rem;
+      opacity:0.95;
+    }
 
-.card{
-background:var(--card);
-border-radius:var(--radius);
-padding:20px;
-box-shadow:var(--shadow);
-border:1px solid var(--border);
-}
+    nav{
+      background:rgba(255,255,255,0.95);
+      border-bottom:1px solid var(--border);
+      position:sticky;
+      top:0;
+      z-index:50;
+      backdrop-filter:blur(10px);
+      display:flex;
+      justify-content:center;
+      gap:12px;
+      flex-wrap:wrap;
+      padding:14px 18px;
+    }
 
-.card h3{
-margin-top:0;
-}
+    nav button{
+      background:var(--surface-soft);
+      border:1px solid var(--border);
+      color:var(--text);
+      padding:10px 16px;
+      border-radius:999px;
+      font-weight:700;
+      cursor:pointer;
+      transition:all 0.2s ease;
+    }
 
-.card button{
-margin-top:10px;
-padding:8px 12px;
-border:none;
-border-radius:8px;
-background:var(--primary);
-color:white;
-cursor:pointer;
-}
+    nav button:hover{
+      background:#eef2ff;
+      border-color:#c7d2fe;
+      transform:translateY(-1px);
+    }
 
-.section-title{
-margin-top:40px;
-}
+    nav button.active{
+      background:var(--primary);
+      border-color:var(--primary);
+      color:white;
+      box-shadow:var(--shadow-sm);
+    }
 
-input{
-width:100%;
-padding:8px;
-margin-top:6px;
-border-radius:6px;
-border:1px solid var(--border);
-}
+    .container{
+      width:min(95%, var(--container));
+      margin:auto;
+      padding:32px 0 56px;
+    }
 
-.table{
-width:100%;
-border-collapse:collapse;
-margin-top:20px;
-}
+    .page{
+      display:none;
+      animation:fadeIn 0.25s ease;
+    }
 
-.table th,.table td{
-padding:10px;
-border-bottom:1px solid var(--border);
-text-align:left;
-}
+    .page.active{
+      display:block;
+    }
 
-.notice{
-background:white;
-border-radius:12px;
-padding:16px;
-margin-bottom:15px;
-box-shadow:var(--shadow);
-}
+    @keyframes fadeIn{
+      from{
+        opacity:0;
+        transform:translateY(6px);
+      }
+      to{
+        opacity:1;
+        transform:translateY(0);
+      }
+    }
 
-</style>
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+      gap:20px;
+    }
+
+    .card{
+      background:var(--surface);
+      border-radius:var(--radius-md);
+      padding:22px;
+      box-shadow:var(--shadow-md);
+      border:1px solid var(--border);
+      transition:transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+
+    .card:hover{
+      transform:translateY(-3px);
+      box-shadow:var(--shadow-lg);
+      border-color:#dbe3f0;
+    }
+
+    .card h3{
+      margin:0 0 10px;
+      font-size:1.15rem;
+      color:var(--text);
+    }
+
+    .card p{
+      margin:0;
+      color:var(--muted);
+    }
+
+    .section-title,
+    h2{
+      margin:0 0 18px;
+      font-size:1.6rem;
+      color:var(--text);
+    }
+
+    h2{
+      margin-top:10px;
+    }
+
+    button{
+      border:none;
+      border-radius:12px;
+      padding:10px 16px;
+      background:var(--primary);
+      color:white;
+      cursor:pointer;
+      font-weight:700;
+      transition:all 0.2s ease;
+    }
+
+    button:hover{
+      opacity:0.96;
+      transform:translateY(-1px);
+    }
+
+    .card button{
+      margin-top:14px;
+    }
+
+    input,
+    select,
+    textarea{
+      width:100%;
+      padding:11px 12px;
+      margin-top:6px;
+      border-radius:10px;
+      border:1px solid var(--border);
+      background:white;
+      color:var(--text);
+      transition:border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus{
+      outline:none;
+      border-color:var(--primary);
+      box-shadow:0 0 0 4px rgba(31,60,136,0.10);
+    }
+
+    .table-wrap{
+      overflow-x:auto;
+      background:var(--surface);
+      border-radius:var(--radius-md);
+      border:1px solid var(--border);
+      box-shadow:var(--shadow-md);
+      margin-top:18px;
+    }
+
+    .table{
+      width:100%;
+      border-collapse:collapse;
+      min-width:680px;
+    }
+
+    .table th,
+    .table td{
+      padding:14px 16px;
+      border-bottom:1px solid var(--border);
+      text-align:left;
+      vertical-align:middle;
+    }
+
+    .table th{
+      background:var(--surface-soft);
+      color:var(--muted);
+      font-size:0.82rem;
+      text-transform:uppercase;
+      letter-spacing:0.04em;
+    }
+
+    .table tr:last-child td{
+      border-bottom:none;
+    }
+
+    .table tr:hover td{
+      background:#fafcff;
+    }
+
+    .notice{
+      background:var(--surface);
+      border-left:5px solid var(--primary);
+      border-radius:14px;
+      padding:18px;
+      margin-bottom:16px;
+      box-shadow:var(--shadow-sm);
+      border-top:1px solid var(--border);
+      border-right:1px solid var(--border);
+      border-bottom:1px solid var(--border);
+    }
+
+    .notice strong{
+      display:block;
+      margin-bottom:8px;
+      font-size:1rem;
+    }
+
+    .notice p{
+      margin:0;
+      color:var(--muted);
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:6px 10px;
+      border-radius:999px;
+      background:var(--primary-soft);
+      color:#1d4ed8;
+      font-size:0.8rem;
+      font-weight:700;
+    }
+
+    .empty-state{
+      background:var(--surface);
+      border:1px dashed var(--border);
+      border-radius:var(--radius-md);
+      padding:28px;
+      text-align:center;
+      color:var(--muted);
+      box-shadow:var(--shadow-sm);
+    }
+
+    .culto-card{
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+
+    .culto-topo{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .culto-categoria{
+      background:var(--primary-soft);
+      color:#1d4ed8;
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:0.78rem;
+      font-weight:700;
+    }
+
+    .culto-data{
+      color:var(--primary);
+      font-size:1.05rem;
+      font-weight:700;
+    }
+
+    .culto-info{
+      color:var(--muted);
+    }
+
+    .culto-info strong{
+      color:var(--text);
+    }
+
+    .toolbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-bottom:20px;
+    }
+
+    .search-box{
+      background:var(--surface);
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:16px;
+      box-shadow:var(--shadow-sm);
+      margin-bottom:18px;
+    }
+
+    .home-lead{
+      margin-bottom:24px;
+    }
+
+    .muted{
+      color:var(--muted);
+    }
+
+    @media (max-width:768px){
+      header{
+        padding:36px 18px;
+      }
+
+      nav{
+        justify-content:flex-start;
+        overflow-x:auto;
+        white-space:nowrap;
+      }
+
+      .container{
+        width:min(94%, var(--container));
+        padding:24px 0 48px;
+      }
+
+      .grid{
+        grid-template-columns:1fr;
+      }
+
+      .card{
+        padding:18px;
+      }
+
+      .table{
+        min-width:560px;
+      }
+    }
+  </style>
 </head>
-
 <body>
 
-<header>
-<h1>Milouv</h1>
-<p>Portal do Ministério de Louvor</p>
-</header>
-
-<nav>
-<button onclick="openPage('home')">Início</button>
-<button onclick="openPage('escala')">Escala do Mês</button>
-<button onclick="openPage('repertorio')">Repertório</button>
-<button onclick="openPage('informacoes')">Informações</button>
-</nav>
-
-<div class="container">
-
-<!-- HOME -->
-<div class="page active" id="home">
-
-<div class="grid">
-
-<div class="card">
-<h3>Escala do mês</h3>
-<p>Veja quem está escalado e o repertório de cada culto.</p>
-<button onclick="openPage('escala')">Abrir escala</button>
-</div>
-
-<div class="card">
-<h3>Repertório completo</h3>
-<p>Banco de músicas do ministério de louvor.</p>
-<button onclick="openPage('repertorio')">Ver repertório</button>
-</div>
-
-<div class="card">
-<h3>Informações</h3>
-<p>Avisos, ensaios, encontros e estudos.</p>
-<button onclick="openPage('informacoes')">Abrir avisos</button>
-</div>
-
-</div>
-
-</div>
-
-<!-- ESCALA -->
-<div class="page" id="escala">
-
-<h2>Escala de Março 2026</h2>
-
-<div id="listaEscala"></div>
-
-</div>
-
-<!-- REPERTORIO -->
-<div class="page" id="repertorio">
-
-<h2>Repertório do Ministério</h2>
-
-<input id="buscarMusica" placeholder="Buscar música ou artista...">
-
-<table class="table">
-<thead>
-<tr>
-<th>Música</th>
-<th>Artista</th>
-<th>Tom</th>
-</tr>
-</thead>
-<tbody id="listaMusicas"></tbody>
-</table>
-
-</div>
-
-<!-- INFORMACOES -->
-<div class="page" id="informacoes">
-
-<h2>Informações do Ministério</h2>
-
-<div id="listaInformacoes"></div>
-
-</div>
-
-</div>
-
-<script type="module">
-
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
-
-const firebaseConfig = {
-apiKey:"AIzaSyDpFm6Q9KeQFuRgHwYD5OfFMJ9SYvdOW_Y",
-authDomain:"louvor-imesc.firebaseapp.com",
-databaseURL:"https://louvor-imesc-default-rtdb.firebaseio.com",
-projectId:"louvor-imesc",
-storageBucket:"louvor-imesc.firebasestorage.app",
-messagingSenderId:"546684488381",
-appId:"1:546684488381:web:bb71634e1dadf21e0d85d4"
-};
-
-const app=initializeApp(firebaseConfig);
-const db=getDatabase(app);
-
-window.openPage=function(page){
-
- document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
- document.getElementById(page).classList.add('active');
-
-}
-
-
-/* ESCALA */
-
-const configRef=ref(db,"config/mesAtivo");
-
-onValue(configRef,(configSnapshot)=>{
-
-const mesAtivo=configSnapshot.val();
-
-if(!mesAtivo){
- document.getElementById("listaEscala").innerHTML="<div class='card'>Nenhum mês ativo configurado.</div>";
- return;
-}
-
-const escalaRef=ref(db,`escalas/${mesAtivo}/cultos`);
-
-onValue(escalaRef,(snapshot)=>{
-
-const dados=snapshot.val();
-
-if(!dados){
- document.getElementById("listaEscala").innerHTML="<div class='card'>Nenhuma escala encontrada para o mês ativo.</div>";
- return;
-}
-
-let html=`<div class="card"><strong>Mês ativo:</strong> ${mesAtivo}</div>`;
-
-Object.values(dados).forEach(culto=>{
-
-const vocal=Array.isArray(culto.vocal) ? culto.vocal.join(", ") : (culto.vocal || "");
-
-html+=`
-<div class="card">
-<strong>${culto.label || culto.data || ""}</strong><br>
-Categoria: ${culto.categoria || ""}<br>
-Líder: ${culto.lider || ""}<br>
-Vocal: ${vocal}<br>
-Bateria: ${culto.bateria || ""}<br>
-Violão: ${culto.violao || ""}
-</div>
-`;
-
-});
-
-document.getElementById("listaEscala").innerHTML=html;
-
-});
-
-});
-
-
-/* REPERTORIO */
-
-const musicasRef=ref(db,"musicas");
-
-onValue(musicasRef,(snapshot)=>{
-
-const dados=snapshot.val();
-
-if(!dados) return;
-
-let html="";
-
-Object.values(dados).forEach(m=>{
-
-html+=`
-<tr>
-<td>${m.musica}</td>
-<td>${m.artista}</td>
-<td>${m.tom || ""}</td>
-</tr>
-`;
-
-});
-
-document.getElementById("listaMusicas").innerHTML=html;
-
-});
-
-
-/* INFORMACOES */
-
-const infoRef=ref(db,"informacoes");
-
-onValue(infoRef,(snapshot)=>{
-
-const dados=snapshot.val();
-
-if(!dados) return;
-
-let html="";
-
-Object.values(dados).forEach(i=>{
-
-html+=`
-<div class="notice">
-<strong>${i.titulo}</strong>
-<p>${i.texto}</p>
-</div>
-`;
-
-});
-
-document.getElementById("listaInformacoes").innerHTML=html;
-
-});
-
-</script>
-
+  <header>
+    <div class="badge">Milouv</div>
+    <h1>Portal do Ministério de Louvor</h1>
+    <p>Escalas, repertórios e informações em um só lugar.</p>
+  </header>
+
+  <nav>
+    <button data-page="home" class="active" onclick="openPage('home')">Início</button>
+    <button data-page="escala" onclick="openPage('escala')">Escala do Mês</button>
+    <button data-page="repertorio" onclick="openPage('repertorio')">Repertório</button>
+    <button data-page="informacoes" onclick="openPage('informacoes')">Informações</button>
+  </nav>
+
+  <main class="container">
+    <section class="page active" id="home">
+      <div class="home-lead">
+        <h2>Bem-vindo ao Milouv</h2>
+        <p class="muted">Acompanhe a escala atual, consulte o repertório completo e veja os avisos do ministério.</p>
+      </div>
+
+      <div class="grid">
+        <div class="card">
+          <h3>Escala do mês</h3>
+          <p>Veja quem está escalado para os cultos do mês ativo.</p>
+          <button onclick="openPage('escala')">Abrir escala</button>
+        </div>
+
+        <div class="card">
+          <h3>Repertório completo</h3>
+          <p>Consulte o banco geral de músicas do ministério.</p>
+          <button onclick="openPage('repertorio')">Ver repertório</button>
+        </div>
+
+        <div class="card">
+          <h3>Informações</h3>
+          <p>Veja avisos, ensaios, encontros e estudos do ministério.</p>
+          <button onclick="openPage('informacoes')">Abrir informações</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" id="escala">
+      <div class="toolbar">
+        <div>
+          <h2>Escala do mês</h2>
+          <p class="muted" id="mesAtivoLabel">Carregando mês ativo...</p>
+        </div>
+      </div>
+
+      <div class="grid" id="listaEscala">
+        <div class="empty-state">Carregando escala...</div>
+      </div>
+    </section>
+
+    <section class="page" id="repertorio">
+      <h2>Repertório do Ministério</h2>
+
+      <div class="search-box">
+        <label for="buscarMusica" class="muted">Buscar música ou artista</label>
+        <input id="buscarMusica" type="text" placeholder="Ex.: Bondade de Deus, Hillsong...">
+      </div>
+
+      <div id="repertorioContainer">
+        <div class="empty-state">Carregando repertório...</div>
+      </div>
+    </section>
+
+    <section class="page" id="informacoes">
+      <h2>Informações do Ministério</h2>
+      <div id="listaInformacoes">
+        <div class="empty-state">Carregando informações...</div>
+      </div>
+    </section>
+  </main>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "SUA_API_KEY",
+      authDomain: "SEU_PROJETO.firebaseapp.com",
+      databaseURL: "https://SEU_PROJETO-default-rtdb.firebaseio.com",
+      projectId: "SEU_PROJETO",
+      storageBucket: "SEU_PROJETO.firebasestorage.app",
+      messagingSenderId: "SEU_MESSAGING_SENDER_ID",
+      appId: "SEU_APP_ID"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    const state = {
+      musicas: []
+    };
+
+    function escapeHtml(value = "") {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#39;");
+    }
+
+    function openPage(page) {
+      document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+      document.getElementById(page).classList.add("active");
+
+      document.querySelectorAll("nav button").forEach(b => b.classList.remove("active"));
+      const botao = document.querySelector(`nav button[data-page="${page}"]`);
+      if (botao) botao.classList.add("active");
+    }
+
+    window.openPage = openPage;
+
+    function renderEscala(dados, mesAtivo) {
+      const container = document.getElementById("listaEscala");
+      const mesAtivoLabel = document.getElementById("mesAtivoLabel");
+
+      mesAtivoLabel.textContent = mesAtivo ? `Mês ativo: ${mesAtivo}` : "Nenhum mês ativo configurado.";
+
+      if (!dados) {
+        container.innerHTML = `<div class="empty-state">Nenhuma escala encontrada para o mês ativo.</div>`;
+        return;
+      }
+
+      const cultos = Object.values(dados);
+
+      if (!cultos.length) {
+        container.innerHTML = `<div class="empty-state">Nenhuma escala encontrada para o mês ativo.</div>`;
+        return;
+      }
+
+      container.innerHTML = cultos.map(culto => {
+        const vocal = Array.isArray(culto.vocal) ? culto.vocal.join(", ") : (culto.vocal || "");
+        return `
+          <div class="card culto-card">
+            <div class="culto-topo">
+              <span class="culto-categoria">${escapeHtml(culto.categoria || "Culto")}</span>
+              <span class="culto-data">${escapeHtml(culto.label || culto.data || "")}</span>
+            </div>
+
+            <div class="culto-info"><strong>Líder:</strong> ${escapeHtml(culto.lider || "—")}</div>
+            <div class="culto-info"><strong>Vocal:</strong> ${escapeHtml(vocal || "—")}</div>
+            <div class="culto-info"><strong>Bateria:</strong> ${escapeHtml(culto.bateria || "—")}</div>
+            <div class="culto-info"><strong>Violão:</strong> ${escapeHtml(culto.violao || "—")}</div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function renderRepertorio(lista) {
+      const container = document.getElementById("repertorioContainer");
+
+      if (!lista.length) {
+        container.innerHTML = `<div class="empty-state">Nenhuma música encontrada.</div>`;
+        return;
+      }
+
+      const rows = lista.map(m => `
+        <tr>
+          <td>${escapeHtml(m.musica || "")}</td>
+          <td>${escapeHtml(m.artista || "")}</td>
+          <td>${escapeHtml(m.tomOriginal || m.tom || "")}</td>
+          <td>${escapeHtml(m.categoria || "")}</td>
+        </tr>
+      `).join("");
+
+      container.innerHTML = `
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Música</th>
+                <th>Artista</th>
+                <th>Tom</th>
+                <th>Categoria</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rows}
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    function renderInformacoes(dados) {
+      const container = document.getElementById("listaInformacoes");
+
+      if (!dados) {
+        container.innerHTML = `<div class="empty-state">Nenhuma informação cadastrada.</div>`;
+        return;
+      }
+
+      const infos = Object.values(dados).filter(item => item.ativo !== false);
+
+      if (!infos.length) {
+        container.innerHTML = `<div class="empty-state">Nenhuma informação cadastrada.</div>`;
+        return;
+      }
+
+      container.innerHTML = infos.map(info => `
+        <div class="notice">
+          <strong>${escapeHtml(info.titulo || "Informação")}</strong>
+          <p>${escapeHtml(info.texto || "")}</p>
+        </div>
+      `).join("");
+    }
+
+    function setupEscala() {
+      const configRef = ref(db, "config/mesAtivo");
+
+      onValue(configRef, (configSnapshot) => {
+        const mesAtivo = configSnapshot.val();
+
+        if (!mesAtivo) {
+          renderEscala(null, null);
+          return;
+        }
+
+        const escalaRef = ref(db, `escalas/${mesAtivo}/cultos`);
+
+        onValue(escalaRef, (snapshot) => {
+          renderEscala(snapshot.val(), mesAtivo);
+        }, () => {
+          renderEscala(null, mesAtivo);
+        });
+      }, () => {
+        renderEscala(null, null);
+      });
+    }
+
+    function setupRepertorio() {
+      const musicasRef = ref(db, "musicas");
+
+      onValue(musicasRef, (snapshot) => {
+        const dados = snapshot.val() || {};
+        state.musicas = Object.values(dados);
+        renderRepertorio(state.musicas);
+      }, () => {
+        state.musicas = [];
+        renderRepertorio([]);
+      });
+
+      document.getElementById("buscarMusica").addEventListener("input", (e) => {
+        const termo = e.target.value.trim().toLowerCase();
+
+        const filtradas = state.musicas.filter(m => {
+          const musica = (m.musica || "").toLowerCase();
+          const artista = (m.artista || "").toLowerCase();
+          return musica.includes(termo) || artista.includes(termo);
+        });
+
+        renderRepertorio(filtradas);
+      });
+    }
+
+    function setupInformacoes() {
+      const infoRef = ref(db, "informacoes");
+
+      onValue(infoRef, (snapshot) => {
+        renderInformacoes(snapshot.val());
+      }, () => {
+        renderInformacoes(null);
+      });
+    }
+
+    setupEscala();
+    setupRepertorio();
+    setupInformacoes();
+  </script>
 </body>
 </html>
