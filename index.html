@@ -404,6 +404,90 @@
         min-width:560px;
       }
     }
+
+.modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(15,23,42,0.65);
+  z-index:1000;
+  padding:20px;
+  align-items:center;
+  justify-content:center;
+}
+
+.modal.active{
+  display:flex;
+}
+
+.modal-box{
+  width:min(760px, 100%);
+  max-height:90vh;
+  overflow:auto;
+  background:var(--surface);
+  border-radius:20px;
+  box-shadow:var(--shadow-lg);
+  border:1px solid var(--border);
+}
+
+.modal-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:16px;
+  padding:20px 20px 12px;
+  border-bottom:1px solid var(--border);
+}
+
+.modal-header h3{
+  margin:0 0 6px;
+}
+
+.modal-header p{
+  margin:0;
+}
+
+.modal-close{
+  background:#fee2e2;
+  color:var(--danger);
+  border:1px solid #fecaca;
+  border-radius:10px;
+  padding:8px 12px;
+}
+
+.modal-list{
+  padding:18px 20px 20px;
+  display:grid;
+  gap:12px;
+}
+
+.modal-item{
+  background:var(--surface-soft);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:14px;
+}
+
+.modal-item strong{
+  display:block;
+  margin-bottom:6px;
+}
+
+.modal-links{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:10px;
+}
+
+.modal-links a{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:999px;
+  padding:6px 10px;
+  font-size:0.9rem;
+}
+    
   </style>
 </head>
 <body>
@@ -483,204 +567,301 @@
     </section>
   </main>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+  <<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyDpFm6Q9KeQFuRgHwYD5OfFMJ9SYvdOW_Y",
-  authDomain: "louvor-imesc.firebaseapp.com",
-  databaseURL: "https://louvor-imesc-default-rtdb.firebaseio.com",
-  projectId: "louvor-imesc",
-  storageBucket: "louvor-imesc.firebasestorage.app",
-  messagingSenderId: "546684488381",
-  appId: "1:546684488381:web:bb71634e1dadf21e0d85d4"
-};
+  const firebaseConfig = {
+    apiKey: "SUA_API_KEY",
+    authDomain: "SEU_PROJETO.firebaseapp.com",
+    databaseURL: "https://SEU_PROJETO-default-rtdb.firebaseio.com",
+    projectId: "SEU_PROJETO",
+    storageBucket: "SEU_PROJETO.firebasestorage.app",
+    messagingSenderId: "SEU_MESSAGING_SENDER_ID",
+    appId: "SEU_APP_ID"
+  };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
 
-    const state = {
-      musicas: []
-    };
+  const state = {
+    musicas: [],
+    mesAtivo: null,
+    cultosMap: {}
+  };
 
-    function escapeHtml(value = "") {
-      return String(value)
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#39;");
+  function escapeHtml(value = "") {
+    return String(value)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#39;");
+  }
+
+  function isValidUrl(url = "") {
+    try {
+      const parsed = new URL(url);
+      return parsed.protocol === "http:" || parsed.protocol === "https:";
+    } catch {
+      return false;
     }
+  }
 
-    function openPage(page) {
-      document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
-      document.getElementById(page).classList.add("active");
+  function openPage(page) {
+    document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+    document.getElementById(page).classList.add("active");
 
-      document.querySelectorAll("nav button").forEach(b => b.classList.remove("active"));
-      const botao = document.querySelector(`nav button[data-page="${page}"]`);
-      if (botao) botao.classList.add("active");
-    }
+    document.querySelectorAll("nav button").forEach(b => b.classList.remove("active"));
+    const botao = document.querySelector(`nav button[data-page="${page}"]`);
+    if (botao) botao.classList.add("active");
+  }
 
-    window.openPage = openPage;
+  window.openPage = openPage;
 
-    function renderEscala(dados, mesAtivo) {
-      const container = document.getElementById("listaEscala");
-      const mesAtivoLabel = document.getElementById("mesAtivoLabel");
+  function abrirModal(cultoId) {
+    const culto = state.cultosMap[cultoId];
+    document.getElementById("modalRepertorio").classList.add("active");
+    document.getElementById("modalTitulo").textContent = "Repertório do Culto";
+    document.getElementById("modalSubtitulo").textContent = culto
+      ? `${culto.categoria || "Culto"} • ${culto.label || culto.data || ""}`
+      : "Culto selecionado";
 
-      mesAtivoLabel.textContent = mesAtivo ? `Mês ativo: ${mesAtivo}` : "Nenhum mês ativo configurado.";
+    const repertorioRef = ref(db, `repertorios/${cultoId}`);
+
+    onValue(repertorioRef, (snapshot) => {
+      const dados = snapshot.val();
+      const conteudo = document.getElementById("modalConteudo");
 
       if (!dados) {
-        container.innerHTML = `<div class="empty-state">Nenhuma escala encontrada para o mês ativo.</div>`;
+        conteudo.innerHTML = `<div class="empty-state" style="margin:20px;">Nenhum repertório cadastrado para este culto.</div>`;
         return;
       }
 
-      const cultos = Object.values(dados);
+      const itens = Object.values(dados).sort((a, b) => (a.ordem || 0) - (b.ordem || 0));
 
-      if (!cultos.length) {
-        container.innerHTML = `<div class="empty-state">Nenhuma escala encontrada para o mês ativo.</div>`;
+      if (!itens.length) {
+        conteudo.innerHTML = `<div class="empty-state" style="margin:20px;">Nenhum repertório cadastrado para este culto.</div>`;
         return;
       }
 
-      container.innerHTML = cultos.map(culto => {
-        const vocal = Array.isArray(culto.vocal) ? culto.vocal.join(", ") : (culto.vocal || "");
-        return `
-          <div class="card culto-card">
-            <div class="culto-topo">
-              <span class="culto-categoria">${escapeHtml(culto.categoria || "Culto")}</span>
-              <span class="culto-data">${escapeHtml(culto.label || culto.data || "")}</span>
+      conteudo.innerHTML = `
+        <div class="modal-list">
+          ${itens.map((item, index) => `
+            <div class="modal-item">
+              <strong>${index + 1}. ${escapeHtml(item.musica || "")}</strong>
+              <div class="muted">Artista: ${escapeHtml(item.artista || "—")}</div>
+              <div class="muted">Tom: ${escapeHtml(item.tom || "—")}</div>
+              ${item.obs ? `<div class="muted">Obs: ${escapeHtml(item.obs)}</div>` : ""}
+              <div class="modal-links">
+                ${isValidUrl(item.youtube) ? `<a href="${escapeHtml(item.youtube)}" target="_blank" rel="noopener noreferrer">YouTube</a>` : ""}
+                ${isValidUrl(item.spotify) ? `<a href="${escapeHtml(item.spotify)}" target="_blank" rel="noopener noreferrer">Spotify</a>` : ""}
+                ${isValidUrl(item.cifra) ? `<a href="${escapeHtml(item.cifra)}" target="_blank" rel="noopener noreferrer">Cifra</a>` : ""}
+              </div>
             </div>
-
-            <div class="culto-info"><strong>Líder:</strong> ${escapeHtml(culto.lider || "—")}</div>
-            <div class="culto-info"><strong>Vocal:</strong> ${escapeHtml(vocal || "—")}</div>
-            <div class="culto-info"><strong>Bateria:</strong> ${escapeHtml(culto.bateria || "—")}</div>
-            <div class="culto-info"><strong>Violão:</strong> ${escapeHtml(culto.violao || "—")}</div>
-          </div>
-        `;
-      }).join("");
-    }
-
-    function renderRepertorio(lista) {
-      const container = document.getElementById("repertorioContainer");
-
-      if (!lista.length) {
-        container.innerHTML = `<div class="empty-state">Nenhuma música encontrada.</div>`;
-        return;
-      }
-
-      const rows = lista.map(m => `
-        <tr>
-          <td>${escapeHtml(m.musica || "")}</td>
-          <td>${escapeHtml(m.artista || "")}</td>
-          <td>${escapeHtml(m.tomOriginal || m.tom || "")}</td>
-          <td>${escapeHtml(m.categoria || "")}</td>
-        </tr>
-      `).join("");
-
-      container.innerHTML = `
-        <div class="table-wrap">
-          <table class="table">
-            <thead>
-              <tr>
-                <th>Música</th>
-                <th>Artista</th>
-                <th>Tom</th>
-                <th>Categoria</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${rows}
-            </tbody>
-          </table>
+          `).join("")}
         </div>
       `;
+    }, () => {
+      document.getElementById("modalConteudo").innerHTML =
+        `<div class="empty-state" style="margin:20px;">Erro ao carregar repertório.</div>`;
+    });
+  }
+
+  function fecharModal() {
+    document.getElementById("modalRepertorio").classList.remove("active");
+  }
+
+  window.fecharModal = fecharModal;
+
+  function renderEscala(dados, mesAtivo) {
+    const container = document.getElementById("listaEscala");
+    const mesAtivoLabel = document.getElementById("mesAtivoLabel");
+
+    mesAtivoLabel.textContent = mesAtivo ? `Mês ativo: ${mesAtivo}` : "Nenhum mês ativo configurado.";
+
+    if (!dados) {
+      container.innerHTML = `<div class="empty-state">Nenhuma escala encontrada para o mês ativo.</div>`;
+      return;
     }
 
-    function renderInformacoes(dados) {
-      const container = document.getElementById("listaInformacoes");
+    const entries = Object.entries(dados);
+    if (!entries.length) {
+      container.innerHTML = `<div class="empty-state">Nenhuma escala encontrada para o mês ativo.</div>`;
+      return;
+    }
 
-      if (!dados) {
-        container.innerHTML = `<div class="empty-state">Nenhuma informação cadastrada.</div>`;
-        return;
-      }
+    state.cultosMap = {};
+    entries.forEach(([id, culto]) => {
+      state.cultosMap[id] = culto;
+    });
 
-      const infos = Object.values(dados).filter(item => item.ativo !== false);
+    container.innerHTML = entries.map(([id, culto]) => {
+      const vocal = Array.isArray(culto.vocal) ? culto.vocal.join(", ") : (culto.vocal || "");
+      return `
+        <div class="card culto-card">
+          <div class="culto-topo">
+            <span class="culto-categoria">${escapeHtml(culto.categoria || "Culto")}</span>
+            <span class="culto-data">${escapeHtml(culto.label || culto.data || "")}</span>
+          </div>
 
-      if (!infos.length) {
-        container.innerHTML = `<div class="empty-state">Nenhuma informação cadastrada.</div>`;
-        return;
-      }
+          <div class="culto-info"><strong>Líder:</strong> ${escapeHtml(culto.lider || "—")}</div>
+          <div class="culto-info"><strong>Vocal:</strong> ${escapeHtml(vocal || "—")}</div>
+          <div class="culto-info"><strong>Bateria:</strong> ${escapeHtml(culto.bateria || "—")}</div>
+          <div class="culto-info"><strong>Violão:</strong> ${escapeHtml(culto.violao || "—")}</div>
 
-      container.innerHTML = infos.map(info => `
-        <div class="notice">
-          <strong>${escapeHtml(info.titulo || "Informação")}</strong>
-          <p>${escapeHtml(info.texto || "")}</p>
+          <button onclick="abrirModalDoCulto('${escapeHtml(id)}')">Ver repertório</button>
         </div>
-      `).join("");
+      `;
+    }).join("");
+  }
+
+  window.abrirModalDoCulto = abrirModal;
+
+  function renderRepertorio(lista) {
+    const container = document.getElementById("repertorioContainer");
+
+    if (!lista.length) {
+      container.innerHTML = `<div class="empty-state">Nenhuma música encontrada.</div>`;
+      return;
     }
 
-    function setupEscala() {
-      const configRef = ref(db, "config/mesAtivo");
+    const rows = lista.map(m => `
+      <tr>
+        <td>${escapeHtml(m.musica || "")}</td>
+        <td>${escapeHtml(m.artista || "")}</td>
+        <td>${escapeHtml(m.tomOriginal || m.tom || "")}</td>
+        <td>${escapeHtml(m.categoria || "")}</td>
+      </tr>
+    `).join("");
 
-      onValue(configRef, (configSnapshot) => {
-        const mesAtivo = configSnapshot.val();
+    container.innerHTML = `
+      <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Música</th>
+              <th>Artista</th>
+              <th>Tom</th>
+              <th>Categoria</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+    `;
+  }
 
-        if (!mesAtivo) {
-          renderEscala(null, null);
-          return;
-        }
+  function renderInformacoes(dados) {
+    const container = document.getElementById("listaInformacoes");
 
-        const escalaRef = ref(db, `escalas/${mesAtivo}/cultos`);
+    if (!dados) {
+      container.innerHTML = `<div class="empty-state">Nenhuma informação cadastrada.</div>`;
+      return;
+    }
 
-        onValue(escalaRef, (snapshot) => {
-          renderEscala(snapshot.val(), mesAtivo);
-        }, () => {
-          renderEscala(null, mesAtivo);
-        });
-      }, () => {
+    const infos = Object.values(dados).filter(item => item.ativo !== false);
+
+    if (!infos.length) {
+      container.innerHTML = `<div class="empty-state">Nenhuma informação cadastrada.</div>`;
+      return;
+    }
+
+    container.innerHTML = infos.map(info => `
+      <div class="notice">
+        <strong>${escapeHtml(info.titulo || "Informação")}</strong>
+        <p>${escapeHtml(info.texto || "")}</p>
+      </div>
+    `).join("");
+  }
+
+  function setupEscala() {
+    const configRef = ref(db, "config/mesAtivo");
+
+    onValue(configRef, (configSnapshot) => {
+      const mesAtivo = configSnapshot.val();
+      state.mesAtivo = mesAtivo;
+
+      if (!mesAtivo) {
         renderEscala(null, null);
-      });
-    }
+        return;
+      }
 
-    function setupRepertorio() {
-      const musicasRef = ref(db, "musicas");
+      const escalaRef = ref(db, `escalas/${mesAtivo}/cultos`);
 
-      onValue(musicasRef, (snapshot) => {
-        const dados = snapshot.val() || {};
-        state.musicas = Object.values(dados);
-        renderRepertorio(state.musicas);
+      onValue(escalaRef, (snapshot) => {
+        renderEscala(snapshot.val(), mesAtivo);
       }, () => {
-        state.musicas = [];
-        renderRepertorio([]);
+        renderEscala(null, mesAtivo);
+      });
+    }, () => {
+      renderEscala(null, null);
+    });
+  }
+
+  function setupRepertorio() {
+    const musicasRef = ref(db, "musicas");
+
+    onValue(musicasRef, (snapshot) => {
+      const dados = snapshot.val() || {};
+      state.musicas = Object.values(dados);
+      renderRepertorio(state.musicas);
+    }, () => {
+      state.musicas = [];
+      renderRepertorio([]);
+    });
+
+    document.getElementById("buscarMusica").addEventListener("input", (e) => {
+      const termo = e.target.value.trim().toLowerCase();
+
+      const filtradas = state.musicas.filter(m => {
+        const musica = (m.musica || "").toLowerCase();
+        const artista = (m.artista || "").toLowerCase();
+        return musica.includes(termo) || artista.includes(termo);
       });
 
-      document.getElementById("buscarMusica").addEventListener("input", (e) => {
-        const termo = e.target.value.trim().toLowerCase();
+      renderRepertorio(filtradas);
+    });
+  }
 
-        const filtradas = state.musicas.filter(m => {
-          const musica = (m.musica || "").toLowerCase();
-          const artista = (m.artista || "").toLowerCase();
-          return musica.includes(termo) || artista.includes(termo);
-        });
+  function setupInformacoes() {
+    const infoRef = ref(db, "informacoes");
 
-        renderRepertorio(filtradas);
-      });
+    onValue(infoRef, (snapshot) => {
+      renderInformacoes(snapshot.val());
+    }, () => {
+      renderInformacoes(null);
+    });
+  }
+
+  document.getElementById("modalRepertorio").addEventListener("click", (e) => {
+    if (e.target.id === "modalRepertorio") {
+      fecharModal();
     }
+  });
 
-    function setupInformacoes() {
-      const infoRef = ref(db, "informacoes");
+  setupEscala();
+  setupRepertorio();
+  setupInformacoes();
+</script>
+<div class="modal" id="modalRepertorio">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div>
+        <h3 id="modalTitulo">Repertório do Culto</h3>
+        <p id="modalSubtitulo" class="muted">Carregando...</p>
+      </div>
+      <button class="modal-close" onclick="fecharModal()">✕</button>
+    </div>
 
-      onValue(infoRef, (snapshot) => {
-        renderInformacoes(snapshot.val());
-      }, () => {
-        renderInformacoes(null);
-      });
-    }
-
-    setupEscala();
-    setupRepertorio();
-    setupInformacoes();
-  </script>
+    <div id="modalConteudo">
+      <div class="empty-state">Carregando repertório...</div>
+    </div>
+  </div>
+</div>
+  
+  
 </body>
 </html>
+
 
