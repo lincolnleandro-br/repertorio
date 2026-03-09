@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Milouv Admin</title>
+
+<style>
+
+body{
+font-family:Arial;
+margin:0;
+background:#f4f6f9;
+}
+
+header{
+background:#1f3c88;
+color:white;
+text-align:center;
+padding:20px;
+}
+
+.container{
+width:95%;
+max-width:800px;
+margin:auto;
+padding:20px;
+}
+
+.card{
+background:white;
+border-radius:10px;
+padding:20px;
+margin-bottom:20px;
+box-shadow:0 4px 10px rgba(0,0,0,0.1);
+}
+
+input{
+width:100%;
+padding:8px;
+margin-top:5px;
+margin-bottom:10px;
+}
+
+button{
+padding:8px 12px;
+border:none;
+border-radius:6px;
+background:#1f3c88;
+color:white;
+cursor:pointer;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+<h1>Milouv Admin</h1>
+</header>
+
+<div class="container">
+
+<div class="card">
+
+<h3>Mês ativo</h3>
+
+<input id="mesAtivo" placeholder="2026-03">
+
+<button onclick="salvarMes()">Salvar</button>
+
+</div>
+
+<div class="card">
+
+<h3>Adicionar Informação</h3>
+
+<input id="titulo" placeholder="Título">
+
+<input id="texto" placeholder="Texto">
+
+<button onclick="salvarInfo()">Salvar Informação</button>
+
+</div>
+
+</div>
+
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getDatabase, ref, set, push } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+const firebaseConfig = {
+
+apiKey: "AIzaSyDpFm6Q9KeQFuRgHwYD5OfFMJ9SYvdOW_Y",
+authDomain: "louvor-imesc.firebaseapp.com",
+databaseURL: "https://louvor-imesc-default-rtdb.firebaseio.com",
+projectId: "louvor-imesc",
+storageBucket: "louvor-imesc.firebasestorage.app",
+messagingSenderId: "546684488381",
+appId: "1:546684488381:web:bb71634e1dadf21e0d85d4"
+
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+window.salvarMes = function(){
+
+const mes=document.getElementById("mesAtivo").value;
+
+set(ref(db,"config/mesAtivo"),mes);
+
+alert("Mês atualizado!");
+
+}
+
+window.salvarInfo = function(){
+
+const titulo=document.getElementById("titulo").value;
+const texto=document.getElementById("texto").value;
+
+push(ref(db,"informacoes"),{
+
+titulo,
+texto
+
+});
+
+alert("Informação salva!");
+
+}
+
+</script>
+
+</body>
+</html>
