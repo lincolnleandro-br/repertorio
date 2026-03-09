@@ -3,110 +3,126 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Escala Louvor IMESC - Março 2026</title>
+<title>Milouv | Ministério de Louvor</title>
 
 <style>
 
+:root{
+--bg:#f4f6f9;
+--card:#ffffff;
+--primary:#1f3c88;
+--border:#e5e7eb;
+--text:#1f2937;
+--muted:#6b7280;
+--radius:14px;
+--shadow:0 8px 25px rgba(0,0,0,0.08);
+}
+
 body{
-font-family:Arial;
 margin:0;
-background:#f4f6f9;
+font-family:Arial, Helvetica, sans-serif;
+background:var(--bg);
+color:var(--text);
 }
 
 header{
-background:#1f3c88;
+background:linear-gradient(135deg,#1f3c88,#2c5bd3);
 color:white;
+padding:30px 20px;
 text-align:center;
-padding:20px;
+}
+
+nav{
+background:white;
+border-bottom:1px solid var(--border);
+display:flex;
+justify-content:center;
+gap:30px;
+padding:12px;
+}
+
+nav button{
+background:none;
+border:none;
+font-weight:bold;
+cursor:pointer;
+color:var(--primary);
+font-size:15px;
 }
 
 .container{
 width:95%;
-max-width:1000px;
+max-width:1100px;
 margin:auto;
+padding:30px 0;
 }
 
-h2{
-margin-top:40px;
-text-align:center;
+.page{
+display:none;
+}
+
+.page.active{
+display:block;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:20px;
 }
 
 .card{
-background:white;
-border-radius:10px;
-padding:15px;
-margin:15px 0;
-box-shadow:0 4px 10px rgba(0,0,0,0.1);
+background:var(--card);
+border-radius:var(--radius);
+padding:20px;
+box-shadow:var(--shadow);
+border:1px solid var(--border);
 }
 
-button{
+.card h3{
+margin-top:0;
+}
+
+.card button{
+margin-top:10px;
 padding:8px 12px;
 border:none;
-border-radius:6px;
-background:#1f3c88;
+border-radius:8px;
+background:var(--primary);
 color:white;
 cursor:pointer;
-margin-top:5px;
 }
 
-button:hover{
-opacity:0.9;
-}
-
-.modal{
-display:none;
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:rgba(0,0,0,0.6);
-justify-content:center;
-align-items:center;
-}
-
-.modal-content{
-background:white;
-padding:20px;
-border-radius:10px;
-width:95%;
-max-width:700px;
-max-height:80vh;
-overflow:auto;
-}
-
-.close{
-float:right;
-cursor:pointer;
-color:red;
-font-weight:bold;
-}
-
-table{
-width:100%;
-border-collapse:collapse;
-margin-top:10px;
-}
-
-th,td{
-border-bottom:1px solid #ddd;
-padding:8px;
-font-size:14px;
-}
-
-th{
-background:#eee;
+.section-title{
+margin-top:40px;
 }
 
 input{
 width:100%;
-padding:6px;
-margin:3px 0;
+padding:8px;
+margin-top:6px;
+border-radius:6px;
+border:1px solid var(--border);
 }
 
-#resultadoBusca div:hover{
-background:#eee;
+.table{
+width:100%;
+border-collapse:collapse;
+margin-top:20px;
+}
+
+.table th,.table td{
+padding:10px;
+border-bottom:1px solid var(--border);
+text-align:left;
+}
+
+.notice{
+background:white;
+border-radius:12px;
+padding:16px;
+margin-bottom:15px;
+box-shadow:var(--shadow);
 }
 
 </style>
@@ -115,516 +131,199 @@ background:#eee;
 <body>
 
 <header>
-<h1>Escala Louvor IMESC - Março 2026</h1>
+<h1>Milouv</h1>
+<p>Portal do Ministério de Louvor</p>
 </header>
+
+<nav>
+<button onclick="openPage('home')">Início</button>
+<button onclick="openPage('escala')">Escala do Mês</button>
+<button onclick="openPage('repertorio')">Repertório</button>
+<button onclick="openPage('informacoes')">Informações</button>
+</nav>
 
 <div class="container">
 
-<h2>Domingo Manhã</h2>
+<!-- HOME -->
+<div class="page active" id="home">
+
+<div class="grid">
 
 <div class="card">
-<strong>08/03/2026</strong><br>
-Líder: Akemi<br>
-Vocal: Sheila, Rafael<br>
-Bateria: Davy<br>
-<button onclick="openModal('08-03-2026')">Ver Repertório</button>
-</div>
-
-<div class="card">
-<strong>15/03/2026</strong><br>
-Líder: Lincoln<br>
-Vocal: Monique, Manu Ceia<br>
-Bateria: Nana<br>
-Violão: Miguel<br>
-<button onclick="openModal('15-03-2026-manha')">Ver Repertório</button>
+<h3>Escala do mês</h3>
+<p>Veja quem está escalado e o repertório de cada culto.</p>
+<button onclick="openPage('escala')">Abrir escala</button>
 </div>
 
 <div class="card">
-<strong>22/03/2026</strong><br>
-Líder: Jakson<br>
-Vocal: Fabi, Monica<br>
-Bateria: Isaque<br>
-<button onclick="openModal('22-03-2026')">Ver Repertório</button>
+<h3>Repertório completo</h3>
+<p>Banco de músicas do ministério de louvor.</p>
+<button onclick="openPage('repertorio')">Ver repertório</button>
 </div>
 
 <div class="card">
-<strong>29/03/2026</strong><br>
-Líder: Lincoln<br>
-Vocal: Raphael, Manu<br>
-Bateria: Davy<br>
-Violão: Miguel<br>
-<button onclick="openModal('29-03-2026-manha')">Ver Repertório</button>
-</div>
-
-<h2>Domingo Noite</h2>
-
-<div class="card">
-<strong>01/03/2026</strong><br>
-Líder: Lincoln<br>
-Vocal: Aline, Miriam, Beto<br>
-Bateria: Davy<br>
-<button onclick="openModal('01-03-2026-noite')">Ver Repertório</button>
-</div>
-
-<div class="card">
-<strong>08/03/2026</strong><br>
-Líder: Akemi<br>
-Vocal: Sheila, Monica, Rafael<br>
-Bateria: Nana<br>
-<button onclick="openModal('08-03-2026-noite')">Ver Repertório</button>
-</div>
-
-<div class="card">
-<strong>15/03/2026</strong><br>
-Líder: Culto dos Jovens<br>
-<button onclick="openModal('15-03-2026-noite')">Ver Repertório</button>
-</div>
-
-<div class="card">
-<strong>22/03/2026</strong><br>
-Líder: Jakson<br>
-Vocal: Fabi, Akemi, Claudio<br>
-Bateria: Isaque<br>
-<button onclick="openModal('22-03-2026-noite')">Ver Repertório</button>
-</div>
-
-<div class="card">
-<strong>29/03/2026 (Praça)</strong><br>
-Líder: Luziane<br>
-Vocal: Aline, Wendel, Lincoln<br>
-Bateria: Davy<br>
-<button onclick="openModal('29-03-2026-noite')">Ver Repertório</button>
-</div>
-
-<h2>Quarta Profética</h2>
-
-<div class="card">
-<strong>04/03/2026</strong><br>
-Líder: Akemi<br>
-Vocal: Miriam, Rafael<br>
-Bateria: Isaque<br>
-<button onclick="openModal('04-03-2026-quarta')">Ver Repertório</button>
-</div>
-
-<div class="card">
-<strong>11/03/2026</strong><br>
-Líder: Lincoln<br>
-Vocal: Monique, Dani<br>
-Bateria: Isaque<br>
-<button onclick="openModal('11-03-2026-quarta')">Ver Repertório</button>
-</div>
-
-<div class="card">
-<strong>18/03/2026</strong><br>
-Líder: Luziane<br>
-Vocal: Sheila, Raphael<br>
-Bateria: Isaque<br>
-<button onclick="openModal('18-03-2026-quarta')">Ver Repertório</button>
-</div>
-
-<div class="card">
-<strong>25/03/2026</strong><br>
-Líder: Lincoln<br>
-Vocal: Manu, Fabi<br>
-Bateria: Isaque<br>
-<button onclick="openModal('25-03-2026-quarta')">Ver Repertório</button>
+<h3>Informações</h3>
+<p>Avisos, ensaios, encontros e estudos.</p>
+<button onclick="openPage('informacoes')">Abrir avisos</button>
 </div>
 
 </div>
 
+</div>
 
-<div class="modal" id="modal">
-<div class="modal-content">
+<!-- ESCALA -->
+<div class="page" id="escala">
 
-<span class="close" onclick="closeModal()">X</span>
+<h2>Escala de Março 2026</h2>
 
-<h3>Repertório</h3>
-
-<button onclick="mostrarFormulario()">➕ Adicionar Música</button>
-<button onclick="compartilharWhatsapp()">📲 Compartilhar</button>
-<button onclick="copiarRepertorio()">📋 Copiar Repertório</button>
-
-<div id="formMusica" style="display:none">
-
-<input type="text" id="buscarMusica" placeholder="Pesquisar música..." onkeyup="pesquisarMusica()">
-<div id="resultadoBusca"></div>
-
-<input id="musicaNome" placeholder="Música">
-<input id="musicaArtista" placeholder="Artista">
-<input id="musicaTom" placeholder="Tom">
-<input id="musicaObs" placeholder="Observação (Solista, Medley, Versão...)">
-<input id="musicaYoutube" placeholder="Link Youtube">
-<input id="musicaSpotify" placeholder="Link Spotify">
-<input id="musicaCifra" placeholder="Link Cifra">
-
-<button onclick="adicionarMusica()">Salvar Música</button>
+<div id="listaEscala"></div>
 
 </div>
 
-<div id="conteudoRepertorio"></div>
+<!-- REPERTORIO -->
+<div class="page" id="repertorio">
+
+<h2>Repertório do Ministério</h2>
+
+<input id="buscarMusica" placeholder="Buscar música ou artista...">
+
+<table class="table">
+<thead>
+<tr>
+<th>Música</th>
+<th>Artista</th>
+<th>Tom</th>
+</tr>
+</thead>
+<tbody id="listaMusicas"></tbody>
+</table>
 
 </div>
+
+<!-- INFORMACOES -->
+<div class="page" id="informacoes">
+
+<h2>Informações do Ministério</h2>
+
+<div id="listaInformacoes"></div>
+
 </div>
 
-
-<script>
-
-let repertorios = JSON.parse(localStorage.getItem("repertorios")) || {};
-let repertorioAtual = null;
-let bancoMusicas = [];
-
-fetch("musicas.json")
-.then(r=>r.json())
-.then(data=>bancoMusicas=data);
-
-function salvar(){
-localStorage.setItem("repertorios",JSON.stringify(repertorios));
-}
-
-function openModal(data){
-repertorioAtual=data;
-document.getElementById("modal").style.display="flex";
-renderTabela();
-}
-
-function closeModal(){
-document.getElementById("modal").style.display="none";
-}
-
-function mostrarFormulario(){
-const f=document.getElementById("formMusica");
-f.style.display=f.style.display=="none"?"block":"none";
-}
-
-function pesquisarMusica(){
-
-const termo=document.getElementById("buscarMusica").value.toLowerCase();
-
-const resultado=bancoMusicas.filter(m=>
-m.musica.toLowerCase().includes(termo) ||
-m.artista.toLowerCase().includes(termo)
-);
-
-let html="";
-
-resultado.slice(0,10).forEach(m=>{
-html+=`<div onclick="selecionarMusica('${m.musica}','${m.artista}')">${m.musica} - ${m.artista}</div>`;
-});
-
-document.getElementById("resultadoBusca").innerHTML=html;
-
-}
-
-function selecionarMusica(musica,artista){
-
-document.getElementById("musicaNome").value=musica;
-document.getElementById("musicaArtista").value=artista;
-
-document.getElementById("resultadoBusca").innerHTML="";
-
-}
-
-function adicionarMusica(){
-
-const nova={
-musica:musicaNome.value,
-artista:musicaArtista.value,
-tom:musicaTom.value,
-youtube:musicaYoutube.value,
-spotify:musicaSpotify.value,
-cifra:musicaCifra.value
-};
-
-if(!repertorios[repertorioAtual]){
-repertorios[repertorioAtual]=[];
-}
-
-repertorios[repertorioAtual].push(nova);
-
-salvar();
-renderTabela();
-
-musicaNome.value="";
-musicaArtista.value="";
-musicaTom.value="";
-musicaYoutube.value="";
-musicaSpotify.value="";
-musicaCifra.value="";
-
-}
-
-function removerMusica(i){
-repertorios[repertorioAtual].splice(i,1);
-salvar();
-renderTabela();
-}
-
-function editarMusica(i){
-
-const m=repertorios[repertorioAtual][i];
-
-musicaNome.value=m.musica;
-musicaArtista.value=m.artista;
-musicaTom.value=m.tom;
-musicaYoutube.value=m.youtube;
-musicaSpotify.value=m.spotify;
-musicaCifra.value=m.cifra;
-
-removerMusica(i);
-mostrarFormulario();
-
-}
-
-function renderTabela(){
-
-const conteudo=document.getElementById("conteudoRepertorio");
-
-if(!repertorios[repertorioAtual] || repertorios[repertorioAtual].length==0){
-conteudo.innerHTML="<p><strong>AGUARDANDO MINISTRO DIVULGAR</strong></p>";
-return;
-}
-
-let html="<table>";
-html+="<tr><th>#</th><th>Música</th><th>Artista</th><th>Tom</th><th>Ações</th></tr>";
-
-repertorios[repertorioAtual].forEach((m,i)=>{
-
-html+=`
-<tr draggable="true"
-ondragstart="drag(event,${i})"
-ondrop="drop(event,${i})"
-ondragover="allowDrop(event)">
-
-<td>${i+1}</td>
-<td>${m.musica}</td>
-<td>${m.artista}</td>
-<td>${m.tom}</td>
-
-<td>
-
-<a href="${m.youtube}" target="_blank">
-<img src="youtube.png" width="22">
-</a>
-
-<a href="${m.spotify}" target="_blank">
-<img src="spotify.png" width="22">
-</a>
-
-<a href="${m.cifra}" target="_blank">
-<img src="cifra.png" width="22">
-</a>
-
-<button onclick="editarMusica(${i})">✏</button>
-<button onclick="removerMusica(${i})">🗑</button>
-
-</td>
-</tr>`;
-});
-
-html+="</table>";
-conteudo.innerHTML=html;
-
-}
-
-let dragIndex;
-
-function allowDrop(e){e.preventDefault();}
-function drag(e,i){dragIndex=i;}
-
-function drop(e,i){
-
-e.preventDefault();
-
-const item=repertorios[repertorioAtual][dragIndex];
-
-repertorios[repertorioAtual].splice(dragIndex,1);
-repertorios[repertorioAtual].splice(i,0,item);
-
-salvar();
-renderTabela();
-
-}
-
-function compartilharWhatsapp(){
-
-if(!repertorios[repertorioAtual]) return;
-
-let texto="🎶 Repertório do Culto\n\n";
-
-repertorios[repertorioAtual].forEach((m,i)=>{
-texto+=`${i+1}. ${m.musica} - ${m.artista} (Tom ${m.tom})\n`;
-});
-
-window.open("https://wa.me/?text="+encodeURIComponent(texto));
-
-}
-
-function copiarRepertorio(){
-
-if(!repertorios[repertorioAtual]) return;
-
-let texto="🎶 Repertório do Culto\n\n";
-
-repertorios[repertorioAtual].forEach((m,i)=>{
-texto+=`${i+1}. ${m.musica} - ${m.artista} (Tom ${m.tom})\n`;
-});
-
-navigator.clipboard.writeText(texto);
-
-alert("Repertório copiado!");
-
-}
-
-</script>
+</div>
 
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getDatabase, ref, push, onValue, remove, update } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDpFm6Q9KeQFuRgHwYD5OfFMJ9SYvdOW_Y",
-  authDomain: "louvor-imesc.firebaseapp.com",
-  databaseURL: "https://louvor-imesc-default-rtdb.firebaseio.com",
-  projectId: "louvor-imesc",
-  storageBucket: "louvor-imesc.firebasestorage.app",
-  messagingSenderId: "546684488381",
-  appId: "1:546684488381:web:bb71634e1dadf21e0d85d4"
+apiKey:"AIzaSyDpFm6Q9KeQFuRgHwYD5OfFMJ9SYvdOW_Y",
+authDomain:"louvor-imesc.firebaseapp.com",
+databaseURL:"https://louvor-imesc-default-rtdb.firebaseio.com",
+projectId:"louvor-imesc",
+storageBucket:"louvor-imesc.firebasestorage.app",
+messagingSenderId:"546684488381",
+appId:"1:546684488381:web:bb71634e1dadf21e0d85d4"
 };
 
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
+const app=initializeApp(firebaseConfig);
+const db=getDatabase(app);
 
-let repertorioAtual = null;
+window.openPage=function(page){
 
-window.openModal = function(data){
-
-repertorioAtual = data;
-
-document.getElementById("modal").style.display="flex";
-
-carregarRepertorio();
+ document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+ document.getElementById(page).classList.add('active');
 
 }
 
-window.closeModal = function(){
 
-document.getElementById("modal").style.display="none";
+/* ESCALA */
 
-}
+const escalaRef=ref(db,"escalas/2026-03");
 
-window.adicionarMusica = function(){
+onValue(escalaRef,(snapshot)=>{
 
-const musica=document.getElementById("musicaNome").value;
-const artista=document.getElementById("musicaArtista").value;
-const tom=document.getElementById("musicaTom").value;
-const obs=document.getElementById("musicaObs").value;
-const youtube=document.getElementById("musicaYoutube").value;
-const spotify=document.getElementById("musicaSpotify").value;
-const cifra=document.getElementById("musicaCifra").value;
+const dados=snapshot.val();
 
-const nova={
-musica,
-artista,
-tom,
-obs,
-youtube,
-spotify,
-cifra
-};
+if(!dados) return;
 
-push(ref(db,"repertorios/"+repertorioAtual),nova);
+let html="";
 
-document.getElementById("musicaNome").value="";
-document.getElementById("musicaArtista").value="";
-document.getElementById("musicaTom").value="";
-document.getElementById("musicaObs").value="";
-document.getElementById("musicaYoutube").value="";
-document.getElementById("musicaSpotify").value="";
-document.getElementById("musicaCifra").value="";
-
-}
-
-function carregarRepertorio(){
-
-const repertorioRef = ref(db,"repertorios/"+repertorioAtual);
-
-onValue(repertorioRef,(snapshot)=>{
-
-const dados = snapshot.val();
-
-const conteudo=document.getElementById("conteudoRepertorio");
-
-if(!dados){
-
-conteudo.innerHTML="<p><strong>AGUARDANDO MINISTRO DIVULGAR</strong></p>";
-return;
-
-}
-
-let html="<table>";
-
-html+="<tr><th>#</th><th>Música</th><th>Artista</th><th>Tom</th><th>Obs</th><th>Ações</th></tr>";
-
-let i=1;
-
-for(const id in dados){
-
-const m=dados[id];
+Object.values(dados).forEach(culto=>{
 
 html+=`
-
-<tr>
-
-<td>${i}</td>
-<td>${m.musica}</td>
-<td>${m.artista}</td>
-<td>${m.tom}</td>
-<td>${m.obs || ""}</td>
-
-<td>
-
-<a href="${m.youtube}" target="_blank">
-<img src="youtube.png" width="22">
-</a>
-
-<a href="${m.spotify}" target="_blank">
-<img src="spotify.png" width="22">
-</a>
-
-<a href="${m.cifra}" target="_blank">
-<img src="cifra.png" width="22">
-</a>
-
-<button onclick="removerMusica('${id}')">🗑</button>
-
-</td>
-
-</tr>
-
+<div class="card">
+<strong>${culto.data}</strong><br>
+Líder: ${culto.lider || ""}<br>
+Vocal: ${culto.vocal || ""}<br>
+Bateria: ${culto.bateria || ""}
+</div>
 `;
-
-i++;
-
-}
-
-html+="</table>";
-
-conteudo.innerHTML=html;
 
 });
 
-}
+document.getElementById("listaEscala").innerHTML=html;
 
-window.removerMusica = function(id){
+});
 
-remove(ref(db,"repertorios/"+repertorioAtual+"/"+id));
 
-}
+/* REPERTORIO */
+
+const musicasRef=ref(db,"musicas");
+
+onValue(musicasRef,(snapshot)=>{
+
+const dados=snapshot.val();
+
+if(!dados) return;
+
+let html="";
+
+Object.values(dados).forEach(m=>{
+
+html+=`
+<tr>
+<td>${m.musica}</td>
+<td>${m.artista}</td>
+<td>${m.tom || ""}</td>
+</tr>
+`;
+
+});
+
+document.getElementById("listaMusicas").innerHTML=html;
+
+});
+
+
+/* INFORMACOES */
+
+const infoRef=ref(db,"informacoes");
+
+onValue(infoRef,(snapshot)=>{
+
+const dados=snapshot.val();
+
+if(!dados) return;
+
+let html="";
+
+Object.values(dados).forEach(i=>{
+
+html+=`
+<div class="notice">
+<strong>${i.titulo}</strong>
+<p>${i.texto}</p>
+</div>
+`;
+
+});
+
+document.getElementById("listaInformacoes").innerHTML=html;
+
+});
 
 </script>
 
 </body>
 </html>
-
-
