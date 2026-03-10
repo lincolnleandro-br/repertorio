@@ -1,142 +1,469 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Milouv Admin</title>
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root{
+      --bg:#f4f6f9;
+      --surface:#ffffff;
+      --primary:#1f3c88;
+      --primary-2:#2c5bd3;
+      --border:#e5e7eb;
+      --text:#1f2937;
+      --muted:#6b7280;
+      --danger:#b91c1c;
+      --success:#166534;
+      --shadow:0 10px 30px rgba(15,23,42,0.08);
+      --radius:16px;
+      --container:1000px;
+    }
 
-<title>Milouv Admin</title>
+    *{ box-sizing:border-box; }
 
-<style>
+    body{
+      margin:0;
+      font-family:Arial, Helvetica, sans-serif;
+      background:var(--bg);
+      color:var(--text);
+    }
 
-body{
-font-family:Arial;
-margin:0;
-background:#f4f6f9;
-}
+    header{
+      background:linear-gradient(135deg,var(--primary),var(--primary-2));
+      color:white;
+      padding:32px 20px;
+      text-align:center;
+    }
 
-header{
-background:#1f3c88;
-color:white;
-text-align:center;
-padding:20px;
-}
+    header h1{
+      margin:0 0 8px;
+    }
 
-.container{
-width:95%;
-max-width:800px;
-margin:auto;
-padding:20px;
-}
+    .container{
+      width:min(95%, var(--container));
+      margin:24px auto 48px;
+    }
 
-.card{
-background:white;
-border-radius:10px;
-padding:20px;
-margin-bottom:20px;
-box-shadow:0 4px 10px rgba(0,0,0,0.1);
-}
+    .card{
+      background:var(--surface);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:20px;
+      margin-bottom:20px;
+    }
 
-input{
-width:100%;
-padding:8px;
-margin-top:5px;
-margin-bottom:10px;
-}
+    .card h2{
+      margin-top:0;
+      font-size:1.2rem;
+    }
 
-button{
-padding:8px 12px;
-border:none;
-border-radius:6px;
-background:#1f3c88;
-color:white;
-cursor:pointer;
-}
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:14px;
+    }
 
-</style>
+    .full{
+      grid-column:1 / -1;
+    }
 
+    label{
+      display:block;
+      font-size:.92rem;
+      color:var(--muted);
+      margin-bottom:6px;
+      font-weight:700;
+    }
+
+    input, select, textarea{
+      width:100%;
+      padding:11px 12px;
+      border-radius:10px;
+      border:1px solid var(--border);
+      background:white;
+      font:inherit;
+    }
+
+    textarea{
+      min-height:100px;
+      resize:vertical;
+    }
+
+    button{
+      border:none;
+      border-radius:10px;
+      padding:11px 16px;
+      background:var(--primary);
+      color:white;
+      font-weight:700;
+      cursor:pointer;
+    }
+
+    button:hover{
+      opacity:.96;
+    }
+
+    .row{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:14px;
+    }
+
+    .status{
+      margin-top:10px;
+      color:var(--muted);
+      font-size:.95rem;
+    }
+
+    .danger{
+      color:var(--danger);
+    }
+
+    .success{
+      color:var(--success);
+    }
+
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      margin-bottom:20px;
+      flex-wrap:wrap;
+    }
+
+    .link-btn{
+      display:inline-block;
+      background:white;
+      border:1px solid var(--border);
+      color:var(--primary);
+      border-radius:999px;
+      padding:10px 14px;
+      text-decoration:none;
+      font-weight:700;
+    }
+
+    @media (max-width: 700px){
+      .grid{
+        grid-template-columns:1fr;
+      }
+    }
+  </style>
 </head>
-
 <body>
+  <header>
+    <h1>Milouv Admin</h1>
+    <p>Painel de administração do ministério de louvor</p>
+  </header>
 
-<header>
-<h1>Milouv Admin</h1>
-</header>
+  <main class="container">
+    <div class="topbar">
+      <a class="link-btn" href="./index.html">← Voltar para o site</a>
+    </div>
 
-<div class="container">
+    <section class="card">
+      <h2>Ajustar mês ativo</h2>
+      <div class="grid">
+        <div>
+          <label for="mesAtivo">Mês ativo</label>
+          <input id="mesAtivo" type="text" placeholder="Ex.: 2026-03">
+        </div>
+      </div>
+      <div class="row">
+        <button onclick="salvarMesAtivo()">Salvar mês ativo</button>
+      </div>
+      <div id="statusMes" class="status"></div>
+    </section>
 
-<div class="card">
+    <section class="card">
+      <h2>Cadastrar música</h2>
+      <div class="grid">
+        <div class="full">
+          <label for="musicaNome">Nome da música</label>
+          <input id="musicaNome" type="text" placeholder="Ex.: Santo Pra Sempre">
+        </div>
 
-<h3>Mês ativo</h3>
+        <div>
+          <label for="musicaArtista">Artista</label>
+          <input id="musicaArtista" type="text" placeholder="Ex.: Gabriel Guedes">
+        </div>
 
-<input id="mesAtivo" placeholder="2026-03">
+        <div>
+          <label for="musicaPerfil">Perfil</label>
+          <input id="musicaPerfil" type="text" placeholder="Ex.: ADORAÇÃO">
+        </div>
 
-<button onclick="salvarMes()">Salvar</button>
+        <div>
+          <label for="tomMasculino">Tom masculino</label>
+          <input id="tomMasculino" type="text" placeholder="Ex.: G">
+        </div>
 
-</div>
+        <div>
+          <label for="tomFeminino">Tom feminino</label>
+          <input id="tomFeminino" type="text" placeholder="Ex.: D">
+        </div>
 
-<div class="card">
+        <div class="full">
+          <label for="musicaAndamento">Andamento</label>
+          <select id="musicaAndamento">
+            <option value="">Selecione</option>
+            <option value="LENTA">LENTA</option>
+            <option value="MODERADO">MODERADO</option>
+            <option value="RAPIDA">RAPIDA</option>
+          </select>
+        </div>
+      </div>
 
-<h3>Adicionar Informação</h3>
+      <div class="row">
+        <button onclick="salvarMusica()">Salvar música</button>
+      </div>
+      <div id="statusMusica" class="status"></div>
+    </section>
 
-<input id="titulo" placeholder="Título">
+    <section class="card">
+      <h2>Criar culto</h2>
+      <div class="grid">
+        <div>
+          <label for="cultoMes">Mês</label>
+          <input id="cultoMes" type="text" placeholder="Ex.: 2026-03">
+        </div>
 
-<input id="texto" placeholder="Texto">
+        <div>
+          <label for="cultoId">ID do culto</label>
+          <input id="cultoId" type="text" placeholder="Ex.: 08-03-2026-manha">
+        </div>
 
-<button onclick="salvarInfo()">Salvar Informação</button>
+        <div>
+          <label for="cultoData">Data ISO</label>
+          <input id="cultoData" type="text" placeholder="Ex.: 2026-03-08">
+        </div>
 
-</div>
+        <div>
+          <label for="cultoLabel">Data exibida</label>
+          <input id="cultoLabel" type="text" placeholder="Ex.: 08/03/2026">
+        </div>
 
-</div>
+        <div>
+          <label for="cultoCategoria">Categoria</label>
+          <select id="cultoCategoria">
+            <option value="Domingo Manhã">Domingo Manhã</option>
+            <option value="Domingo Noite">Domingo Noite</option>
+            <option value="Quarta Profética">Quarta Profética</option>
+          </select>
+        </div>
 
+        <div>
+          <label for="cultoLider">Líder</label>
+          <input id="cultoLider" type="text" placeholder="Ex.: Lincoln">
+        </div>
 
-<script type="module">
+        <div class="full">
+          <label for="cultoVocal">Vocal</label>
+          <input id="cultoVocal" type="text" placeholder="Ex.: Sheila, Rafael, Monica">
+        </div>
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getDatabase, ref, set, push } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+        <div>
+          <label for="cultoBateria">Bateria</label>
+          <input id="cultoBateria" type="text" placeholder="Ex.: Davy">
+        </div>
 
-const firebaseConfig = {
+        <div>
+          <label for="cultoViolao">Violão</label>
+          <input id="cultoViolao" type="text" placeholder="Ex.: Miguel">
+        </div>
+      </div>
 
-apiKey: "AIzaSyDpFm6Q9KeQFuRgHwYD5OfFMJ9SYvdOW_Y",
-authDomain: "louvor-imesc.firebaseapp.com",
-databaseURL: "https://louvor-imesc-default-rtdb.firebaseio.com",
-projectId: "louvor-imesc",
-storageBucket: "louvor-imesc.firebasestorage.app",
-messagingSenderId: "546684488381",
-appId: "1:546684488381:web:bb71634e1dadf21e0d85d4"
+      <div class="row">
+        <button onclick="salvarCulto()">Salvar culto</button>
+      </div>
+      <div id="statusCulto" class="status"></div>
+    </section>
 
-};
+    <section class="card">
+      <h2>Publicar informação</h2>
+      <div class="grid">
+        <div class="full">
+          <label for="infoTitulo">Título</label>
+          <input id="infoTitulo" type="text" placeholder="Ex.: Ensaio geral">
+        </div>
 
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
+        <div class="full">
+          <label for="infoTexto">Texto</label>
+          <textarea id="infoTexto" placeholder="Digite o aviso do ministério..."></textarea>
+        </div>
+      </div>
 
-window.salvarMes = function(){
+      <div class="row">
+        <button onclick="salvarInformacao()">Publicar informação</button>
+      </div>
+      <div id="statusInfo" class="status"></div>
+    </section>
+  </main>
 
-const mes=document.getElementById("mesAtivo").value;
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getDatabase, ref, set, push, get } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
-set(ref(db,"config/mesAtivo"),mes);
+    const firebaseConfig = {
+      apiKey: "AIzaSyDpFm6Q9KeQFuRgHwYD5OfFMJ9SYvdOW_Y",
+      authDomain: "louvor-imesc.firebaseapp.com",
+      databaseURL: "https://louvor-imesc-default-rtdb.firebaseio.com",
+      projectId: "louvor-imesc",
+      storageBucket: "louvor-imesc.firebasestorage.app",
+      messagingSenderId: "546684488381",
+      appId: "1:546684488381:web:bb71634e1dadf21e0d85d4"
+    };
 
-alert("Mês atualizado!");
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
 
-}
+    function setStatus(id, message, ok = true) {
+      const el = document.getElementById(id);
+      el.textContent = message;
+      el.className = `status ${ok ? "success" : "danger"}`;
+    }
 
-window.salvarInfo = function(){
+    async function salvarMesAtivo() {
+      const mesAtivo = document.getElementById("mesAtivo").value.trim();
 
-const titulo=document.getElementById("titulo").value;
-const texto=document.getElementById("texto").value;
+      if (!mesAtivo) {
+        setStatus("statusMes", "Informe o mês ativo.", false);
+        return;
+      }
 
-push(ref(db,"informacoes"),{
+      try {
+        await set(ref(db, "config/mesAtivo"), mesAtivo);
+        setStatus("statusMes", "Mês ativo salvo com sucesso.");
+      } catch (error) {
+        console.error(error);
+        setStatus("statusMes", "Erro ao salvar mês ativo.", false);
+      }
+    }
 
-titulo,
-texto
+    async function salvarMusica() {
+      const musica = document.getElementById("musicaNome").value.trim();
+      const artista = document.getElementById("musicaArtista").value.trim();
+      const perfil = document.getElementById("musicaPerfil").value.trim();
+      const tomMasculino = document.getElementById("tomMasculino").value.trim();
+      const tomFeminino = document.getElementById("tomFeminino").value.trim();
+      const andamento = document.getElementById("musicaAndamento").value.trim();
 
-});
+      if (!musica || !artista) {
+        setStatus("statusMusica", "Preencha pelo menos música e artista.", false);
+        return;
+      }
 
-alert("Informação salva!");
+      try {
+        const musicasRef = ref(db, "musicas");
+        const snapshot = await get(musicasRef);
+        const dados = snapshot.val() || {};
+        const proximoNumero = Object.keys(dados).length + 1;
+        const novoId = `m${String(proximoNumero).padStart(3, "0")}`;
 
-}
+        await set(ref(db, `musicas/${novoId}`), {
+          musica,
+          artista,
+          tomMasculino,
+          tomFeminino,
+          perfil,
+          andamento
+        });
 
-</script>
+        document.getElementById("musicaNome").value = "";
+        document.getElementById("musicaArtista").value = "";
+        document.getElementById("musicaPerfil").value = "";
+        document.getElementById("tomMasculino").value = "";
+        document.getElementById("tomFeminino").value = "";
+        document.getElementById("musicaAndamento").value = "";
 
+        setStatus("statusMusica", `Música salva com sucesso em ${novoId}.`);
+      } catch (error) {
+        console.error(error);
+        setStatus("statusMusica", "Erro ao salvar música.", false);
+      }
+    }
+
+    async function salvarCulto() {
+      const mes = document.getElementById("cultoMes").value.trim();
+      const cultoId = document.getElementById("cultoId").value.trim();
+      const data = document.getElementById("cultoData").value.trim();
+      const label = document.getElementById("cultoLabel").value.trim();
+      const categoria = document.getElementById("cultoCategoria").value.trim();
+      const lider = document.getElementById("cultoLider").value.trim();
+      const vocalTexto = document.getElementById("cultoVocal").value.trim();
+      const bateria = document.getElementById("cultoBateria").value.trim();
+      const violao = document.getElementById("cultoViolao").value.trim();
+
+      if (!mes || !cultoId || !data || !label || !categoria) {
+        setStatus("statusCulto", "Preencha mês, id do culto, data, label e categoria.", false);
+        return;
+      }
+
+      const vocal = vocalTexto
+        ? vocalTexto.split(",").map(item => item.trim()).filter(Boolean)
+        : [];
+
+      try {
+        await set(ref(db, `escalas/${mes}/cultos/${cultoId}`), {
+          data,
+          label,
+          categoria,
+          lider,
+          vocal,
+          bateria,
+          violao
+        });
+
+        document.getElementById("cultoMes").value = "";
+        document.getElementById("cultoId").value = "";
+        document.getElementById("cultoData").value = "";
+        document.getElementById("cultoLabel").value = "";
+        document.getElementById("cultoCategoria").value = "Domingo Manhã";
+        document.getElementById("cultoLider").value = "";
+        document.getElementById("cultoVocal").value = "";
+        document.getElementById("cultoBateria").value = "";
+        document.getElementById("cultoViolao").value = "";
+
+        setStatus("statusCulto", "Culto salvo com sucesso.");
+      } catch (error) {
+        console.error(error);
+        setStatus("statusCulto", "Erro ao salvar culto.", false);
+      }
+    }
+
+    async function salvarInformacao() {
+      const titulo = document.getElementById("infoTitulo").value.trim();
+      const texto = document.getElementById("infoTexto").value.trim();
+
+      if (!titulo || !texto) {
+        setStatus("statusInfo", "Preencha título e texto.", false);
+        return;
+      }
+
+      try {
+        await push(ref(db, "informacoes"), {
+          titulo,
+          texto
+        });
+
+        document.getElementById("infoTitulo").value = "";
+        document.getElementById("infoTexto").value = "";
+
+        setStatus("statusInfo", "Informação publicada com sucesso.");
+      } catch (error) {
+        console.error(error);
+        setStatus("statusInfo", "Erro ao publicar informação.", false);
+      }
+    }
+
+    window.salvarMesAtivo = salvarMesAtivo;
+    window.salvarMusica = salvarMusica;
+    window.salvarCulto = salvarCulto;
+    window.salvarInformacao = salvarInformacao;
+  </script>
 </body>
 </html>
