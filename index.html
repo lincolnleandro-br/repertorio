@@ -3,234 +3,557 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Milouv 3.3 | Admin Protegido</title>
+  <title>Milouv 2.0 | Ministério de Louvor</title>
+
   <style>
     :root{
       --bg:#f4f6f9;
       --surface:#ffffff;
+      --surface-soft:#f8fafc;
       --primary:#1f3c88;
       --primary-2:#2c5bd3;
-      --border:#e5e7eb;
+      --primary-soft:#dbeafe;
       --text:#1f2937;
       --muted:#6b7280;
+      --border:#e5e7eb;
       --danger:#b91c1c;
       --success:#166534;
-      --shadow:0 10px 30px rgba(15,23,42,0.08);
-      --radius:16px;
+      --shadow-sm:0 6px 18px rgba(15,23,42,0.06);
+      --shadow-md:0 10px 30px rgba(15,23,42,0.08);
+      --shadow-lg:0 18px 40px rgba(15,23,42,0.12);
+      --radius-md:16px;
       --container:1100px;
     }
 
-    *{box-sizing:border-box}
-    body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
-    header{background:linear-gradient(135deg,var(--primary),var(--primary-2));color:#fff;padding:32px 20px;text-align:center}
-    .container{width:min(95%,var(--container));margin:24px auto 48px}
-    .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px;margin-bottom:20px}
-    .card h2,.card h3{margin-top:0}
-    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
-    .full{grid-column:1 / -1}
-    label{display:block;font-size:.92rem;color:var(--muted);margin-bottom:6px;font-weight:700}
-    input,select,textarea{width:100%;padding:11px 12px;border-radius:10px;border:1px solid var(--border);background:#fff;font:inherit}
-    textarea{min-height:100px;resize:vertical}
-    button{border:none;border-radius:10px;padding:11px 16px;background:var(--primary);color:#fff;font-weight:700;cursor:pointer}
-    button:hover{opacity:.96}
-    .secondary{background:#fff;color:var(--primary);border:1px solid var(--border)}
-    .danger{background:#fee2e2;color:var(--danger);border:1px solid #fecaca}
-    .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
-    .status{margin-top:10px;color:var(--muted);font-size:.95rem}
-    .success{color:var(--success)}
-    .error{color:var(--danger)}
-    .topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap}
-    .link-btn{display:inline-block;background:#fff;border:1px solid var(--border);color:var(--primary);border-radius:999px;padding:10px 14px;text-decoration:none;font-weight:700}
-    .hidden{display:none !important}
-    .pill{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;background:#eef2ff;color:var(--primary);font-size:.85rem;font-weight:700}
-    .list{display:grid;gap:10px}
-    .item{padding:12px;border:1px solid var(--border);border-radius:12px;background:#fafcff}
-    .search-results{display:grid;gap:8px;margin-top:12px}
-    .search-item{padding:12px;border:1px solid var(--border);border-radius:12px;background:#fff;display:flex;justify-content:space-between;gap:10px;align-items:center}
-    .muted{color:var(--muted)}
-    @media (max-width:700px){.grid{grid-template-columns:1fr}}
+    *{ box-sizing:border-box; }
+    html{ scroll-behavior:smooth; }
+
+    body{
+      margin:0;
+      font-family:Arial, Helvetica, sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      line-height:1.5;
+    }
+
+    a{ color:inherit; text-decoration:none; }
+    button,input,select,textarea{ font:inherit; }
+
+    header{
+      background:linear-gradient(135deg,var(--primary),var(--primary-2));
+      color:white;
+      padding:48px 20px;
+      text-align:center;
+      box-shadow:var(--shadow-md);
+    }
+
+    header h1{
+      margin:0 0 10px;
+      font-size:clamp(2rem,4vw,3rem);
+      font-weight:700;
+    }
+
+    header p{ margin:0; opacity:.95; }
+
+    nav{
+      background:rgba(255,255,255,.95);
+      border-bottom:1px solid var(--border);
+      position:sticky;
+      top:0;
+      z-index:50;
+      backdrop-filter:blur(10px);
+      display:flex;
+      justify-content:center;
+      gap:12px;
+      flex-wrap:wrap;
+      padding:14px 18px;
+    }
+
+    nav button{
+      background:var(--surface-soft);
+      border:1px solid var(--border);
+      color:var(--text);
+      padding:10px 16px;
+      border-radius:999px;
+      font-weight:700;
+      cursor:pointer;
+      transition:all .2s ease;
+    }
+
+    nav button:hover{
+      background:#eef2ff;
+      border-color:#c7d2fe;
+      transform:translateY(-1px);
+    }
+
+    nav button.active{
+      background:var(--primary);
+      border-color:var(--primary);
+      color:white;
+      box-shadow:var(--shadow-sm);
+    }
+
+    .container{
+      width:min(95%, var(--container));
+      margin:auto;
+      padding:32px 0 56px;
+    }
+
+    .page{ display:none; animation:fadeIn .25s ease; }
+    .page.active{ display:block; }
+
+    @keyframes fadeIn{
+      from{ opacity:0; transform:translateY(6px); }
+      to{ opacity:1; transform:translateY(0); }
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+      gap:20px;
+    }
+
+    .card{
+      background:var(--surface);
+      border-radius:var(--radius-md);
+      padding:22px;
+      box-shadow:var(--shadow-md);
+      border:1px solid var(--border);
+      transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+    }
+
+    .card:hover{
+      transform:translateY(-3px);
+      box-shadow:var(--shadow-lg);
+      border-color:#dbe3f0;
+    }
+
+    .card h3{ margin:0 0 10px; font-size:1.15rem; }
+    .card p{ margin:0; color:var(--muted); }
+
+    h2{ margin:10px 0 18px; font-size:1.6rem; color:var(--text); }
+
+    button{
+      border:none;
+      border-radius:12px;
+      padding:10px 16px;
+      background:var(--primary);
+      color:white;
+      cursor:pointer;
+      font-weight:700;
+      transition:all .2s ease;
+    }
+
+    button:hover{ opacity:.96; transform:translateY(-1px); }
+    .card button{ margin-top:14px; }
+
+    .btn-secondary{
+      background:var(--surface-soft);
+      color:var(--primary);
+      border:1px solid var(--border);
+    }
+
+    .btn-danger{
+      background:#fee2e2;
+      color:var(--danger);
+      border:1px solid #fecaca;
+    }
+
+    input,select,textarea{
+      width:100%;
+      padding:11px 12px;
+      margin-top:6px;
+      border-radius:10px;
+      border:1px solid var(--border);
+      background:white;
+      color:var(--text);
+      transition:border-color .2s ease, box-shadow .2s ease;
+    }
+
+    input:focus,select:focus,textarea:focus{
+      outline:none;
+      border-color:var(--primary);
+      box-shadow:0 0 0 4px rgba(31,60,136,.10);
+    }
+
+    .table-wrap{
+      overflow-x:auto;
+      background:var(--surface);
+      border-radius:var(--radius-md);
+      border:1px solid var(--border);
+      box-shadow:var(--shadow-md);
+      margin-top:18px;
+    }
+
+    .table{ width:100%; border-collapse:collapse; min-width:760px; }
+    .table th,.table td{ padding:14px 16px; border-bottom:1px solid var(--border); text-align:left; vertical-align:middle; }
+    .table th{ background:var(--surface-soft); color:var(--muted); font-size:.82rem; text-transform:uppercase; letter-spacing:.04em; }
+    .table tr:last-child td{ border-bottom:none; }
+    .table tr:hover td{ background:#fafcff; }
+
+    .notice{
+      background:var(--surface);
+      border-left:5px solid var(--primary);
+      border-radius:14px;
+      padding:18px;
+      margin-bottom:16px;
+      box-shadow:var(--shadow-sm);
+      border-top:1px solid var(--border);
+      border-right:1px solid var(--border);
+      border-bottom:1px solid var(--border);
+    }
+
+    .notice strong{ display:block; margin-bottom:8px; font-size:1rem; }
+    .notice p{ margin:0; color:var(--muted); }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:6px 10px;
+      border-radius:999px;
+      background:var(--primary-soft);
+      color:#1d4ed8;
+      font-size:.8rem;
+      font-weight:700;
+    }
+
+    .empty-state{
+      background:var(--surface);
+      border:1px dashed var(--border);
+      border-radius:var(--radius-md);
+      padding:28px;
+      text-align:center;
+      color:var(--muted);
+      box-shadow:var(--shadow-sm);
+    }
+
+    .culto-card{ display:flex; flex-direction:column; gap:12px; }
+    .culto-topo{ display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; }
+    .culto-categoria{ background:var(--primary-soft); color:#1d4ed8; padding:6px 10px; border-radius:999px; font-size:.78rem; font-weight:700; }
+    .culto-data{ color:var(--primary); font-size:1.05rem; font-weight:700; }
+    .culto-info{ color:var(--muted); }
+    .culto-info strong{ color:var(--text); }
+
+    .toolbar{ display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:20px; }
+    .search-box,.panel{
+      background:var(--surface);
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:16px;
+      box-shadow:var(--shadow-sm);
+      margin-bottom:18px;
+    }
+
+    .home-lead{ margin-bottom:24px; }
+    .muted{ color:var(--muted); }
+
+    .modal{
+      display:none;
+      position:fixed;
+      inset:0;
+      background:rgba(15,23,42,.65);
+      z-index:1000;
+      padding:20px;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .modal.active{ display:flex; }
+
+    .modal-box{
+      width:min(920px,100%);
+      max-height:92vh;
+      overflow:auto;
+      background:var(--surface);
+      border-radius:20px;
+      box-shadow:var(--shadow-lg);
+      border:1px solid var(--border);
+    }
+
+    .modal-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:16px;
+      padding:20px 20px 12px;
+      border-bottom:1px solid var(--border);
+      position:sticky;
+      top:0;
+      background:white;
+      z-index:2;
+    }
+
+    .modal-header h3{ margin:0 0 6px; }
+    .modal-header p{ margin:0; }
+    .modal-body{ padding:18px 20px 20px; }
+
+    .modal-close{
+      background:#fee2e2;
+      color:var(--danger);
+      border:1px solid #fecaca;
+      border-radius:10px;
+      padding:8px 12px;
+    }
+
+    .modal-list{ display:grid; gap:12px; }
+
+    .modal-item{
+      background:var(--surface-soft);
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:14px;
+    }
+
+    .modal-item strong{ display:block; margin-bottom:6px; }
+
+    .modal-actions{ display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
+
+    .form-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:12px;
+    }
+
+    .form-field-full{ grid-column:1 / -1; }
+
+    .search-results{
+      margin-top:10px;
+      border:1px solid var(--border);
+      border-radius:12px;
+      overflow:hidden;
+      background:white;
+      max-height:260px;
+      overflow-y:auto;
+    }
+
+    .search-results:empty{ display:none; }
+
+    .search-item{
+      padding:12px;
+      border-bottom:1px solid var(--border);
+      cursor:pointer;
+    }
+
+    .search-item:last-child{ border-bottom:none; }
+    .search-item:hover{ background:#eff6ff; }
+
+    .selected-music{
+      background:#ecfeff;
+      border:1px solid #bae6fd;
+      color:#0f172a;
+      padding:12px;
+      border-radius:12px;
+      margin-top:12px;
+    }
+
+    .status-inline{
+      font-size:.92rem;
+      color:var(--muted);
+      margin-top:8px;
+    }
+
+    @media (max-width:768px){
+      header{ padding:36px 18px; }
+      nav{ justify-content:flex-start; overflow-x:auto; white-space:nowrap; }
+      .container{ width:min(94%, var(--container)); padding:24px 0 48px; }
+      .grid{ grid-template-columns:1fr; }
+      .card{ padding:18px; }
+      .table{ min-width:620px; }
+      .form-grid{ grid-template-columns:1fr; }
+    }
   </style>
 </head>
 <body>
   <header>
-    <h1>Milouv Admin 3.3</h1>
-    <p>Painel protegido com login do Google</p>
+    <div class="badge">Milouv 2.0</div>
+    <h1>Portal do Ministério de Louvor</h1>
+    <p>Escalas, repertórios e informações em um só lugar.</p>
   </header>
 
+  <nav>
+    <button data-page="home" class="active" onclick="openPage('home')">Início</button>
+    <button data-page="escala" onclick="openPage('escala')">Escala do Mês</button>
+    <button data-page="repertorio" onclick="openPage('repertorio')">Repertório</button>
+    <button data-page="informacoes" onclick="openPage('informacoes')">Informações</button>
+    <button data-page="estatisticas" onclick="openPage('estatisticas')">Estatísticas</button>
+  </nav>
+
   <main class="container">
-    <div class="topbar">
-      <a class="link-btn" href="./index.html">← Voltar para o site</a>
-      <div id="userBox" class="pill hidden"></div>
+    <section class="page active" id="home">
+      <div class="home-lead">
+        <h2>Bem-vindo ao Milouv 2.0</h2>
+        <p class="muted">Agora com fluxo de repertório por culto: pesquisar no banco, selecionar e adicionar diretamente ao culto.</p>
+      </div>
+
+      <div class="grid">
+        <div class="card">
+          <h3>Escala do mês</h3>
+          <p>Veja quem está escalado e abra o repertório de cada culto.</p>
+          <button onclick="openPage('escala')">Abrir escala</button>
+        </div>
+
+        <div class="card">
+          <h3>Repertório completo</h3>
+          <p>Consulte o banco geral de músicas do ministério com busca por nome e artista.</p>
+          <button onclick="openPage('repertorio')">Ver repertório</button>
+        </div>
+
+        <div class="card">
+          <h3>Informações</h3>
+          <p>Veja avisos, ensaios, encontros e estudos do ministério.</p>
+          <button onclick="openPage('informacoes')">Abrir informações</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" id="escala">
+      <div class="toolbar">
+        <div>
+          <h2>Escala do mês</h2>
+          <p class="muted" id="mesAtivoLabel">Carregando mês ativo...</p>
+        </div>
+      </div>
+
+      <div class="grid" id="listaEscala">
+        <div class="empty-state">Carregando escala...</div>
+      </div>
+    </section>
+
+    <section class="page" id="repertorio">
+      <h2>Repertório do Ministério</h2>
+
+      <div class="search-box">
+        <label for="buscarMusica" class="muted">Buscar música ou artista</label>
+        <input id="buscarMusica" type="text" placeholder="Ex.: Bondade de Deus, Hillsong...">
+      </div>
+
+      <div id="repertorioContainer">
+        <div class="empty-state">Carregando repertório...</div>
+      </div>
+    </section>
+
+    <section class="page" id="informacoes">
+      <h2>Informações do Ministério</h2>
+      <div id="listaInformacoes">
+        <div class="empty-state">Carregando informações...</div>
+      </div>
+    </section>
+
+    <section class="page" id="estatisticas">
+  <h2>Estatísticas do Ministério</h2>
+
+  <div class="grid">
+    <div class="card">
+      <h3>Músicas cadastradas</h3>
+      <p id="statTotalMusicas">0</p>
     </div>
 
-    <section id="authCard" class="card">
-      <h2>Acesso ao painel</h2>
-      <p class="muted">Entre com sua conta Google autorizada para administrar o Milouv.</p>
-      <div class="row">
-        <button id="btnLogin">Entrar com Google</button>
-      </div>
-      <div id="authStatus" class="status"></div>
-      <div class="status">Antes de usar este painel, ative no Firebase Authentication o provedor <strong>Google</strong>.</div>
-    </section>
+    <div class="card">
+      <h3>Cultos no mês</h3>
+      <p id="statTotalCultos">0</p>
+    </div>
 
-    <section id="adminArea" class="hidden">
-      <section class="card">
-        <div class="topbar">
-          <div>
-            <h2>Painel administrativo</h2>
-            <p class="muted">Somente líderes autorizados podem editar.</p>
-          </div>
-          <div class="row">
-            <button class="secondary" id="btnLogout">Sair</button>
-          </div>
-        </div>
-      </section>
+    <div class="card">
+      <h3>Músicas no histórico</h3>
+      <p id="statHistorico">0</p>
+    </div>
+  </div>
 
-      <section class="card">
-        <h3>Ajustar mês ativo</h3>
-        <div class="grid">
-          <div>
-            <label for="mesAtivo">Mês ativo</label>
-            <input id="mesAtivo" type="text" placeholder="Ex.: 2026-03">
-          </div>
-        </div>
-        <div class="row">
-          <button onclick="salvarMesAtivo()">Salvar mês ativo</button>
-        </div>
-        <div id="statusMes" class="status"></div>
-      </section>
+  <div class="card" style="margin-top:20px;">
+    <h3>Músicas mais cantadas</h3>
+    <div id="listaMaisCantadas" class="muted">Carregando...</div>
+  </div>
 
-      <section class="card">
-        <h3>Cadastrar música</h3>
-        <div class="grid">
-          <div class="full">
-            <label for="musicaNome">Nome da música</label>
-            <input id="musicaNome" type="text" placeholder="Ex.: Santo Pra Sempre">
-          </div>
-          <div>
-            <label for="musicaArtista">Artista</label>
-            <input id="musicaArtista" type="text" placeholder="Ex.: Gabriel Guedes">
-          </div>
-          <div>
-            <label for="musicaPerfil">Perfil</label>
-            <input id="musicaPerfil" type="text" placeholder="Ex.: ADORAÇÃO">
-          </div>
-          <div>
-            <label for="tomMasculino">Tom masculino</label>
-            <input id="tomMasculino" type="text" placeholder="Ex.: G">
-          </div>
-          <div>
-            <label for="tomFeminino">Tom feminino</label>
-            <input id="tomFeminino" type="text" placeholder="Ex.: D">
-          </div>
-          <div class="full">
-            <label for="musicaAndamento">Andamento</label>
-            <select id="musicaAndamento">
-              <option value="">Selecione</option>
-              <option value="LENTA">LENTA</option>
-              <option value="MODERADO">MODERADO</option>
-              <option value="RAPIDA">RAPIDA</option>
-            </select>
-          </div>
-        </div>
-        <div class="row">
-          <button onclick="salvarMusica()">Salvar música</button>
-        </div>
-        <div id="statusMusica" class="status"></div>
-      </section>
-
-      <section class="card">
-        <h3>Criar culto</h3>
-        <div class="grid">
-          <div>
-            <label for="cultoMes">Mês</label>
-            <input id="cultoMes" type="text" placeholder="Ex.: 2026-03">
-          </div>
-          <div>
-            <label for="cultoId">ID do culto</label>
-            <input id="cultoId" type="text" placeholder="Ex.: 08-03-2026-manha">
-          </div>
-          <div>
-            <label for="cultoData">Data ISO</label>
-            <input id="cultoData" type="text" placeholder="Ex.: 2026-03-08">
-          </div>
-          <div>
-            <label for="cultoLabel">Data exibida</label>
-            <input id="cultoLabel" type="text" placeholder="Ex.: 08/03/2026">
-          </div>
-          <div>
-            <label for="cultoCategoria">Categoria</label>
-            <select id="cultoCategoria">
-              <option value="Domingo Manhã">Domingo Manhã</option>
-              <option value="Domingo Noite">Domingo Noite</option>
-              <option value="Quarta Profética">Quarta Profética</option>
-            </select>
-          </div>
-          <div>
-            <label for="cultoLider">Líder</label>
-            <input id="cultoLider" type="text" placeholder="Ex.: Lincoln">
-          </div>
-          <div class="full">
-            <label for="cultoVocal">Vocal</label>
-            <input id="cultoVocal" type="text" placeholder="Ex.: Sheila, Rafael, Monica">
-          </div>
-          <div>
-            <label for="cultoBateria">Bateria</label>
-            <input id="cultoBateria" type="text" placeholder="Ex.: Davy">
-          </div>
-          <div>
-            <label for="cultoViolao">Violão</label>
-            <input id="cultoViolao" type="text" placeholder="Ex.: Miguel">
-          </div>
-        </div>
-        <div class="row">
-          <button onclick="salvarCulto()">Salvar culto</button>
-        </div>
-        <div id="statusCulto" class="status"></div>
-      </section>
-
-      <section class="card">
-        <h3>Montar repertório do culto</h3>
-        <div class="grid">
-          <div>
-            <label for="cultoSelect">Culto</label>
-            <select id="cultoSelect"></select>
-          </div>
-          <div>
-            <label for="buscaMusicaCulto">Pesquisar música</label>
-            <input id="buscaMusicaCulto" type="text" placeholder="Digite o nome da música">
-          </div>
-        </div>
-        <div id="resultadoBusca" class="search-results"></div>
-        <h3 style="margin-top:20px">Repertório atual</h3>
-        <div id="repertorioCulto" class="list muted">Selecione um culto.</div>
-        <div id="statusRepertorio" class="status"></div>
-      </section>
-
-      <section class="card">
-        <h3>Publicar informação</h3>
-        <div class="grid">
-          <div class="full">
-            <label for="infoTitulo">Título</label>
-            <input id="infoTitulo" type="text" placeholder="Ex.: Ensaio geral">
-          </div>
-          <div class="full">
-            <label for="infoTexto">Texto</label>
-            <textarea id="infoTexto" placeholder="Digite o aviso do ministério..."></textarea>
-          </div>
-        </div>
-        <div class="row">
-          <button onclick="salvarInformacao()">Publicar informação</button>
-        </div>
-        <div id="statusInfo" class="status"></div>
-      </section>
-    </section>
+  <div class="card" style="margin-top:20px;">
+    <h3>Perfis mais cadastrados</h3>
+    <div id="listaPerfis" class="muted">Carregando...</div>
+  </div>
+</section>
   </main>
+
+  <div class="modal" id="modalRepertorio">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div>
+          <h3 id="modalTitulo">Repertório do Culto</h3>
+          <p id="modalSubtitulo" class="muted">Carregando...</p>
+        </div>
+        <button class="modal-close" onclick="fecharModal()">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="panel">
+          <h3>Adicionar música ao culto</h3>
+
+          <div class="panel">
+  <h3>Sugestões automáticas por perfil</h3>
+
+  <div class="form-grid">
+    <div>
+      <label for="perfilSugestao" class="muted">Perfil</label>
+      <select id="perfilSugestao">
+        <option value="">Selecione</option>
+        <option value="ADORAÇÃO">ADORAÇÃO</option>
+        <option value="CLAMOR">CLAMOR</option>
+        <option value="ENTREGA">ENTREGA</option>
+        <option value="CEIA">CEIA</option>
+        <option value="CONGREGACIONAL">CONGREGACIONAL</option>
+        <option value="CELEBRAÇÃO">CELEBRAÇÃO</option>
+        <option value="OFERTA">OFERTA</option>
+        <option value="PROMESSA">PROMESSA</option>
+        <option value="GUERRA">GUERRA</option>
+        <option value="EXALTAÇÃO">EXALTAÇÃO</option>
+      </select>
+    </div>
+
+    <div style="display:flex; align-items:end;">
+      <button onclick="gerarSugestoes()">Gerar sugestões</button>
+    </div>
+  </div>
+
+  <div id="listaSugestoes" class="search-results" style="margin-top:12px;"></div>
+</div>
+
+          <div class="form-grid">
+            <div class="form-field-full">
+              <label for="buscarMusicaCulto" class="muted">Pesquisar no banco</label>
+              <input id="buscarMusicaCulto" type="text" placeholder="Digite nome da música ou artista...">
+              <div id="resultadoBuscaCulto" class="search-results"></div>
+            </div>
+
+            <div>
+              <label for="tomCulto" class="muted">Tom do culto</label>
+              <input id="tomCulto" type="text" placeholder="Ex.: G, A, C, D">
+            </div>
+
+            <div>
+              <label for="obsCulto" class="muted">Observação</label>
+              <input id="obsCulto" type="text" placeholder="Abertura, ministração, ceia...">
+            </div>
+
+            <div class="form-field-full">
+              <div id="musicaSelecionadaBox" class="selected-music" style="display:none;"></div>
+            </div>
+          </div>
+
+          <div class="modal-actions">
+            <button onclick="salvarMusicaNoCulto()">Adicionar ao repertório</button>
+            <button class="btn-secondary" onclick="limparSelecaoMusica()">Limpar seleção</button>
+          </div>
+          <div class="status-inline" id="statusAdicao"></div>
+        </div>
+
+        <div id="modalConteudo">
+          <div class="empty-state">Carregando repertório...</div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getDatabase, ref, set, push, get, remove, update } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
-    import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getDatabase, ref, onValue, get, set } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDpFm6Q9KeQFuRgHwYD5OfFMJ9SYvdOW_Y",
@@ -244,392 +567,514 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
-    const auth = getAuth(app);
-    const provider = new GoogleAuthProvider();
 
-    // Troque pelos emails dos líderes autorizados
-    const ALLOWED_EMAILS = [
-      "lincolnleandro@gmail.com",
-      "lincolnleandro@hotmail.com
-      // "lider2@gmail.com",
-      // "lider3@gmail.com"
-    ];
+    const state = {
+  musicas: [],
+  mesAtivo: null,
+  cultosMap: {},
+  cultoAtualId: null,
+  musicaSelecionada: null,
+  resultadosBuscaAtual: [],
+  historico: {}
+};
 
-    let bancoMusicas = [];
-    let cultosCache = [];
-    let repertorioAtual = {};
-
-    function setStatus(id, message, ok = true) {
-      const el = document.getElementById(id);
-      el.textContent = message;
-      el.className = `status ${ok ? "success" : "error"}`;
+    function escapeHtml(value = "") {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#39;");
     }
 
-    function isAllowed(email) {
-      return ALLOWED_EMAILS.includes((email || "").toLowerCase());
+    function openPage(page) {
+      document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+      document.getElementById(page).classList.add("active");
+      document.querySelectorAll("nav button").forEach(b => b.classList.remove("active"));
+      const botao = document.querySelector(`nav button[data-page="${page}"]`);
+      if (botao) botao.classList.add("active");
     }
+    window.openPage = openPage;
 
-    function showAdmin(user) {
-      document.getElementById("authCard").classList.add("hidden");
-      document.getElementById("adminArea").classList.remove("hidden");
-      const box = document.getElementById("userBox");
-      box.classList.remove("hidden");
-      box.textContent = user.email;
-      preloadAdminData();
+    function fecharModal() {
+      document.getElementById("modalRepertorio").classList.remove("active");
+      limparSelecaoMusica();
+      document.getElementById("statusAdicao").textContent = "";
     }
+    window.fecharModal = fecharModal;
 
-    function showAuth(message = "") {
-      document.getElementById("authCard").classList.remove("hidden");
-      document.getElementById("adminArea").classList.add("hidden");
-      const box = document.getElementById("userBox");
-      box.classList.add("hidden");
-      box.textContent = "";
-      document.getElementById("authStatus").textContent = message;
-    }
+    function renderEscala(dados, mesAtivo) {
+      const container = document.getElementById("listaEscala");
+      const mesAtivoLabel = document.getElementById("mesAtivoLabel");
 
-    async function loginComGoogle() {
-      try {
-        const result = await signInWithPopup(auth, provider);
-        const user = result.user;
-        if (!isAllowed(user.email)) {
-          await signOut(auth);
-          showAuth(`Acesso negado para ${user.email}. Adicione este email na lista ALLOWED_EMAILS.`);
-        }
-      } catch (error) {
-        console.error(error);
-        showAuth("Erro no login com Google. Verifique se o provedor Google foi ativado no Firebase Authentication.");
-      }
-    }
+      mesAtivoLabel.textContent = mesAtivo ? `Mês ativo: ${mesAtivo}` : "Nenhum mês ativo configurado.";
 
-    async function logout() {
-      await signOut(auth);
-      showAuth("Sessão encerrada.");
-    }
-
-    async function preloadAdminData() {
-      await Promise.all([
-        carregarMesAtivoAtual(),
-        carregarMusicasBanco(),
-        carregarCultos(),
-        carregarRepertorioCulto()
-      ]);
-    }
-
-    async function carregarMesAtivoAtual() {
-      const snapshot = await get(ref(db, "config/mesAtivo"));
-      document.getElementById("mesAtivo").value = snapshot.val() || "";
-      if (!document.getElementById("cultoMes").value) {
-        document.getElementById("cultoMes").value = snapshot.val() || "";
-      }
-    }
-
-    async function salvarMesAtivo() {
-      const mesAtivo = document.getElementById("mesAtivo").value.trim();
-      if (!mesAtivo) {
-        setStatus("statusMes", "Informe o mês ativo.", false);
-        return;
-      }
-      try {
-        await set(ref(db, "config/mesAtivo"), mesAtivo);
-        setStatus("statusMes", "Mês ativo salvo com sucesso.");
-      } catch (error) {
-        console.error(error);
-        setStatus("statusMes", "Erro ao salvar mês ativo.", false);
-      }
-    }
-
-    async function salvarMusica() {
-      const musica = document.getElementById("musicaNome").value.trim();
-      const artista = document.getElementById("musicaArtista").value.trim();
-      const perfil = document.getElementById("musicaPerfil").value.trim();
-      const tomMasculino = document.getElementById("tomMasculino").value.trim();
-      const tomFeminino = document.getElementById("tomFeminino").value.trim();
-      const andamento = document.getElementById("musicaAndamento").value.trim();
-
-      if (!musica || !artista) {
-        setStatus("statusMusica", "Preencha pelo menos música e artista.", false);
+      if (!dados) {
+        container.innerHTML = `<div class="empty-state">Nenhuma escala encontrada.</div>`;
         return;
       }
 
-      try {
-        const musicasRef = ref(db, "musicas");
-        const snapshot = await get(musicasRef);
-        const dados = snapshot.val() || {};
-        const proximoNumero = Object.keys(dados).length + 1;
-        const novoId = `m${String(proximoNumero).padStart(3, "0")}`;
-
-        await set(ref(db, `musicas/${novoId}`), {
-          musica,
-          artista,
-          tomMasculino,
-          tomFeminino,
-          perfil,
-          andamento
-        });
-
-        document.getElementById("musicaNome").value = "";
-        document.getElementById("musicaArtista").value = "";
-        document.getElementById("musicaPerfil").value = "";
-        document.getElementById("tomMasculino").value = "";
-        document.getElementById("tomFeminino").value = "";
-        document.getElementById("musicaAndamento").value = "";
-
-        await carregarMusicasBanco();
-        setStatus("statusMusica", `Música salva com sucesso em ${novoId}.`);
-      } catch (error) {
-        console.error(error);
-        setStatus("statusMusica", "Erro ao salvar música.", false);
-      }
-    }
-
-    async function salvarCulto() {
-      const mes = document.getElementById("cultoMes").value.trim();
-      const cultoId = document.getElementById("cultoId").value.trim();
-      const data = document.getElementById("cultoData").value.trim();
-      const label = document.getElementById("cultoLabel").value.trim();
-      const categoria = document.getElementById("cultoCategoria").value.trim();
-      const lider = document.getElementById("cultoLider").value.trim();
-      const vocalTexto = document.getElementById("cultoVocal").value.trim();
-      const bateria = document.getElementById("cultoBateria").value.trim();
-      const violao = document.getElementById("cultoViolao").value.trim();
-
-      if (!mes || !cultoId || !data || !label || !categoria) {
-        setStatus("statusCulto", "Preencha mês, id do culto, data, label e categoria.", false);
+      const entries = Object.entries(dados);
+      if (!entries.length) {
+        container.innerHTML = `<div class="empty-state">Nenhuma escala encontrada.</div>`;
         return;
       }
 
-      const vocal = vocalTexto ? vocalTexto.split(",").map(item => item.trim()).filter(Boolean) : [];
+      state.cultosMap = {};
+      entries.forEach(([id, culto]) => { state.cultosMap[id] = culto; });
 
-      try {
-        await set(ref(db, `escalas/${mes}/cultos/${cultoId}`), {
-          data, label, categoria, lider, vocal, bateria, violao
-        });
-
-        document.getElementById("cultoId").value = "";
-        document.getElementById("cultoData").value = "";
-        document.getElementById("cultoLabel").value = "";
-        document.getElementById("cultoLider").value = "";
-        document.getElementById("cultoVocal").value = "";
-        document.getElementById("cultoBateria").value = "";
-        document.getElementById("cultoViolao").value = "";
-
-        await carregarCultos();
-        setStatus("statusCulto", "Culto salvo com sucesso.");
-      } catch (error) {
-        console.error(error);
-        setStatus("statusCulto", "Erro ao salvar culto.", false);
-      }
+      container.innerHTML = entries.map(([id, culto]) => {
+        const vocal = Array.isArray(culto.vocal) ? culto.vocal.join(", ") : (culto.vocal || "");
+        return `
+          <div class="card culto-card">
+            <div class="culto-topo">
+              <span class="culto-categoria">${escapeHtml(culto.categoria || "Culto")}</span>
+              <span class="culto-data">${escapeHtml(culto.label || culto.data || "")}</span>
+            </div>
+            <div class="culto-info"><strong>Líder:</strong> ${escapeHtml(culto.lider || "—")}</div>
+            <div class="culto-info"><strong>Vocal:</strong> ${escapeHtml(vocal || "—")}</div>
+            <div class="culto-info"><strong>Bateria:</strong> ${escapeHtml(culto.bateria || "—")}</div>
+            <div class="culto-info"><strong>Violão:</strong> ${escapeHtml(culto.violao || "—")}</div>
+            <button onclick="abrirModalDoCulto('${id}')">Ver repertório</button>
+          </div>
+        `;
+      }).join("");
     }
 
-    async function salvarInformacao() {
-      const titulo = document.getElementById("infoTitulo").value.trim();
-      const texto = document.getElementById("infoTexto").value.trim();
-
-      if (!titulo || !texto) {
-        setStatus("statusInfo", "Preencha título e texto.", false);
-        return;
-      }
-
-      try {
-        await push(ref(db, "informacoes"), { titulo, texto });
-        document.getElementById("infoTitulo").value = "";
-        document.getElementById("infoTexto").value = "";
-        setStatus("statusInfo", "Informação publicada com sucesso.");
-      } catch (error) {
-        console.error(error);
-        setStatus("statusInfo", "Erro ao publicar informação.", false);
-      }
-    }
-
-    async function carregarMusicasBanco() {
-      const snapshot = await get(ref(db, "musicas"));
-      const dados = snapshot.val() || {};
-      bancoMusicas = Object.keys(dados).map(id => ({ id, ...dados[id] }));
-    }
-
-    async function carregarCultos() {
-      const mes = document.getElementById("cultoMes").value.trim() || document.getElementById("mesAtivo").value.trim() || "2026-03";
-      const snapshot = await get(ref(db, `escalas/${mes}/cultos`));
-      const dados = snapshot.val() || {};
-      cultosCache = Object.entries(dados).map(([id, culto]) => ({ id, ...culto }));
-
-      const select = document.getElementById("cultoSelect");
-      select.innerHTML = "";
-
-      cultosCache.forEach(culto => {
-        const opt = document.createElement("option");
-        opt.value = culto.id;
-        opt.textContent = `${culto.label || culto.id} - ${culto.categoria || "Culto"}`;
-        select.appendChild(opt);
-      });
-    }
-
-    function renderResultadoBusca(lista) {
-      const container = document.getElementById("resultadoBusca");
+    function renderRepertorio(lista) {
+      const container = document.getElementById("repertorioContainer");
       if (!lista.length) {
-        container.innerHTML = "";
+        container.innerHTML = `<div class="empty-state">Nenhuma música encontrada.</div>`;
         return;
       }
+
+      const rows = lista.map(m => `
+        <tr>
+          <td>${escapeHtml(m.musica || "")}</td>
+          <td>${escapeHtml(m.artista || "")}</td>
+          <td>${escapeHtml(m.tomMasculino || "")}</td>
+          <td>${escapeHtml(m.tomFeminino || "")}</td>
+          <td>${escapeHtml(m.perfil || "")}</td>
+          <td>${escapeHtml(m.andamento || "")}</td>
+        </tr>
+      `).join("");
+
+      container.innerHTML = `
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Música</th>
+                <th>Artista</th>
+                <th>Tom Masc</th>
+                <th>Tom Fem</th>
+                <th>Perfil</th>
+                <th>Andamento</th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    function renderInformacoes(dados) {
+      const container = document.getElementById("listaInformacoes");
+      if (!dados) {
+        container.innerHTML = `<div class="empty-state">Nenhuma informação cadastrada.</div>`;
+        return;
+      }
+      const infos = Object.values(dados);
+      container.innerHTML = infos.map(info => `
+        <div class="notice">
+          <strong>${escapeHtml(info.titulo || "")}</strong>
+          <p>${escapeHtml(info.texto || "")}</p>
+        </div>
+      `).join("");
+    }
+
+    function renderResultadoBuscaCulto(lista) {
+      const container = document.getElementById("resultadoBuscaCulto");
       container.innerHTML = lista.map((m, index) => `
-        <div class="search-item">
-          <div>
-            <strong>${m.musica || ""}</strong><br>
-            <span class="muted">${m.artista || ""} • ${m.perfil || ""} • ${m.andamento || ""}</span>
-          </div>
-          <button onclick="adicionarMusicaCulto(${index})">Adicionar</button>
-        </div>
-      `).join("");
-      window._resultadoBusca = lista;
-    }
-
-    async function carregarRepertorioCulto() {
-      const cultoId = document.getElementById("cultoSelect").value;
-      const container = document.getElementById("repertorioCulto");
-      if (!cultoId) {
-        container.textContent = "Selecione um culto.";
-        return;
-      }
-
-      const snapshot = await get(ref(db, `repertorios/${cultoId}`));
-      repertorioAtual = snapshot.val() || {};
-      const itens = Object.entries(repertorioAtual).sort((a,b) => (a[1].ordem || 0) - (b[1].ordem || 0));
-
-      if (!itens.length) {
-        container.textContent = "Sem repertório.";
-        return;
-      }
-
-      container.innerHTML = itens.map(([id, item], index) => `
-        <div class="item">
-          <strong>${index + 1}. ${item.musica || ""}</strong><br>
-          <span class="muted">${item.artista || ""} • Tom: ${item.tom || "—"}</span>
-          ${item.obs ? `<br><span class="muted">${item.obs}</span>` : ""}
-          <div class="row">
-            <button class="secondary" onclick="subirMusica('${id}')">⬆</button>
-            <button class="secondary" onclick="descerMusica('${id}')">⬇</button>
-            <button class="danger" onclick="removerMusicaDoCulto('${id}')">Remover</button>
-          </div>
+        <div class="search-item" onclick="selecionarMusicaDoBanco(${index})">
+          <strong>${escapeHtml(m.musica || "")}</strong><br>
+          <span class="muted">${escapeHtml(m.artista || "")} • ${escapeHtml(m.perfil || "")} • ${escapeHtml(m.andamento || "")}</span>
         </div>
       `).join("");
     }
 
-    async function adicionarMusicaCulto(index) {
-      const musica = (window._resultadoBusca || [])[index];
-      const cultoId = document.getElementById("cultoSelect").value;
-      if (!musica || !cultoId) return;
-
-      const snapshot = await get(ref(db, `repertorios/${cultoId}`));
-      const dados = snapshot.val() || {};
-      const ordem = Object.keys(dados).length + 1;
-      const itemId = `item${ordem}`;
-
-      await set(ref(db, `repertorios/${cultoId}/${itemId}`), {
-        musica: musica.musica || "",
-        artista: musica.artista || "",
-        tom: musica.tomMasculino || musica.tomFeminino || "",
-        obs: "",
-        ordem
-      });
-
-      await set(ref(db, `historico/${musica.musica}/${cultoId}`), true);
-      document.getElementById("buscaMusicaCulto").value = "";
-      document.getElementById("resultadoBusca").innerHTML = "";
-      setStatus("statusRepertorio", "Música adicionada ao culto.");
-      await carregarRepertorioCulto();
-    }
-
-    async function removerMusicaDoCulto(itemId) {
-      const cultoId = document.getElementById("cultoSelect").value;
-      if (!cultoId) return;
-      await remove(ref(db, `repertorios/${cultoId}/${itemId}`));
-      await normalizarOrdens(cultoId);
-      setStatus("statusRepertorio", "Música removida do culto.");
-      await carregarRepertorioCulto();
-    }
-
-    async function normalizarOrdens(cultoId) {
-      const snapshot = await get(ref(db, `repertorios/${cultoId}`));
-      const dados = snapshot.val() || {};
-      const itens = Object.entries(dados).sort((a,b) => (a[1].ordem || 0) - (b[1].ordem || 0));
-      const updates = {};
-      itens.forEach(([id], index) => {
-        updates[`repertorios/${cultoId}/${id}/ordem`] = index + 1;
-      });
-      if (Object.keys(updates).length) {
-        await update(ref(db), updates);
-      }
-    }
-
-    async function subirMusica(itemId) {
-      const cultoId = document.getElementById("cultoSelect").value;
-      const snapshot = await get(ref(db, `repertorios/${cultoId}`));
-      const dados = snapshot.val() || {};
-      const itens = Object.entries(dados).sort((a,b) => (a[1].ordem || 0) - (b[1].ordem || 0));
-      const index = itens.findIndex(([id]) => id === itemId);
-      if (index <= 0) return;
-      const atual = itens[index];
-      const anterior = itens[index - 1];
-      await update(ref(db), {
-        [`repertorios/${cultoId}/${atual[0]}/ordem`]: index,
-        [`repertorios/${cultoId}/${anterior[0]}/ordem`]: index + 1
-      });
-      await carregarRepertorioCulto();
-    }
-
-    async function descerMusica(itemId) {
-      const cultoId = document.getElementById("cultoSelect").value;
-      const snapshot = await get(ref(db, `repertorios/${cultoId}`));
-      const dados = snapshot.val() || {};
-      const itens = Object.entries(dados).sort((a,b) => (a[1].ordem || 0) - (b[1].ordem || 0));
-      const index = itens.findIndex(([id]) => id === itemId);
-      if (index < 0 || index >= itens.length - 1) return;
-      const atual = itens[index];
-      const proximo = itens[index + 1];
-      await update(ref(db), {
-        [`repertorios/${cultoId}/${atual[0]}/ordem`]: index + 2,
-        [`repertorios/${cultoId}/${proximo[0]}/ordem`]: index + 1
-      });
-      await carregarRepertorioCulto();
-    }
-
-    document.getElementById("btnLogin").addEventListener("click", loginComGoogle);
-    document.getElementById("btnLogout").addEventListener("click", logout);
-    document.getElementById("cultoMes").addEventListener("change", carregarCultos);
-    document.getElementById("cultoSelect").addEventListener("change", carregarRepertorioCulto);
-    document.getElementById("buscaMusicaCulto").addEventListener("input", (e) => {
-      const termo = e.target.value.toLowerCase().trim();
-      if (!termo) {
-        renderResultadoBusca([]);
+    function atualizarBoxMusicaSelecionada() {
+      const box = document.getElementById("musicaSelecionadaBox");
+      if (!state.musicaSelecionada) {
+        box.style.display = "none";
+        box.innerHTML = "";
         return;
       }
-      const resultado = bancoMusicas.filter(m =>
-        (m.musica || "").toLowerCase().includes(termo) ||
-        (m.artista || "").toLowerCase().includes(termo)
-      ).slice(0, 10);
-      renderResultadoBusca(resultado);
+
+      box.style.display = "block";
+      box.innerHTML = `
+        <strong>Música selecionada:</strong><br>
+        ${escapeHtml(state.musicaSelecionada.musica || "")} — ${escapeHtml(state.musicaSelecionada.artista || "")}<br>
+        <span class="muted">Perfil: ${escapeHtml(state.musicaSelecionada.perfil || "")} • Andamento: ${escapeHtml(state.musicaSelecionada.andamento || "")}</span>
+      `;
+    }
+
+    function limparSelecaoMusica() {
+      state.musicaSelecionada = null;
+      document.getElementById("buscarMusicaCulto").value = "";
+      document.getElementById("resultadoBuscaCulto").innerHTML = "";
+      document.getElementById("tomCulto").value = "";
+      document.getElementById("obsCulto").value = "";
+      atualizarBoxMusicaSelecionada();
+    }
+    window.limparSelecaoMusica = limparSelecaoMusica;
+
+    function gerarSugestoes() {
+  const perfil = document.getElementById("perfilSugestao").value;
+  const container = document.getElementById("listaSugestoes");
+
+  if (!perfil) {
+    container.innerHTML = "";
+    return;
+  }
+
+  const filtradas = state.musicas
+    .filter(m => (m.perfil || "").toUpperCase() === perfil.toUpperCase())
+    .slice(0, 8);
+
+  if (!filtradas.length) {
+    container.innerHTML = `<div class="search-item">Nenhuma sugestão encontrada.</div>`;
+    return;
+  }
+
+  state.resultadosBuscaAtual = filtradas;
+
+  container.innerHTML = filtradas.map((m, index) => `
+    <div class="search-item" onclick="selecionarSugestao(${index})">
+      <strong>${escapeHtml(m.musica || "")}</strong><br>
+      <span class="muted">${escapeHtml(m.artista || "")} • ${escapeHtml(m.andamento || "")}</span>
+    </div>
+  `).join("");
+}
+
+function selecionarSugestao(index) {
+  const musica = (state.resultadosBuscaAtual || [])[index];
+  if (!musica) return;
+
+  state.musicaSelecionada = musica;
+  document.getElementById("buscarMusicaCulto").value = `${musica.musica} - ${musica.artista}`;
+  document.getElementById("tomCulto").value = musica.tomMasculino || musica.tomFeminino || "";
+  atualizarBoxMusicaSelecionada();
+  document.getElementById("listaSugestoes").innerHTML = "";
+}
+
+window.gerarSugestoes = gerarSugestoes;
+window.selecionarSugestao = selecionarSugestao;
+
+    function renderEstatisticas() {
+  document.getElementById("statTotalMusicas").textContent = state.musicas.length;
+
+  const totalCultos = Object.keys(state.cultosMap || {}).length;
+  document.getElementById("statTotalCultos").textContent = totalCultos;
+
+  const historico = state.historico || {};
+  const totalHistorico = Object.keys(historico).length;
+  document.getElementById("statHistorico").textContent = totalHistorico;
+
+  const ranking = Object.entries(historico)
+    .map(([musica, cultos]) => ({
+      musica,
+      total: Object.keys(cultos || {}).length
+    }))
+    .sort((a, b) => b.total - a.total)
+    .slice(0, 10);
+
+  document.getElementById("listaMaisCantadas").innerHTML = ranking.length
+    ? ranking.map((item, index) => `<div>${index + 1}. ${escapeHtml(item.musica)} (${item.total}x)</div>`).join("")
+    : "Nenhuma música registrada no histórico.";
+
+  const perfis = {};
+  state.musicas.forEach(m => {
+    const perfil = (m.perfil || "SEM PERFIL").toUpperCase();
+    perfis[perfil] = (perfis[perfil] || 0) + 1;
+  });
+
+  const rankingPerfis = Object.entries(perfis)
+    .sort((a, b) => b[1] - a[1]);
+
+  document.getElementById("listaPerfis").innerHTML = rankingPerfis.length
+    ? rankingPerfis.map(([perfil, total]) => `<div>${escapeHtml(perfil)} (${total})</div>`).join("")
+    : "Nenhum perfil encontrado.";
+}
+
+function setupHistorico() {
+  onValue(ref(db, "historico"), (snapshot) => {
+    state.historico = snapshot.val() || {};
+    renderEstatisticas();
+  });
+}
+
+    async function carregarRepertorioDoCulto(cultoId) {
+      const conteudo = document.getElementById("modalConteudo");
+      conteudo.innerHTML = `<div class="empty-state">Carregando repertório...</div>`;
+
+      try {
+        const snapshot = await get(ref(db, `repertorios/${cultoId}`));
+        const dados = snapshot.val();
+
+        if (!dados) {
+          conteudo.innerHTML = `<div class="empty-state">Nenhum repertório cadastrado para este culto.</div>`;
+          return;
+        }
+
+        const itens = Object.values(dados).sort((a, b) => (a.ordem || 0) - (b.ordem || 0));
+        if (!itens.length) {
+          conteudo.innerHTML = `<div class="empty-state">Nenhum repertório cadastrado para este culto.</div>`;
+          return;
+        }
+
+      conteudo.innerHTML = `
+<div class="modal-list">
+${itens.map((item,index)=>`
+<div class="modal-item">
+
+<strong>${index+1}. ${item.musica}</strong>
+
+<div class="muted">Artista: ${item.artista||"—"}</div>
+<div class="muted">Tom: ${item.tom||"—"}</div>
+<div class="muted">${item.obs||""}</div>
+
+<div class="modal-actions">
+
+<button onclick="subirMusica('${cultoId}',${index})">
+⬆
+</button>
+
+<button onclick="descerMusica('${cultoId}',${index})">
+⬇
+</button>
+
+<button class="btn-danger"
+onclick="removerMusica('${cultoId}','item${index+1}')">
+❌ Remover
+</button>
+
+</div>
+
+</div>
+`).join("")}
+</div>
+`;
+      } catch (error) {
+        console.error(error);
+        conteudo.innerHTML = `<div class="empty-state">Erro ao carregar repertório.</div>`;
+      }
+    }
+
+async function removerMusica(cultoId,itemId){
+
+if(!confirm("Remover música do repertório?")) return;
+
+await set(ref(db,`repertorios/${cultoId}/${itemId}`),null);
+
+carregarRepertorioDoCulto(cultoId);
+
+}
+
+
+    async function subirMusica(cultoId,index){
+
+const snapshot = await get(ref(db,`repertorios/${cultoId}`));
+const dados = snapshot.val();
+
+const itens = Object.entries(dados);
+
+if(index===0) return;
+
+const atual = itens[index];
+const anterior = itens[index-1];
+
+await set(ref(db,`repertorios/${cultoId}/${atual[0]}/ordem`),index);
+await set(ref(db,`repertorios/${cultoId}/${anterior[0]}/ordem`),index+1);
+
+carregarRepertorioDoCulto(cultoId);
+
+}
+
+
+    async function descerMusica(cultoId,index){
+
+const snapshot = await get(ref(db,`repertorios/${cultoId}`));
+const dados = snapshot.val();
+
+const itens = Object.entries(dados);
+
+if(index===itens.length-1) return;
+
+const atual = itens[index];
+const proxima = itens[index+1];
+
+await set(ref(db,`repertorios/${cultoId}/${atual[0]}/ordem`),index+2);
+await set(ref(db,`repertorios/${cultoId}/${proxima[0]}/ordem`),index+1);
+
+carregarRepertorioDoCulto(cultoId);
+
+}
+    
+    async function abrirModal(cultoId) {
+      const culto = state.cultosMap[cultoId];
+      state.cultoAtualId = cultoId;
+      document.getElementById("modalRepertorio").classList.add("active");
+      document.getElementById("modalTitulo").textContent = "Repertório do Culto";
+      document.getElementById("modalSubtitulo").textContent = culto
+        ? `${culto.categoria || "Culto"} • ${culto.label || culto.data || ""}`
+        : "Culto selecionado";
+      document.getElementById("statusAdicao").textContent = "";
+      limparSelecaoMusica();
+      await carregarRepertorioDoCulto(cultoId);
+    }
+    window.abrirModalDoCulto = abrirModal;
+
+    function setupEscala() {
+  onValue(ref(db, "config/mesAtivo"), (configSnapshot) => {
+    const mesAtivo = configSnapshot.val();
+    state.mesAtivo = mesAtivo;
+
+    if (!mesAtivo) {
+      renderEscala(null, null);
+      renderEstatisticas();
+      return;
+    }
+
+    onValue(ref(db, `escalas/${mesAtivo}/cultos`), (snapshot) => {
+      renderEscala(snapshot.val(), mesAtivo);
+      renderEstatisticas();
+    });
+  });
+}
+
+    function setupRepertorio() {
+  onValue(ref(db, "musicas"), (snapshot) => {
+    const dados = snapshot.val();
+
+    if (!dados) {
+      state.musicas = [];
+      renderRepertorio([]);
+      renderEstatisticas();
+      return;
+    }
+
+    const lista = Object.keys(dados).map(id => ({ id, ...dados[id] }));
+    state.musicas = lista;
+
+    renderRepertorio(lista);
+    renderEstatisticas();
+  });
+
+  document.getElementById("buscarMusica").addEventListener("input", (e) => {
+    const termo = e.target.value.toLowerCase().trim();
+
+    const filtradas = state.musicas.filter(m =>
+      (m.musica || "").toLowerCase().includes(termo) ||
+      (m.artista || "").toLowerCase().includes(termo)
+    );
+
+    renderRepertorio(filtradas);
+  });
+}
+
+    function setupInformacoes() {
+      onValue(ref(db, "informacoes"), (snapshot) => {
+        renderInformacoes(snapshot.val());
+      });
+    }
+
+    function setupBuscaNoModal() {
+      document.getElementById("buscarMusicaCulto").addEventListener("input", (e) => {
+        const termo = e.target.value.toLowerCase().trim();
+        if (!termo) {
+          document.getElementById("resultadoBuscaCulto").innerHTML = "";
+          return;
+        }
+        const resultados = state.musicas.filter(m =>
+          (m.musica || "").toLowerCase().includes(termo) ||
+          (m.artista || "").toLowerCase().includes(termo)
+        ).slice(0, 10);
+        state.resultadosBuscaAtual = resultados;
+        renderResultadoBuscaCulto(resultados);
+      });
+    }
+
+    function selecionarMusicaDoBanco(index) {
+      const musica = (state.resultadosBuscaAtual || [])[index];
+      if (!musica) return;
+      state.musicaSelecionada = musica;
+      document.getElementById("resultadoBuscaCulto").innerHTML = "";
+      document.getElementById("buscarMusicaCulto").value = `${musica.musica} - ${musica.artista}`;
+      if (!document.getElementById("tomCulto").value) {
+        document.getElementById("tomCulto").value = musica.tomMasculino || musica.tomFeminino || "";
+      }
+      atualizarBoxMusicaSelecionada();
+    }
+    window.selecionarMusicaDoBanco = selecionarMusicaDoBanco;
+
+    async function salvarMusicaNoCulto() {
+  const status = document.getElementById("statusAdicao");
+
+  if (!state.cultoAtualId) {
+    status.textContent = "Nenhum culto selecionado.";
+    return;
+  }
+
+  if (!state.musicaSelecionada) {
+    status.textContent = "Selecione uma música no banco antes de adicionar.";
+    return;
+  }
+
+  const tom = document.getElementById("tomCulto").value.trim();
+  const obs = document.getElementById("obsCulto").value.trim();
+
+  try {
+    const repertorioRef = ref(db, `repertorios/${state.cultoAtualId}`);
+    const snapshot = await get(repertorioRef);
+    const dados = snapshot.val() || {};
+    const proximaOrdem = Object.keys(dados).length + 1;
+    const novoId = `item${proximaOrdem}`;
+
+    await set(ref(db, `repertorios/${state.cultoAtualId}/${novoId}`), {
+      musica: state.musicaSelecionada.musica || "",
+      artista: state.musicaSelecionada.artista || "",
+      tom: tom,
+      obs: obs,
+      ordem: proximaOrdem
     });
 
-    onAuthStateChanged(auth, async (user) => {
-      if (!user) {
-        showAuth("");
-        return;
-      }
-      if (!isAllowed(user.email)) {
-        await signOut(auth);
-        showAuth(`Acesso negado para ${user.email}. Adicione este email na lista ALLOWED_EMAILS.`);
-        return;
-      }
-      showAdmin(user);
-    });
+    const historicoRef = ref(db, `historico/${state.musicaSelecionada.musica}/${state.cultoAtualId}`);
+    await set(historicoRef, true);
 
-    window.salvarMesAtivo = salvarMesAtivo;
-    window.salvarMusica = salvarMusica;
-    window.salvarCulto = salvarCulto;
-    window.salvarInformacao = salvarInformacao;
-    window.adicionarMusicaCulto = adicionarMusicaCulto;
-    window.removerMusicaDoCulto = removerMusicaDoCulto;
-    window.subirMusica = subirMusica;
-    window.descerMusica = descerMusica;
+    status.textContent = "Música adicionada ao repertório com sucesso.";
+    limparSelecaoMusica();
+    await carregarRepertorioDoCulto(state.cultoAtualId);
+  } catch (error) {
+    console.error(error);
+    status.textContent = "Erro ao adicionar música ao repertório.";
+  }
+}
+    window.salvarMusicaNoCulto = salvarMusicaNoCulto;
+
+    const modal = document.getElementById("modalRepertorio");
+    if (modal) {
+      modal.addEventListener("click", (e) => {
+        if (e.target.id === "modalRepertorio") fecharModal();
+      });
+    }
+
+    setupEscala();
+setupRepertorio();
+setupInformacoes();
+setupBuscaNoModal();
+setupHistorico();
   </script>
 </body>
 </html>
+
