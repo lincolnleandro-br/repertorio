@@ -291,6 +291,29 @@
       gap:12px;
     }
 
+    .culto-card.proximo-culto{
+  border:2px solid #93c5fd;
+  box-shadow:0 12px 30px rgba(37,99,235,0.14);
+  background:linear-gradient(180deg,#ffffff 0%,#f8fbff 100%);
+}
+
+.culto-card.culto-passado{
+  opacity:0.68;
+  filter:saturate(0.85);
+}
+
+.badge-proximo{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:6px 10px;
+  border-radius:999px;
+  background:#dbeafe;
+  color:#1d4ed8;
+  font-size:0.76rem;
+  font-weight:700;
+}
+
     .culto-topo{
       display:flex;
       justify-content:space-between;
@@ -673,49 +696,83 @@
 
     window.copiarRepertorioAtual = copiarRepertorioAtual;
 
-    function renderEscala(dados, mesAtivo) {
-      const container = document.getElementById("listaEscala");
-      const mesAtivoLabel = document.getElementById("mesAtivoLabel");
+function renderEscala(dados, mesAtivo) {
+  const container = document.getElementById("listaEscala");
+  const mesAtivoLabel = document.getElementById("mesAtivoLabel");
 
-      mesAtivoLabel.textContent = mesAtivo ? `Mês ativo: ${mesAtivo}` : "Nenhum mês ativo configurado.";
+  mesAtivoLabel.textContent = mesAtivo ? `Mês ativo: ${mesAtivo}` : "Nenhum mês ativo configurado.";
 
-      if (!dados) {
-        container.innerHTML = `<div class="empty-state">Nenhuma escala encontrada.</div>`;
-        return;
-      }
+  if (!dados) {
+    container.innerHTML = `<div class="empty-state">Nenhuma escala encontrada.</div>`;
+    return;
+  }
 
-      const entries = Object.entries(dados);
+  let entries = Object.entries(dados).map(([id, culto]) => ({
+    id,
+    ...culto
+  }));
 
-      if (!entries.length) {
-        container.innerHTML = `<div class="empty-state">Nenhuma escala encontrada.</div>`;
-        return;
-      }
+  if (!entries.length) {
+    container.innerHTML = `<div class="empty-state">Nenhuma escala encontrada.</div>`;
+    return;
+  }
 
-      state.cultosMap = {};
-      entries.forEach(([id, culto]) => {
-        state.cultosMap[id] = culto;
-      });
+  // guarda no state para o modal continuar funcionando
+  state.cultosMap = {};
+  entries.forEach(culto => {
+    state.cultosMap[culto.id] = culto;
+  });
 
-      container.innerHTML = entries.map(([id, culto]) => {
-        const vocal = Array.isArray(culto.vocal) ? culto.vocal.join(", ") : (culto.vocal || "");
+  // ordena por data
+  entries.sort((a, b) => {
+    const da = new Date(`${a.data}T00:00:00`);
+    const db = new Date(`${b.data}T00:00:00`);
+    return da - db;
+  });
 
-        return `
-          <div class="card culto-card">
-            <div class="culto-topo">
-              <span class="culto-categoria">${escapeHtml(culto.categoria || "Culto")}</span>
-              <span class="culto-data">${escapeHtml(culto.label || culto.data || "")}</span>
-            </div>
+  const hoje = new Date();
+  const hojeSemHora = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
 
-            <div class="culto-info"><strong>Líder:</strong> ${escapeHtml(culto.lider || "—")}</div>
-            <div class="culto-info"><strong>Vocal:</strong> ${escapeHtml(vocal || "—")}</div>
-            <div class="culto-info"><strong>Bateria:</strong> ${escapeHtml(culto.bateria || "—")}</div>
-            <div class="culto-info"><strong>Violão:</strong> ${escapeHtml(culto.violao || "—")}</div>
+  const futuros = [];
+  const passados = [];
 
-            <button onclick="abrirModalDoCulto('${id}')">Ver repertório</button>
-          </div>
-        `;
-      }).join("");
+  for (const culto of entries) {
+    const dataCulto = new Date(`${culto.data}T00:00:00`);
+    if (dataCulto < hojeSemHora) {
+      passados.push(culto);
+    } else {
+      futuros.push(culto);
     }
+  }
+
+  // futuros primeiro, passados depois
+  const ordenados = [...futuros, ...passados];
+  const proximoCultoId = futuros.length ? futuros[0].id : null;
+
+  container.innerHTML = ordenados.map((culto) => {
+    const vocal = Array.isArray(culto.vocal) ? culto.vocal.join(", ") : (culto.vocal || "");
+    const isProximo = culto.id === proximoCultoId;
+    const isPassado = passados.some(item => item.id === culto.id);
+
+    return `
+      <div class="card culto-card ${isProximo ? "proximo-culto" : ""} ${isPassado ? "culto-passado" : ""}">
+        <div class="culto-topo">
+          <span class="culto-categoria">${escapeHtml(culto.categoria || "Culto")}</span>
+          <span class="culto-data">${escapeHtml(culto.label || culto.data || "")}</span>
+        </div>
+
+        ${isProximo ? `<div><span class="badge-proximo">Próximo culto</span></div>` : ""}
+
+        <div class="culto-info"><strong>Líder:</strong> ${escapeHtml(culto.lider || "—")}</div>
+        <div class="culto-info"><strong>Vocal:</strong> ${escapeHtml(vocal || "—")}</div>
+        <div class="culto-info"><strong>Bateria:</strong> ${escapeHtml(culto.bateria || "—")}</div>
+        <div class="culto-info"><strong>Violão:</strong> ${escapeHtml(culto.violao || "—")}</div>
+
+        <button onclick="abrirModalDoCulto('${culto.id}')">Ver repertório</button>
+      </div>
+    `;
+  }).join("");
+}
 
     function renderRepertorio(lista) {
       const container = document.getElementById("repertorioContainer");
@@ -946,5 +1003,6 @@ function renderInformacoes(dados) {
   </script>
 </body>
 </html>
+
 
 
