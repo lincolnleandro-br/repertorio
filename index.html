@@ -819,29 +819,57 @@ function renderRepertorio(lista) {
   }
 
   function setupRepertorio() {
-    const musicasRef = ref(db, "musicas");
+  const musicasRef = ref(db, "musicas");
 
-    onValue(musicasRef, (snapshot) => {
-      const dados = snapshot.val() || {};
-      state.musicas = Object.values(dados);
-      renderRepertorio(state.musicas);
-    }, () => {
+  onValue(musicasRef, (snapshot) => {
+
+    const dados = snapshot.val();
+
+    if (!dados) {
       state.musicas = [];
       renderRepertorio([]);
-    });
+      return;
+    }
 
-    document.getElementById("buscarMusica").addEventListener("input", (e) => {
-      const termo = e.target.value.trim().toLowerCase();
+    const lista = [];
 
-      const filtradas = state.musicas.filter(m => {
-        const musica = (m.musica || "").toLowerCase();
-        const artista = (m.artista || "").toLowerCase();
-        return musica.includes(termo) || artista.includes(termo);
+    Object.keys(dados).forEach(id => {
+      const m = dados[id];
+
+      lista.push({
+        musica: m.musica || "",
+        artista: m.artista || "",
+        tomMasculino: m.tomMasculino || "",
+        tomFeminino: m.tomFeminino || "",
+        perfil: m.perfil || "",
+        andamento: m.andamento || ""
       });
-
-      renderRepertorio(filtradas);
     });
-  }
+
+    state.musicas = lista;
+
+    renderRepertorio(lista);
+
+  }, (error) => {
+    console.error("Erro ao carregar repertório:", error);
+    state.musicas = [];
+    renderRepertorio([]);
+  });
+
+  document.getElementById("buscarMusica").addEventListener("input", (e) => {
+
+    const termo = e.target.value.toLowerCase();
+
+    const filtradas = state.musicas.filter(m => {
+      return (
+        (m.musica || "").toLowerCase().includes(termo) ||
+        (m.artista || "").toLowerCase().includes(termo)
+      );
+    });
+
+    renderRepertorio(filtradas);
+  });
+}
 
   function setupInformacoes() {
     const infoRef = ref(db, "informacoes");
@@ -868,6 +896,7 @@ function renderRepertorio(lista) {
   
 </body>
 </html>
+
 
 
 
