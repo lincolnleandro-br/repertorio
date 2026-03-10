@@ -262,6 +262,54 @@
         <div id="statusMes" class="status"></div>
       </section>
 
+            <section class="card">
+        <h3>Montar repertório do culto</h3>
+        <div class="section-note">
+          Aqui você pode <strong>adicionar músicas</strong>, usar <strong>sugestões automáticas por perfil</strong>, <strong>mover</strong> e <strong>remover</strong> músicas do culto.
+        </div>
+
+        <div class="grid">
+          <div>
+            <label for="cultoSelect">Culto</label>
+            <select id="cultoSelect"></select>
+          </div>
+
+          <div>
+            <label for="buscaMusicaCulto">Pesquisar música</label>
+            <input id="buscaMusicaCulto" type="text" placeholder="Digite o nome da música ou artista">
+          </div>
+
+          <div>
+            <label for="perfilSugestao">Sugestões por perfil</label>
+            <select id="perfilSugestao">
+              <option value="">Selecione</option>
+              <option value="ADORAÇÃO">ADORAÇÃO</option>
+              <option value="CLAMOR">CLAMOR</option>
+              <option value="ENTREGA">ENTREGA</option>
+              <option value="CEIA">CEIA</option>
+              <option value="CONGREGACIONAL">CONGREGACIONAL</option>
+              <option value="CELEBRAÇÃO">CELEBRAÇÃO</option>
+              <option value="OFERTA">OFERTA</option>
+              <option value="PROMESSA">PROMESSA</option>
+              <option value="GUERRA">GUERRA</option>
+              <option value="EXALTAÇÃO">EXALTAÇÃO</option>
+              <option value="PEDIDO">PEDIDO</option>
+            </select>
+          </div>
+
+          <div style="display:flex;align-items:end;">
+            <button onclick="gerarSugestoes()">Gerar sugestões</button>
+          </div>
+        </div>
+
+        <div id="resultadoBusca" class="search-results"></div>
+        <div id="listaSugestoes" class="search-results"></div>
+
+        <h3 style="margin-top:20px;">Repertório atual</h3>
+        <div id="repertorioCulto" class="list muted">Selecione um culto.</div>
+        <div id="statusRepertorio" class="status"></div>
+      </section>
+
       <section class="card">
         <h3>Cadastrar música</h3>
         <div class="grid">
@@ -305,6 +353,26 @@
           <button onclick="salvarMusica()">Salvar música</button>
         </div>
         <div id="statusMusica" class="status"></div>
+      </section>
+
+            <section class="card">
+        <h3>Publicar informação</h3>
+        <div class="grid">
+          <div class="full">
+            <label for="infoTitulo">Título</label>
+            <input id="infoTitulo" type="text" placeholder="Ex.: Ensaio geral">
+          </div>
+
+          <div class="full">
+            <label for="infoTexto">Texto</label>
+            <textarea id="infoTexto" placeholder="Digite o aviso do ministério..."></textarea>
+          </div>
+        </div>
+
+        <div class="row">
+          <button onclick="salvarInformacao()">Publicar informação</button>
+        </div>
+        <div id="statusInfo" class="status"></div>
       </section>
 
       <section class="card">
@@ -365,74 +433,7 @@
         </div>
         <div id="statusCulto" class="status"></div>
       </section>
-
-      <section class="card">
-        <h3>Montar repertório do culto</h3>
-        <div class="section-note">
-          Aqui você pode <strong>adicionar músicas</strong>, usar <strong>sugestões automáticas por perfil</strong>, <strong>mover</strong> e <strong>remover</strong> músicas do culto.
-        </div>
-
-        <div class="grid">
-          <div>
-            <label for="cultoSelect">Culto</label>
-            <select id="cultoSelect"></select>
-          </div>
-
-          <div>
-            <label for="buscaMusicaCulto">Pesquisar música</label>
-            <input id="buscaMusicaCulto" type="text" placeholder="Digite o nome da música ou artista">
-          </div>
-
-          <div>
-            <label for="perfilSugestao">Sugestões por perfil</label>
-            <select id="perfilSugestao">
-              <option value="">Selecione</option>
-              <option value="ADORAÇÃO">ADORAÇÃO</option>
-              <option value="CLAMOR">CLAMOR</option>
-              <option value="ENTREGA">ENTREGA</option>
-              <option value="CEIA">CEIA</option>
-              <option value="CONGREGACIONAL">CONGREGACIONAL</option>
-              <option value="CELEBRAÇÃO">CELEBRAÇÃO</option>
-              <option value="OFERTA">OFERTA</option>
-              <option value="PROMESSA">PROMESSA</option>
-              <option value="GUERRA">GUERRA</option>
-              <option value="EXALTAÇÃO">EXALTAÇÃO</option>
-              <option value="PEDIDO">PEDIDO</option>
-            </select>
-          </div>
-
-          <div style="display:flex;align-items:end;">
-            <button onclick="gerarSugestoes()">Gerar sugestões</button>
-          </div>
-        </div>
-
-        <div id="resultadoBusca" class="search-results"></div>
-        <div id="listaSugestoes" class="search-results"></div>
-
-        <h3 style="margin-top:20px;">Repertório atual</h3>
-        <div id="repertorioCulto" class="list muted">Selecione um culto.</div>
-        <div id="statusRepertorio" class="status"></div>
-      </section>
-
-      <section class="card">
-        <h3>Publicar informação</h3>
-        <div class="grid">
-          <div class="full">
-            <label for="infoTitulo">Título</label>
-            <input id="infoTitulo" type="text" placeholder="Ex.: Ensaio geral">
-          </div>
-
-          <div class="full">
-            <label for="infoTexto">Texto</label>
-            <textarea id="infoTexto" placeholder="Digite o aviso do ministério..."></textarea>
-          </div>
-        </div>
-
-        <div class="row">
-          <button onclick="salvarInformacao()">Publicar informação</button>
-        </div>
-        <div id="statusInfo" class="status"></div>
-      </section>
+      
     </section>
   </main>
 
