@@ -371,13 +371,15 @@
     <p>Escalas, repertórios e informações em um só lugar.</p>
   </header>
 
-  <nav>
-    <button data-page="home" class="active" onclick="openPage('home')">Início</button>
-    <button data-page="escala" onclick="openPage('escala')">Escala do Mês</button>
-    <button data-page="repertorio" onclick="openPage('repertorio')">Repertório</button>
-    <button data-page="informacoes" onclick="openPage('informacoes')">Informações</button>
-    <button data-page="estatisticas" onclick="openPage('estatisticas')">Estatísticas</button>
-  </nav>
+<nav>
+  <button data-page="home">Início</button>
+  <button data-page="escala">Escala do Mês</button>
+  <button data-page="repertorio">Repertório</button>
+  <button data-page="informacoes">Informações</button>
+  <button data-page="estatisticas">Estatísticas</button>
+
+  <a href="./admin.html" style="margin-left:10px;font-weight:bold;">Admin</a>
+</nav>
 
   <main class="container">
     <section class="page active" id="home">
@@ -1077,4 +1079,5 @@ setupHistorico();
   </script>
 </body>
 </html>
+
 
