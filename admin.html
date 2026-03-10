@@ -268,39 +268,44 @@
           Aqui você pode <strong>adicionar músicas</strong>, usar <strong>sugestões automáticas por perfil</strong>, <strong>mover</strong> e <strong>remover</strong> músicas do culto.
         </div>
 
-        <div class="grid">
-          <div>
-            <label for="cultoSelect">Culto</label>
-            <select id="cultoSelect"></select>
-          </div>
+<div class="grid">
+  <div>
+    <label for="cultoSelect">Culto</label>
+    <select id="cultoSelect"></select>
+  </div>
 
-          <div>
-            <label for="buscaMusicaCulto">Pesquisar música</label>
-            <input id="buscaMusicaCulto" type="text" placeholder="Digite o nome da música ou artista">
-          </div>
+  <div>
+    <label for="buscaMusicaCulto">Pesquisar música</label>
+    <input id="buscaMusicaCulto" type="text" placeholder="Digite o nome da música ou artista">
+  </div>
 
-          <div>
-            <label for="perfilSugestao">Sugestões por perfil</label>
-            <select id="perfilSugestao">
-              <option value="">Selecione</option>
-              <option value="ADORAÇÃO">ADORAÇÃO</option>
-              <option value="CLAMOR">CLAMOR</option>
-              <option value="ENTREGA">ENTREGA</option>
-              <option value="CEIA">CEIA</option>
-              <option value="CONGREGACIONAL">CONGREGACIONAL</option>
-              <option value="CELEBRAÇÃO">CELEBRAÇÃO</option>
-              <option value="OFERTA">OFERTA</option>
-              <option value="PROMESSA">PROMESSA</option>
-              <option value="GUERRA">GUERRA</option>
-              <option value="EXALTAÇÃO">EXALTAÇÃO</option>
-              <option value="PEDIDO">PEDIDO</option>
-            </select>
-          </div>
+  <div>
+    <label for="perfilSugestao">Sugestões por perfil</label>
+    <select id="perfilSugestao">
+      <option value="">Selecione</option>
+      <option value="ADORAÇÃO">ADORAÇÃO</option>
+      <option value="CLAMOR">CLAMOR</option>
+      <option value="ENTREGA">ENTREGA</option>
+      <option value="CEIA">CEIA</option>
+      <option value="CONGREGACIONAL">CONGREGACIONAL</option>
+      <option value="CELEBRAÇÃO">CELEBRAÇÃO</option>
+      <option value="OFERTA">OFERTA</option>
+      <option value="PROMESSA">PROMESSA</option>
+      <option value="GUERRA">GUERRA</option>
+      <option value="EXALTAÇÃO">EXALTAÇÃO</option>
+      <option value="PEDIDO">PEDIDO</option>
+    </select>
+  </div>
 
-          <div style="display:flex;align-items:end;">
-            <button onclick="gerarSugestoes()">Gerar sugestões</button>
-          </div>
-        </div>
+  <div style="display:flex;align-items:end;">
+    <button onclick="gerarSugestoes()">Gerar sugestões</button>
+  </div>
+
+  <div class="full">
+    <label for="obsMusicaCulto">Observação da música</label>
+    <input id="obsMusicaCulto" type="text" placeholder="Ex.: Medley, Solo, Ministração...">
+  </div>
+</div>
 
         <div id="resultadoBusca" class="search-results"></div>
         <div id="listaSugestoes" class="search-results"></div>
@@ -806,27 +811,31 @@ async function carregarCultos() {
       `).join("");
     }
 
-    async function adicionarMusicaAoCultoBase(musica) {
-      const cultoId = document.getElementById("cultoSelect").value;
-      if (!musica || !cultoId) return;
+async function adicionarMusicaAoCultoBase(musica) {
+  const cultoId = document.getElementById("cultoSelect").value;
+  const obs = document.getElementById("obsMusicaCulto").value.trim();
 
-      const snapshot = await get(ref(db, `repertorios/${cultoId}`));
-      const dados = snapshot.val() || {};
-      const ordem = Object.keys(dados).length + 1;
-      const itemId = `item${ordem}`;
+  if (!musica || !cultoId) return;
 
-      await set(ref(db, `repertorios/${cultoId}/${itemId}`), {
-        musica: musica.musica || "",
-        artista: musica.artista || "",
-        tom: musica.tomMasculino || musica.tomFeminino || "",
-        obs: "",
-        ordem
-      });
+  const snapshot = await get(ref(db, `repertorios/${cultoId}`));
+  const dados = snapshot.val() || {};
+  const ordem = Object.keys(dados).length + 1;
+  const itemId = `item${ordem}`;
 
-      await set(ref(db, `historico/${safeKey(musica.musica)}/${cultoId}`), true);
-      setStatus("statusRepertorio", "Música adicionada ao culto.");
-      await carregarRepertorioCulto();
-    }
+  await set(ref(db, `repertorios/${cultoId}/${itemId}`), {
+    musica: musica.musica || "",
+    artista: musica.artista || "",
+    tom: musica.tomMasculino || musica.tomFeminino || "",
+    obs: obs,
+    ordem
+  });
+
+  await set(ref(db, `historico/${safeKey(musica.musica)}/${cultoId}`), true);
+
+  document.getElementById("obsMusicaCulto").value = "";
+  setStatus("statusRepertorio", "Música adicionada ao culto.");
+  await carregarRepertorioCulto();
+}
 
     async function adicionarMusicaCulto(index) {
       const musica = resultadosBuscaAtual[index];
