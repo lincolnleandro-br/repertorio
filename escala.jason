@@ -1,0 +1,169 @@
+{
+  "config": {
+    "mesAtivo": "2026-03"
+  },
+
+  "escalas": {
+
+    "2026-03": {
+      "titulo": "Março 2026",
+
+      "cultos": {
+
+        "08-03-2026-manha": {
+          "data": "2026-03-08",
+          "label": "08/03/2026",
+          "categoria": "Domingo Manhã",
+          "lider": "Akemi",
+          "vocal": ["Sheila", "Rafael"],
+          "bateria": "Davy",
+          "violao": "",
+          "teclado": "",
+          "baixo": ""
+        },
+
+        "08-03-2026-noite": {
+          "data": "2026-03-08",
+          "label": "08/03/2026",
+          "categoria": "Domingo Noite",
+          "lider": "Akemi",
+          "vocal": ["Sheila", "Monica", "Rafael"],
+          "bateria": "Nana",
+          "violao": "",
+          "teclado": "",
+          "baixo": ""
+        },
+
+        "15-03-2026-manha": {
+          "data": "2026-03-15",
+          "label": "15/03/2026",
+          "categoria": "Domingo Manhã",
+          "lider": "Lincoln",
+          "vocal": ["Monique", "Manu Ceia"],
+          "bateria": "Nana",
+          "violao": "Miguel",
+          "teclado": "",
+          "baixo": ""
+        },
+
+        "22-03-2026-manha": {
+          "data": "2026-03-22",
+          "label": "22/03/2026",
+          "categoria": "Domingo Manhã",
+          "lider": "Jakson",
+          "vocal": ["Fabi", "Monica"],
+          "bateria": "Isaque"
+        },
+
+        "29-03-2026-manha": {
+          "data": "2026-03-29",
+          "label": "29/03/2026",
+          "categoria": "Domingo Manhã",
+          "lider": "Lincoln",
+          "vocal": ["Raphael", "Manu"],
+          "bateria": "Davy",
+          "violao": "Miguel"
+        }
+
+      }
+    },
+
+    "2026-04": {
+      "titulo": "Abril 2026",
+
+      "cultos": {
+
+        "05-04-2026-manha": {
+          "data": "2026-04-05",
+          "label": "05/04/2026",
+          "categoria": "Domingo Manhã",
+          "lider": "",
+          "vocal": [],
+          "bateria": "",
+          "violao": "",
+          "teclado": "",
+          "baixo": ""
+        },
+
+        "12-04-2026-manha": {
+          "data": "2026-04-12",
+          "label": "12/04/2026",
+          "categoria": "Domingo Manhã",
+          "lider": "",
+          "vocal": [],
+          "bateria": ""
+        }
+
+      }
+    }
+
+  },
+
+  "musicas": {
+
+    "m001": {
+      "musica": "Bondade de Deus",
+      "artista": "Isaias Saad",
+      "tomOriginal": "A",
+      "categoria": "Adoração"
+    },
+
+    "m002": {
+      "musica": "Oceanos",
+      "artista": "Hillsong",
+      "tomOriginal": "D",
+      "categoria": "Adoração"
+    },
+
+    "m003": {
+      "musica": "Ninguém Explica Deus",
+      "artista": "Preto no Branco",
+      "tomOriginal": "G",
+      "categoria": "Celebração"
+    }
+
+  },
+
+  "informacoes": {
+
+    "info1": {
+      "titulo": "Ensaio geral",
+      "texto": "Quinta-feira às 19h30 na igreja.",
+      "tipo": "ensaio",
+      "data": "2026-03-12",
+      "ativo": true
+    },
+
+    "info2": {
+      "titulo": "Estudo do ministério",
+      "texto": "Sábado às 18h no salão social.",
+      "tipo": "estudo",
+      "data": "2026-03-21",
+      "ativo": true
+    }
+
+  },
+
+  "repertorios": {
+
+    "08-03-2026-manha": {
+
+      "item1": {
+        "musica": "Bondade de Deus",
+        "artista": "Isaias Saad",
+        "tom": "G",
+        "ordem": 1
+      },
+
+      "item2": {
+        "musica": "Oceanos",
+        "artista": "Hillsong",
+        "tom": "D",
+        "ordem": 2
+      }
+
+    }
+
+  }
+
+}
