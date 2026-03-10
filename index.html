@@ -633,54 +633,55 @@ const firebaseConfig = {
 
   window.openPage = openPage;
 
-  function abrirModal(cultoId) {
-    const culto = state.cultosMap[cultoId];
-    document.getElementById("modalRepertorio").classList.add("active");
-    document.getElementById("modalTitulo").textContent = "Repertório do Culto";
-    document.getElementById("modalSubtitulo").textContent = culto
-      ? `${culto.categoria || "Culto"} • ${culto.label || culto.data || ""}`
-      : "Culto selecionado";
+  async function abrirModal(cultoId) {
+  const culto = state.cultosMap[cultoId];
+  document.getElementById("modalRepertorio").classList.add("active");
+  document.getElementById("modalTitulo").textContent = "Repertório do Culto";
+  document.getElementById("modalSubtitulo").textContent = culto
+    ? `${culto.categoria || "Culto"} • ${culto.label || culto.data || ""}`
+    : "Culto selecionado";
 
-    const repertorioRef = ref(db, `repertorios/${cultoId}`);
+  const conteudo = document.getElementById("modalConteudo");
+  conteudo.innerHTML = `<div class="empty-state">Carregando repertório...</div>`;
 
-    onValue(repertorioRef, (snapshot) => {
-      const dados = snapshot.val();
-      const conteudo = document.getElementById("modalConteudo");
+  try {
+    const snapshot = await get(ref(db, `repertorios/${cultoId}`));
+    const dados = snapshot.val();
 
-      if (!dados) {
-        conteudo.innerHTML = `<div class="empty-state" style="margin:20px;">Nenhum repertório cadastrado para este culto.</div>`;
-        return;
-      }
+    if (!dados) {
+      conteudo.innerHTML = `<div class="empty-state" style="margin:20px;">Nenhum repertório cadastrado para este culto.</div>`;
+      return;
+    }
 
-      const itens = Object.values(dados).sort((a, b) => (a.ordem || 0) - (b.ordem || 0));
+    const itens = Object.values(dados).sort((a, b) => (a.ordem || 0) - (b.ordem || 0));
 
-      if (!itens.length) {
-        conteudo.innerHTML = `<div class="empty-state" style="margin:20px;">Nenhum repertório cadastrado para este culto.</div>`;
-        return;
-      }
+    if (!itens.length) {
+      conteudo.innerHTML = `<div class="empty-state" style="margin:20px;">Nenhum repertório cadastrado para este culto.</div>`;
+      return;
+    }
 
-      conteudo.innerHTML = `
-        <div class="modal-list">
-          ${itens.map((item, index) => `
-            <div class="modal-item">
-              <strong>${index + 1}. ${escapeHtml(item.musica || "")}</strong>
-              <div class="muted">Artista: ${escapeHtml(item.artista || "—")}</div>
-              <div class="muted">Tom: ${escapeHtml(item.tom || "—")}</div>
-              ${item.obs ? `<div class="muted">Obs: ${escapeHtml(item.obs)}</div>` : ""}
-              <div class="modal-links">
-                ${isValidUrl(item.youtube) ? `<a href="${escapeHtml(item.youtube)}" target="_blank" rel="noopener noreferrer">YouTube</a>` : ""}
-                ${isValidUrl(item.spotify) ? `<a href="${escapeHtml(item.spotify)}" target="_blank" rel="noopener noreferrer">Spotify</a>` : ""}
-                ${isValidUrl(item.cifra) ? `<a href="${escapeHtml(item.cifra)}" target="_blank" rel="noopener noreferrer">Cifra</a>` : ""}
-              </div>
+    conteudo.innerHTML = `
+      <div class="modal-list">
+        ${itens.map((item, index) => `
+          <div class="modal-item">
+            <strong>${index + 1}. ${escapeHtml(item.musica || "")}</strong>
+            <div class="muted">Artista: ${escapeHtml(item.artista || "—")}</div>
+            <div class="muted">Tom: ${escapeHtml(item.tom || "—")}</div>
+            ${item.obs ? `<div class="muted">Obs: ${escapeHtml(item.obs)}</div>` : ""}
+            <div class="modal-links">
+              ${isValidUrl(item.youtube) ? `<a href="${escapeHtml(item.youtube)}" target="_blank" rel="noopener noreferrer">YouTube</a>` : ""}
+              ${isValidUrl(item.spotify) ? `<a href="${escapeHtml(item.spotify)}" target="_blank" rel="noopener noreferrer">Spotify</a>` : ""}
+              ${isValidUrl(item.cifra) ? `<a href="${escapeHtml(item.cifra)}" target="_blank" rel="noopener noreferrer">Cifra</a>` : ""}
             </div>
-          `).join("")}
-        </div>
-      `;
-    }, () => {
-      document.getElementById("modalConteudo").innerHTML =
-        `<div class="empty-state" style="margin:20px;">Erro ao carregar repertório.</div>`;
-    });
+          </div>
+        `).join("")}
+      </div>
+    `;
+  } catch (error) {
+    conteudo.innerHTML = `<div class="empty-state" style="margin:20px;">Erro ao carregar repertório.</div>`;
+    console.error(error);
   }
+}
 
   function fecharModal() {
     document.getElementById("modalRepertorio").classList.remove("active");
@@ -867,6 +868,7 @@ function renderRepertorio(lista) {
   
 </body>
 </html>
+
 
 
 
