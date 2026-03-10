@@ -3,57 +3,219 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Milouv 3.3 | Admin Protegido</title>
+  <title>Milouv Admin 3.4</title>
   <style>
     :root{
       --bg:#f4f6f9;
       --surface:#ffffff;
+      --surface-soft:#f8fafc;
       --primary:#1f3c88;
       --primary-2:#2c5bd3;
+      --primary-soft:#dbeafe;
       --border:#e5e7eb;
       --text:#1f2937;
       --muted:#6b7280;
       --danger:#b91c1c;
       --success:#166534;
+      --warning:#b45309;
       --shadow:0 10px 30px rgba(15,23,42,0.08);
       --radius:16px;
       --container:1100px;
     }
 
     *{box-sizing:border-box}
-    body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
-    header{background:linear-gradient(135deg,var(--primary),var(--primary-2));color:#fff;padding:32px 20px;text-align:center}
-    .container{width:min(95%,var(--container));margin:24px auto 48px}
-    .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px;margin-bottom:20px}
-    .card h2,.card h3{margin-top:0}
-    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
-    .full{grid-column:1 / -1}
-    label{display:block;font-size:.92rem;color:var(--muted);margin-bottom:6px;font-weight:700}
-    input,select,textarea{width:100%;padding:11px 12px;border-radius:10px;border:1px solid var(--border);background:#fff;font:inherit}
-    textarea{min-height:100px;resize:vertical}
-    button{border:none;border-radius:10px;padding:11px 16px;background:var(--primary);color:#fff;font-weight:700;cursor:pointer}
-    button:hover{opacity:.96}
-    .secondary{background:#fff;color:var(--primary);border:1px solid var(--border)}
-    .danger{background:#fee2e2;color:var(--danger);border:1px solid #fecaca}
-    .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
-    .status{margin-top:10px;color:var(--muted);font-size:.95rem}
-    .success{color:var(--success)}
-    .error{color:var(--danger)}
-    .topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap}
-    .link-btn{display:inline-block;background:#fff;border:1px solid var(--border);color:var(--primary);border-radius:999px;padding:10px 14px;text-decoration:none;font-weight:700}
-    .hidden{display:none !important}
-    .pill{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;background:#eef2ff;color:var(--primary);font-size:.85rem;font-weight:700}
-    .list{display:grid;gap:10px}
-    .item{padding:12px;border:1px solid var(--border);border-radius:12px;background:#fafcff}
-    .search-results{display:grid;gap:8px;margin-top:12px}
-    .search-item{padding:12px;border:1px solid var(--border);border-radius:12px;background:#fff;display:flex;justify-content:space-between;gap:10px;align-items:center}
-    .muted{color:var(--muted)}
-    @media (max-width:700px){.grid{grid-template-columns:1fr}}
+    body{
+      margin:0;
+      font-family:Arial,Helvetica,sans-serif;
+      background:var(--bg);
+      color:var(--text);
+    }
+
+    header{
+      background:linear-gradient(135deg,var(--primary),var(--primary-2));
+      color:#fff;
+      padding:32px 20px;
+      text-align:center;
+    }
+
+    .container{
+      width:min(95%,var(--container));
+      margin:24px auto 48px;
+    }
+
+    .card{
+      background:var(--surface);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:20px;
+      margin-bottom:20px;
+    }
+
+    .card h2,.card h3{
+      margin-top:0;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:14px;
+    }
+
+    .full{
+      grid-column:1 / -1;
+    }
+
+    label{
+      display:block;
+      font-size:.92rem;
+      color:var(--muted);
+      margin-bottom:6px;
+      font-weight:700;
+    }
+
+    input,select,textarea{
+      width:100%;
+      padding:11px 12px;
+      border-radius:10px;
+      border:1px solid var(--border);
+      background:#fff;
+      font:inherit;
+    }
+
+    textarea{
+      min-height:100px;
+      resize:vertical;
+    }
+
+    button{
+      border:none;
+      border-radius:10px;
+      padding:11px 16px;
+      background:var(--primary);
+      color:#fff;
+      font-weight:700;
+      cursor:pointer;
+    }
+
+    button:hover{
+      opacity:.96;
+    }
+
+    .secondary{
+      background:#fff;
+      color:var(--primary);
+      border:1px solid var(--border);
+    }
+
+    .danger{
+      background:#fee2e2;
+      color:var(--danger);
+      border:1px solid #fecaca;
+    }
+
+    .row{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:14px;
+    }
+
+    .status{
+      margin-top:10px;
+      color:var(--muted);
+      font-size:.95rem;
+    }
+
+    .success{ color:var(--success); }
+    .error{ color:var(--danger); }
+
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      margin-bottom:20px;
+      flex-wrap:wrap;
+    }
+
+    .link-btn{
+      display:inline-block;
+      background:#fff;
+      border:1px solid var(--border);
+      color:var(--primary);
+      border-radius:999px;
+      padding:10px 14px;
+      text-decoration:none;
+      font-weight:700;
+    }
+
+    .hidden{ display:none !important; }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:6px 10px;
+      border-radius:999px;
+      background:#eef2ff;
+      color:var(--primary);
+      font-size:.85rem;
+      font-weight:700;
+    }
+
+    .list{
+      display:grid;
+      gap:10px;
+    }
+
+    .item{
+      padding:12px;
+      border:1px solid var(--border);
+      border-radius:12px;
+      background:#fafcff;
+    }
+
+    .search-results{
+      display:grid;
+      gap:8px;
+      margin-top:12px;
+    }
+
+    .search-item{
+      padding:12px;
+      border:1px solid var(--border);
+      border-radius:12px;
+      background:#fff;
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      align-items:center;
+    }
+
+    .muted{
+      color:var(--muted);
+    }
+
+    .section-note{
+      background:var(--primary-soft);
+      color:#1d4ed8;
+      border-radius:12px;
+      padding:10px 12px;
+      font-size:.92rem;
+      margin-bottom:12px;
+    }
+
+    @media (max-width:700px){
+      .grid{
+        grid-template-columns:1fr;
+      }
+    }
   </style>
 </head>
 <body>
   <header>
-    <h1>Milouv Admin 3.3</h1>
+    <h1>Milouv Admin 3.4</h1>
     <p>Painel protegido com login do Google</p>
   </header>
 
@@ -107,22 +269,27 @@
             <label for="musicaNome">Nome da música</label>
             <input id="musicaNome" type="text" placeholder="Ex.: Santo Pra Sempre">
           </div>
+
           <div>
             <label for="musicaArtista">Artista</label>
             <input id="musicaArtista" type="text" placeholder="Ex.: Gabriel Guedes">
           </div>
+
           <div>
             <label for="musicaPerfil">Perfil</label>
             <input id="musicaPerfil" type="text" placeholder="Ex.: ADORAÇÃO">
           </div>
+
           <div>
             <label for="tomMasculino">Tom masculino</label>
             <input id="tomMasculino" type="text" placeholder="Ex.: G">
           </div>
+
           <div>
             <label for="tomFeminino">Tom feminino</label>
             <input id="tomFeminino" type="text" placeholder="Ex.: D">
           </div>
+
           <div class="full">
             <label for="musicaAndamento">Andamento</label>
             <select id="musicaAndamento">
@@ -133,6 +300,7 @@
             </select>
           </div>
         </div>
+
         <div class="row">
           <button onclick="salvarMusica()">Salvar música</button>
         </div>
@@ -146,18 +314,22 @@
             <label for="cultoMes">Mês</label>
             <input id="cultoMes" type="text" placeholder="Ex.: 2026-03">
           </div>
+
           <div>
             <label for="cultoId">ID do culto</label>
             <input id="cultoId" type="text" placeholder="Ex.: 08-03-2026-manha">
           </div>
+
           <div>
             <label for="cultoData">Data ISO</label>
             <input id="cultoData" type="text" placeholder="Ex.: 2026-03-08">
           </div>
+
           <div>
             <label for="cultoLabel">Data exibida</label>
             <input id="cultoLabel" type="text" placeholder="Ex.: 08/03/2026">
           </div>
+
           <div>
             <label for="cultoCategoria">Categoria</label>
             <select id="cultoCategoria">
@@ -166,23 +338,28 @@
               <option value="Quarta Profética">Quarta Profética</option>
             </select>
           </div>
+
           <div>
             <label for="cultoLider">Líder</label>
             <input id="cultoLider" type="text" placeholder="Ex.: Lincoln">
           </div>
+
           <div class="full">
             <label for="cultoVocal">Vocal</label>
             <input id="cultoVocal" type="text" placeholder="Ex.: Sheila, Rafael, Monica">
           </div>
+
           <div>
             <label for="cultoBateria">Bateria</label>
             <input id="cultoBateria" type="text" placeholder="Ex.: Davy">
           </div>
+
           <div>
             <label for="cultoViolao">Violão</label>
             <input id="cultoViolao" type="text" placeholder="Ex.: Miguel">
           </div>
         </div>
+
         <div class="row">
           <button onclick="salvarCulto()">Salvar culto</button>
         </div>
@@ -191,18 +368,48 @@
 
       <section class="card">
         <h3>Montar repertório do culto</h3>
+        <div class="section-note">
+          Aqui você pode <strong>adicionar músicas</strong>, usar <strong>sugestões automáticas por perfil</strong>, <strong>mover</strong> e <strong>remover</strong> músicas do culto.
+        </div>
+
         <div class="grid">
           <div>
             <label for="cultoSelect">Culto</label>
             <select id="cultoSelect"></select>
           </div>
+
           <div>
             <label for="buscaMusicaCulto">Pesquisar música</label>
-            <input id="buscaMusicaCulto" type="text" placeholder="Digite o nome da música">
+            <input id="buscaMusicaCulto" type="text" placeholder="Digite o nome da música ou artista">
+          </div>
+
+          <div>
+            <label for="perfilSugestao">Sugestões por perfil</label>
+            <select id="perfilSugestao">
+              <option value="">Selecione</option>
+              <option value="ADORAÇÃO">ADORAÇÃO</option>
+              <option value="CLAMOR">CLAMOR</option>
+              <option value="ENTREGA">ENTREGA</option>
+              <option value="CEIA">CEIA</option>
+              <option value="CONGREGACIONAL">CONGREGACIONAL</option>
+              <option value="CELEBRAÇÃO">CELEBRAÇÃO</option>
+              <option value="OFERTA">OFERTA</option>
+              <option value="PROMESSA">PROMESSA</option>
+              <option value="GUERRA">GUERRA</option>
+              <option value="EXALTAÇÃO">EXALTAÇÃO</option>
+              <option value="PEDIDO">PEDIDO</option>
+            </select>
+          </div>
+
+          <div style="display:flex;align-items:end;">
+            <button onclick="gerarSugestoes()">Gerar sugestões</button>
           </div>
         </div>
+
         <div id="resultadoBusca" class="search-results"></div>
-        <h3 style="margin-top:20px">Repertório atual</h3>
+        <div id="listaSugestoes" class="search-results"></div>
+
+        <h3 style="margin-top:20px;">Repertório atual</h3>
         <div id="repertorioCulto" class="list muted">Selecione um culto.</div>
         <div id="statusRepertorio" class="status"></div>
       </section>
@@ -214,11 +421,13 @@
             <label for="infoTitulo">Título</label>
             <input id="infoTitulo" type="text" placeholder="Ex.: Ensaio geral">
           </div>
+
           <div class="full">
             <label for="infoTexto">Texto</label>
             <textarea id="infoTexto" placeholder="Digite o aviso do ministério..."></textarea>
           </div>
         </div>
+
         <div class="row">
           <button onclick="salvarInformacao()">Publicar informação</button>
         </div>
@@ -256,6 +465,8 @@
     let bancoMusicas = [];
     let cultosCache = [];
     let repertorioAtual = {};
+    let resultadosBuscaAtual = [];
+    let resultadosSugestoesAtual = [];
 
     function setStatus(id, message, ok = true) {
       const el = document.getElementById(id);
@@ -293,13 +504,14 @@
       try {
         const result = await signInWithPopup(auth, provider);
         const user = result.user;
+
         if (!isAllowed(user.email)) {
           await signOut(auth);
           showAuth(`Acesso negado para ${user.email}. Adicione este email na lista ALLOWED_EMAILS.`);
         }
       } catch (error) {
         console.error(error);
-        showAuth("Erro no login com Google. Verifique se o provedor Google foi ativado no Firebase Authentication.");
+        showAuth("Erro no login com Google. Verifique se o provedor Google foi ativado no Firebase Authentication e se o domínio da Vercel foi autorizado.");
       }
     }
 
@@ -318,6 +530,7 @@
     async function carregarMesAtivoAtual() {
       const snapshot = await get(ref(db, "config/mesAtivo"));
       document.getElementById("mesAtivo").value = snapshot.val() || "";
+
       if (!document.getElementById("cultoMes").value) {
         document.getElementById("cultoMes").value = snapshot.val() || "";
       }
@@ -325,10 +538,12 @@
 
     async function salvarMesAtivo() {
       const mesAtivo = document.getElementById("mesAtivo").value.trim();
+
       if (!mesAtivo) {
         setStatus("statusMes", "Informe o mês ativo.", false);
         return;
       }
+
       try {
         await set(ref(db, "config/mesAtivo"), mesAtivo);
         document.getElementById("cultoMes").value = mesAtivo;
@@ -354,8 +569,7 @@
       }
 
       try {
-        const musicasRef = ref(db, "musicas");
-        const snapshot = await get(musicasRef);
+        const snapshot = await get(ref(db, "musicas"));
         const dados = snapshot.val() || {};
         const proximoNumero = Object.keys(dados).length + 1;
         const novoId = `m${String(proximoNumero).padStart(3, "0")}`;
@@ -400,11 +614,19 @@
         return;
       }
 
-      const vocal = vocalTexto ? vocalTexto.split(",").map(item => item.trim()).filter(Boolean) : [];
+      const vocal = vocalTexto
+        ? vocalTexto.split(",").map(item => item.trim()).filter(Boolean)
+        : [];
 
       try {
         await set(ref(db, `escalas/${mes}/cultos/${cultoId}`), {
-          data, label, categoria, lider, vocal, bateria, violao
+          data,
+          label,
+          categoria,
+          lider,
+          vocal,
+          bateria,
+          violao
         });
 
         document.getElementById("cultoId").value = "";
@@ -434,6 +656,7 @@
 
       try {
         await push(ref(db, "informacoes"), { titulo, texto });
+
         document.getElementById("infoTitulo").value = "";
         document.getElementById("infoTexto").value = "";
         setStatus("statusInfo", "Informação publicada com sucesso.");
@@ -474,6 +697,7 @@
 
     function renderResultadoBusca(lista) {
       const container = document.getElementById("resultadoBusca");
+
       if (!lista.length) {
         container.innerHTML = "";
         return;
@@ -489,8 +713,45 @@
         </div>
       `).join("");
 
-      window._resultadoBusca = lista;
+      resultadosBuscaAtual = lista;
     }
+
+    function renderSugestoes(lista) {
+      const container = document.getElementById("listaSugestoes");
+
+      if (!lista.length) {
+        container.innerHTML = "";
+        return;
+      }
+
+      container.innerHTML = lista.map((m, index) => `
+        <div class="search-item">
+          <div>
+            <strong>${m.musica || ""}</strong><br>
+            <span class="muted">${m.artista || ""} • ${m.perfil || ""} • ${m.andamento || ""}</span>
+          </div>
+          <button onclick="adicionarSugestaoCulto(${index})">Adicionar</button>
+        </div>
+      `).join("");
+
+      resultadosSugestoesAtual = lista;
+    }
+
+    function gerarSugestoes() {
+      const perfil = document.getElementById("perfilSugestao").value;
+      if (!perfil) {
+        renderSugestoes([]);
+        return;
+      }
+
+      const sugeridas = bancoMusicas
+        .filter(m => (m.perfil || "").toUpperCase() === perfil.toUpperCase())
+        .slice(0, 8);
+
+      renderSugestoes(sugeridas);
+    }
+
+    window.gerarSugestoes = gerarSugestoes;
 
     async function carregarRepertorioCulto() {
       const cultoId = document.getElementById("cultoSelect").value;
@@ -524,8 +785,7 @@
       `).join("");
     }
 
-    async function adicionarMusicaCulto(index) {
-      const musica = (window._resultadoBusca || [])[index];
+    async function adicionarMusicaAoCultoBase(musica) {
       const cultoId = document.getElementById("cultoSelect").value;
       if (!musica || !cultoId) return;
 
@@ -543,11 +803,21 @@
       });
 
       await set(ref(db, `historico/${safeKey(musica.musica)}/${cultoId}`), true);
-
-      document.getElementById("buscaMusicaCulto").value = "";
-      document.getElementById("resultadoBusca").innerHTML = "";
       setStatus("statusRepertorio", "Música adicionada ao culto.");
       await carregarRepertorioCulto();
+    }
+
+    async function adicionarMusicaCulto(index) {
+      const musica = resultadosBuscaAtual[index];
+      await adicionarMusicaAoCultoBase(musica);
+      document.getElementById("buscaMusicaCulto").value = "";
+      renderResultadoBusca([]);
+    }
+
+    async function adicionarSugestaoCulto(index) {
+      const musica = resultadosSugestoesAtual[index];
+      await adicionarMusicaAoCultoBase(musica);
+      renderSugestoes([]);
     }
 
     async function removerMusicaDoCulto(itemId) {
@@ -656,6 +926,7 @@
     window.salvarCulto = salvarCulto;
     window.salvarInformacao = salvarInformacao;
     window.adicionarMusicaCulto = adicionarMusicaCulto;
+    window.adicionarSugestaoCulto = adicionarSugestaoCulto;
     window.removerMusicaDoCulto = removerMusicaDoCulto;
     window.subirMusica = subirMusica;
     window.descerMusica = descerMusica;
