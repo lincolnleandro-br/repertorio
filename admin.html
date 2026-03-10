@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Milouv Admin 3.4</title>
+  <title>Milouv Admin 3.5</title>
   <style>
     :root{
       --bg:#f4f6f9;
@@ -17,13 +17,13 @@
       --muted:#6b7280;
       --danger:#b91c1c;
       --success:#166534;
-      --warning:#b45309;
       --shadow:0 10px 30px rgba(15,23,42,0.08);
       --radius:16px;
       --container:1100px;
     }
 
     *{box-sizing:border-box}
+
     body{
       margin:0;
       font-family:Arial,Helvetica,sans-serif;
@@ -150,7 +150,9 @@
       font-weight:700;
     }
 
-    .hidden{ display:none !important; }
+    .hidden{
+      display:none !important;
+    }
 
     .pill{
       display:inline-flex;
@@ -206,6 +208,14 @@
       margin-bottom:12px;
     }
 
+    .selected-box{
+      background:#f8fafc;
+      border:1px solid var(--border);
+      border-radius:12px;
+      padding:14px;
+      margin-top:14px;
+    }
+
     @media (max-width:700px){
       .grid{
         grid-template-columns:1fr;
@@ -215,7 +225,7 @@
 </head>
 <body>
   <header>
-    <h1>Milouv Admin 3.4</h1>
+    <h1>Milouv Admin 3.5</h1>
     <p>Painel protegido com login do Google</p>
   </header>
 
@@ -262,53 +272,74 @@
         <div id="statusMes" class="status"></div>
       </section>
 
-            <section class="card">
+      <section class="card">
         <h3>Montar repertório do culto</h3>
+
         <div class="section-note">
-          Aqui você pode <strong>adicionar músicas</strong>, usar <strong>sugestões automáticas por perfil</strong>, <strong>mover</strong> e <strong>remover</strong> músicas do culto.
+          Aqui você pode <strong>selecionar a música</strong>, ajustar o <strong>tom</strong>, escrever uma <strong>observação</strong>, usar <strong>sugestões automáticas</strong> e depois adicionar ao repertório.
         </div>
 
-<div class="grid">
-  <div>
-    <label for="cultoSelect">Culto</label>
-    <select id="cultoSelect"></select>
-  </div>
+        <div class="grid">
+          <div>
+            <label for="cultoSelect">Culto</label>
+            <select id="cultoSelect"></select>
+          </div>
 
-  <div>
-    <label for="buscaMusicaCulto">Pesquisar música</label>
-    <input id="buscaMusicaCulto" type="text" placeholder="Digite o nome da música ou artista">
-  </div>
+          <div>
+            <label for="buscaMusicaCulto">Pesquisar música</label>
+            <input id="buscaMusicaCulto" type="text" placeholder="Digite o nome da música ou artista">
+          </div>
 
-  <div>
-    <label for="perfilSugestao">Sugestões por perfil</label>
-    <select id="perfilSugestao">
-      <option value="">Selecione</option>
-      <option value="ADORAÇÃO">ADORAÇÃO</option>
-      <option value="CLAMOR">CLAMOR</option>
-      <option value="ENTREGA">ENTREGA</option>
-      <option value="CEIA">CEIA</option>
-      <option value="CONGREGACIONAL">CONGREGACIONAL</option>
-      <option value="CELEBRAÇÃO">CELEBRAÇÃO</option>
-      <option value="OFERTA">OFERTA</option>
-      <option value="PROMESSA">PROMESSA</option>
-      <option value="GUERRA">GUERRA</option>
-      <option value="EXALTAÇÃO">EXALTAÇÃO</option>
-      <option value="PEDIDO">PEDIDO</option>
-    </select>
-  </div>
+          <div>
+            <label for="perfilSugestao">Sugestões por perfil</label>
+            <select id="perfilSugestao">
+              <option value="">Selecione</option>
+              <option value="ADORAÇÃO">ADORAÇÃO</option>
+              <option value="CLAMOR">CLAMOR</option>
+              <option value="ENTREGA">ENTREGA</option>
+              <option value="CEIA">CEIA</option>
+              <option value="CONGREGACIONAL">CONGREGACIONAL</option>
+              <option value="CELEBRAÇÃO">CELEBRAÇÃO</option>
+              <option value="OFERTA">OFERTA</option>
+              <option value="PROMESSA">PROMESSA</option>
+              <option value="GUERRA">GUERRA</option>
+              <option value="EXALTAÇÃO">EXALTAÇÃO</option>
+              <option value="PEDIDO">PEDIDO</option>
+            </select>
+          </div>
 
-  <div style="display:flex;align-items:end;">
-    <button onclick="gerarSugestoes()">Gerar sugestões</button>
-  </div>
-
-  <div class="full">
-    <label for="obsMusicaCulto">Observação da música</label>
-    <input id="obsMusicaCulto" type="text" placeholder="Ex.: Medley, Solo, Ministração...">
-  </div>
-</div>
+          <div style="display:flex;align-items:end;">
+            <button onclick="gerarSugestoes()">Gerar sugestões</button>
+          </div>
+        </div>
 
         <div id="resultadoBusca" class="search-results"></div>
         <div id="listaSugestoes" class="search-results"></div>
+
+        <div class="selected-box">
+          <h3 style="margin-bottom:12px;">Música selecionada</h3>
+
+          <div id="musicaSelecionadaBox" class="muted" style="margin-bottom:12px;">
+            Nenhuma música selecionada.
+          </div>
+
+          <div class="grid">
+            <div>
+              <label for="tomMusicaCulto">Tom</label>
+              <input id="tomMusicaCulto" type="text" placeholder="Ex.: G, A, C, D">
+            </div>
+
+            <div>
+              <label for="obsMusicaCulto">Observação</label>
+              <input id="obsMusicaCulto" type="text" placeholder="Ex.: Medley, Solo, Ministração...">
+            </div>
+          </div>
+
+          <div class="row">
+            <button onclick="confirmarAdicionarMusica()">Adicionar ao repertório</button>
+            <button class="secondary" onclick="limparSelecaoMusica()">Limpar seleção</button>
+          </div>
+        </div>
 
         <h3 style="margin-top:20px;">Repertório atual</h3>
         <div id="repertorioCulto" class="list muted">Selecione um culto.</div>
@@ -360,7 +391,7 @@
         <div id="statusMusica" class="status"></div>
       </section>
 
-            <section class="card">
+      <section class="card">
         <h3>Publicar informação</h3>
         <div class="grid">
           <div class="full">
@@ -438,7 +469,6 @@
         </div>
         <div id="statusCulto" class="status"></div>
       </section>
-      
     </section>
   </main>
 
@@ -473,6 +503,7 @@
     let repertorioAtual = {};
     let resultadosBuscaAtual = [];
     let resultadosSugestoesAtual = [];
+    let musicaSelecionadaAtual = null;
 
     function setStatus(id, message, ok = true) {
       const el = document.getElementById(id);
@@ -604,6 +635,26 @@
       }
     }
 
+    async function salvarInformacao() {
+      const titulo = document.getElementById("infoTitulo").value.trim();
+      const texto = document.getElementById("infoTexto").value.trim();
+
+      if (!titulo || !texto) {
+        setStatus("statusInfo", "Preencha título e texto.", false);
+        return;
+      }
+
+      try {
+        await push(ref(db, "informacoes"), { titulo, texto });
+        document.getElementById("infoTitulo").value = "";
+        document.getElementById("infoTexto").value = "";
+        setStatus("statusInfo", "Informação publicada com sucesso.");
+      } catch (error) {
+        console.error(error);
+        setStatus("statusInfo", "Erro ao publicar informação.", false);
+      }
+    }
+
     async function salvarCulto() {
       const mes = document.getElementById("cultoMes").value.trim();
       const cultoId = document.getElementById("cultoId").value.trim();
@@ -651,75 +702,47 @@
       }
     }
 
-    async function salvarInformacao() {
-      const titulo = document.getElementById("infoTitulo").value.trim();
-      const texto = document.getElementById("infoTexto").value.trim();
-
-      if (!titulo || !texto) {
-        setStatus("statusInfo", "Preencha título e texto.", false);
-        return;
-      }
-
-      try {
-        await push(ref(db, "informacoes"), { titulo, texto });
-
-        document.getElementById("infoTitulo").value = "";
-        document.getElementById("infoTexto").value = "";
-        setStatus("statusInfo", "Informação publicada com sucesso.");
-      } catch (error) {
-        console.error(error);
-        setStatus("statusInfo", "Erro ao publicar informação.", false);
-      }
-    }
-
     async function carregarMusicasBanco() {
       const snapshot = await get(ref(db, "musicas"));
       const dados = snapshot.val() || {};
       bancoMusicas = Object.keys(dados).map(id => ({ id, ...dados[id] }));
     }
 
-async function carregarCultos() {
-  const mes = document.getElementById("cultoMes").value.trim() 
-           || document.getElementById("mesAtivo").value.trim() 
-           || "2026-03";
+    async function carregarCultos() {
+      const mes = document.getElementById("cultoMes").value.trim() || document.getElementById("mesAtivo").value.trim() || "2026-03";
+      const snapshot = await get(ref(db, `escalas/${mes}/cultos`));
+      const dados = snapshot.val() || {};
 
-  const snapshot = await get(ref(db, `escalas/${mes}/cultos`));
-  const dados = snapshot.val() || {};
+      cultosCache = Object.entries(dados)
+        .map(([id, culto]) => ({ id, ...culto }))
+        .sort((a, b) => new Date(a.data) - new Date(b.data));
 
-  cultosCache = Object.entries(dados).map(([id, culto]) => ({
-    id,
-    ...culto
-  }));
+      const select = document.getElementById("cultoSelect");
+      select.innerHTML = "";
 
-  // ordenar pela data
-  cultosCache.sort((a, b) => new Date(a.data) - new Date(b.data));
+      let indexProximoCulto = 0;
+      const hoje = new Date();
+      const hojeSemHora = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
 
-  const select = document.getElementById("cultoSelect");
-  select.innerHTML = "";
+      cultosCache.forEach((culto, index) => {
+        const opt = document.createElement("option");
+        opt.value = culto.id;
+        opt.textContent = `${culto.label || culto.id} - ${culto.categoria || "Culto"}`;
+        select.appendChild(opt);
 
-  const hoje = new Date();
-  let indexProximoCulto = 0;
+        const dataCulto = new Date(`${culto.data}T00:00:00`);
+        if (dataCulto >= hojeSemHora && indexProximoCulto === 0) {
+          indexProximoCulto = index;
+        }
+      });
 
-  cultosCache.forEach((culto, index) => {
-    const opt = document.createElement("option");
-    opt.value = culto.id;
-    opt.textContent = `${culto.label || culto.id} - ${culto.categoria || "Culto"}`;
-
-    select.appendChild(opt);
-
-    // detectar próximo culto
-    if (new Date(culto.data) >= hoje && indexProximoCulto === 0) {
-      indexProximoCulto = index;
+      if (cultosCache.length) {
+        select.selectedIndex = indexProximoCulto;
+        await carregarRepertorioCulto();
+      } else {
+        document.getElementById("repertorioCulto").textContent = "Sem cultos cadastrados para este mês.";
+      }
     }
-  });
-
-  // selecionar próximo culto automaticamente
-  if (cultosCache.length) {
-    select.selectedIndex = indexProximoCulto;
-  }
-
-  await carregarRepertorioCulto();
-}
 
     function renderResultadoBusca(lista) {
       const container = document.getElementById("resultadoBusca");
@@ -735,7 +758,7 @@ async function carregarCultos() {
             <strong>${m.musica || ""}</strong><br>
             <span class="muted">${m.artista || ""} • ${m.perfil || ""} • ${m.andamento || ""}</span>
           </div>
-          <button onclick="adicionarMusicaCulto(${index})">Adicionar</button>
+          <button onclick="selecionarMusicaBusca(${index})">Selecionar</button>
         </div>
       `).join("");
 
@@ -756,7 +779,7 @@ async function carregarCultos() {
             <strong>${m.musica || ""}</strong><br>
             <span class="muted">${m.artista || ""} • ${m.perfil || ""} • ${m.andamento || ""}</span>
           </div>
-          <button onclick="adicionarSugestaoCulto(${index})">Adicionar</button>
+          <button onclick="selecionarMusicaSugestao(${index})">Selecionar</button>
         </div>
       `).join("");
 
@@ -765,6 +788,7 @@ async function carregarCultos() {
 
     function gerarSugestoes() {
       const perfil = document.getElementById("perfilSugestao").value;
+
       if (!perfil) {
         renderSugestoes([]);
         return;
@@ -777,7 +801,93 @@ async function carregarCultos() {
       renderSugestoes(sugeridas);
     }
 
-    window.gerarSugestoes = gerarSugestoes;
+    function atualizarBoxMusicaSelecionada() {
+      const box = document.getElementById("musicaSelecionadaBox");
+
+      if (!musicaSelecionadaAtual) {
+        box.innerHTML = "Nenhuma música selecionada.";
+        return;
+      }
+
+      box.innerHTML = `
+        <strong>${musicaSelecionadaAtual.musica || ""}</strong><br>
+        <span class="muted">
+          ${musicaSelecionadaAtual.artista || ""} • 
+          Perfil: ${musicaSelecionadaAtual.perfil || ""} • 
+          Andamento: ${musicaSelecionadaAtual.andamento || ""}
+        </span>
+      `;
+    }
+
+    function selecionarMusicaBusca(index) {
+      const musica = resultadosBuscaAtual[index];
+      if (!musica) return;
+
+      musicaSelecionadaAtual = musica;
+      document.getElementById("tomMusicaCulto").value = musica.tomMasculino || musica.tomFeminino || "";
+      document.getElementById("obsMusicaCulto").value = "";
+      atualizarBoxMusicaSelecionada();
+    }
+
+    function selecionarMusicaSugestao(index) {
+      const musica = resultadosSugestoesAtual[index];
+      if (!musica) return;
+
+      musicaSelecionadaAtual = musica;
+      document.getElementById("tomMusicaCulto").value = musica.tomMasculino || musica.tomFeminino || "";
+      document.getElementById("obsMusicaCulto").value = "";
+      atualizarBoxMusicaSelecionada();
+    }
+
+    function limparSelecaoMusica() {
+      musicaSelecionadaAtual = null;
+      document.getElementById("tomMusicaCulto").value = "";
+      document.getElementById("obsMusicaCulto").value = "";
+      atualizarBoxMusicaSelecionada();
+    }
+
+    async function confirmarAdicionarMusica() {
+      const cultoId = document.getElementById("cultoSelect").value;
+      const tom = document.getElementById("tomMusicaCulto").value.trim();
+      const obs = document.getElementById("obsMusicaCulto").value.trim();
+
+      if (!cultoId) {
+        setStatus("statusRepertorio", "Selecione um culto.", false);
+        return;
+      }
+
+      if (!musicaSelecionadaAtual) {
+        setStatus("statusRepertorio", "Selecione uma música antes de adicionar.", false);
+        return;
+      }
+
+      try {
+        const snapshot = await get(ref(db, `repertorios/${cultoId}`));
+        const dados = snapshot.val() || {};
+        const ordem = Object.keys(dados).length + 1;
+        const itemId = `item${ordem}`;
+
+        await set(ref(db, `repertorios/${cultoId}/${itemId}`), {
+          musica: musicaSelecionadaAtual.musica || "",
+          artista: musicaSelecionadaAtual.artista || "",
+          tom: tom,
+          obs: obs,
+          ordem
+        });
+
+        await set(ref(db, `historico/${safeKey(musicaSelecionadaAtual.musica)}/${cultoId}`), true);
+
+        setStatus("statusRepertorio", "Música adicionada ao culto.");
+        limparSelecaoMusica();
+        document.getElementById("buscaMusicaCulto").value = "";
+        renderResultadoBusca([]);
+        renderSugestoes([]);
+        await carregarRepertorioCulto();
+      } catch (error) {
+        console.error(error);
+        setStatus("statusRepertorio", "Erro ao adicionar música.", false);
+      }
+    }
 
     async function carregarRepertorioCulto() {
       const cultoId = document.getElementById("cultoSelect").value;
@@ -809,45 +919,6 @@ async function carregarCultos() {
           </div>
         </div>
       `).join("");
-    }
-
-async function adicionarMusicaAoCultoBase(musica) {
-  const cultoId = document.getElementById("cultoSelect").value;
-  const obs = document.getElementById("obsMusicaCulto").value.trim();
-
-  if (!musica || !cultoId) return;
-
-  const snapshot = await get(ref(db, `repertorios/${cultoId}`));
-  const dados = snapshot.val() || {};
-  const ordem = Object.keys(dados).length + 1;
-  const itemId = `item${ordem}`;
-
-  await set(ref(db, `repertorios/${cultoId}/${itemId}`), {
-    musica: musica.musica || "",
-    artista: musica.artista || "",
-    tom: musica.tomMasculino || musica.tomFeminino || "",
-    obs: obs,
-    ordem
-  });
-
-  await set(ref(db, `historico/${safeKey(musica.musica)}/${cultoId}`), true);
-
-  document.getElementById("obsMusicaCulto").value = "";
-  setStatus("statusRepertorio", "Música adicionada ao culto.");
-  await carregarRepertorioCulto();
-}
-
-    async function adicionarMusicaCulto(index) {
-      const musica = resultadosBuscaAtual[index];
-      await adicionarMusicaAoCultoBase(musica);
-      document.getElementById("buscaMusicaCulto").value = "";
-      renderResultadoBusca([]);
-    }
-
-    async function adicionarSugestaoCulto(index) {
-      const musica = resultadosSugestoesAtual[index];
-      await adicionarMusicaAoCultoBase(musica);
-      renderSugestoes([]);
     }
 
     async function removerMusicaDoCulto(itemId) {
@@ -953,10 +1024,13 @@ async function adicionarMusicaAoCultoBase(musica) {
 
     window.salvarMesAtivo = salvarMesAtivo;
     window.salvarMusica = salvarMusica;
-    window.salvarCulto = salvarCulto;
     window.salvarInformacao = salvarInformacao;
-    window.adicionarMusicaCulto = adicionarMusicaCulto;
-    window.adicionarSugestaoCulto = adicionarSugestaoCulto;
+    window.salvarCulto = salvarCulto;
+    window.gerarSugestoes = gerarSugestoes;
+    window.selecionarMusicaBusca = selecionarMusicaBusca;
+    window.selecionarMusicaSugestao = selecionarMusicaSugestao;
+    window.confirmarAdicionarMusica = confirmarAdicionarMusica;
+    window.limparSelecaoMusica = limparSelecaoMusica;
     window.removerMusicaDoCulto = removerMusicaDoCulto;
     window.subirMusica = subirMusica;
     window.descerMusica = descerMusica;
