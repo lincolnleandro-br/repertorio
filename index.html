@@ -494,7 +494,7 @@
   <nav>
     <button data-page="home" class="active" onclick="openPage('home')">Início</button>
     <button data-page="escala" onclick="openPage('escala')">Escala do Mês</button>
-    <button data-page="repertorio" onclick="openPage('repertorio')">Repertório</button>
+    <button data-page="repertorio" onclick="openPage('repertorio')">SetList</button>
     <button data-page="informacoes" onclick="openPage('informacoes')">Informações</button>
     <button data-page="estatisticas" onclick="openPage('estatisticas')">Estatísticas</button>
     <button onclick="window.location.href='./admin.html'">Admin</button>
@@ -517,7 +517,9 @@
         <div class="card">
           <h3>Repertório completo</h3>
           <p>Consulte o banco geral de músicas do ministério com busca por nome e artista.</p>
-          <button onclick="openPage('repertorio')">Ver repertório</button>
+          <button onclick="abrirModalDoCulto('${culto.id}')">
+  Ver Setlist
+</button>
         </div>
 
         <div class="card">
@@ -542,7 +544,7 @@
     </section>
 
     <section class="page" id="repertorio">
-      <h2>Repertório do Ministério</h2>
+      <h2>SetList do Ministério</h2>
 
       <div class="search-box">
         <label for="buscarMusica" class="muted">Buscar música ou artista</label>
@@ -1003,6 +1005,7 @@ function renderInformacoes(dados) {
   </script>
 </body>
 </html>
+
 
 
 
