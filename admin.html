@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Milouv Admin 3.5</title>
+  <title>Milouv Admin 3.6</title>
   <style>
     :root{
       --bg:#f4f6f9;
@@ -225,7 +225,7 @@
 </head>
 <body>
   <header>
-    <h1>Milouv Admin 3.5</h1>
+    <h1>Milouv Admin 3.6</h1>
     <p>Painel protegido com login do Google</p>
   </header>
 
@@ -406,11 +406,12 @@
         </div>
 
         <div class="row">
-          <button onclick="salvarInformacao()">Publicar informação</button>
+          <button onclick="salvarInformacao()">Salvar informação</button>
         </div>
         <div id="statusInfo" class="status"></div>
+
         <h3 style="margin-top:20px;">Informações cadastradas</h3>
-<div id="listaInfoAdmin" class="list muted">Carregando informações...</div>
+        <div id="listaInfoAdmin" class="list muted">Carregando informações...</div>
       </section>
 
       <section class="card">
@@ -506,6 +507,8 @@
     let resultadosBuscaAtual = [];
     let resultadosSugestoesAtual = [];
     let musicaSelecionadaAtual = null;
+    let infoEditandoId = null;
+    let informacoesCache = [];
 
     function setStatus(id, message, ok = true) {
       const el = document.getElementById(id);
@@ -560,12 +563,12 @@
     }
 
     async function preloadAdminData() {
-  await carregarMesAtivoAtual();
-  await carregarMusicasBanco();
-  await carregarCultos();
-  await carregarRepertorioCulto();
-  await carregarInformacoesAdmin();
-}
+      await carregarMesAtivoAtual();
+      await carregarMusicasBanco();
+      await carregarCultos();
+      await carregarRepertorioCulto();
+      await carregarInformacoesAdmin();
+    }
 
     async function carregarMesAtivoAtual() {
       const snapshot = await get(ref(db, "config/mesAtivo"));
@@ -638,84 +641,157 @@
       }
     }
 
-async function salvarInformacao() {
-  const titulo = document.getElementById("infoTitulo").value.trim();
-  const texto = document.getElementById("infoTexto").value.trim();
+    async function salvarInformacao() {
+      const titulo = document.getElementById("infoTitulo").value.trim();
+      const texto = document.getElementById("infoTexto").value.trim();
 
-  if (!titulo || !texto) {
-    setStatus("statusInfo", "Preencha título e texto.", false);
-    return;
-  }
+      if (!titulo || !texto) {
+        setStatus("statusInfo", "Preencha título e texto.", false);
+        return;
+      }
 
-  try {
-    if (infoEditandoId) {
-      await set(ref(db, `informacoes/${infoEditandoId}`), { titulo, texto });
-      setStatus("statusInfo", "Informação atualizada com sucesso.");
-      infoEditandoId = null;
-    } else {
-      await push(ref(db, "informacoes"), { titulo, texto });
-      setStatus("statusInfo", "Informação publicada com sucesso.");
+      try {
+        if (infoEditandoId) {
+          const snapshot = await get(ref(db, `informacoes/${infoEditandoId}`));
+          const atual = snapshot.val() || {};
+          await set(ref(db, `informacoes/${infoEditandoId}`), {
+            titulo,
+            texto,
+            ordem: atual.ordem || 0
+          });
+          setStatus("statusInfo", "Informação atualizada com sucesso.");
+          infoEditandoId = null;
+        } else {
+          const snapshot = await get(ref(db, "informacoes"));
+          const dados = snapshot.val() || {};
+          const ordem = Object.keys(dados).length + 1;
+
+          await push(ref(db, "informacoes"), {
+            titulo,
+            texto,
+            ordem
+          });
+
+          setStatus("statusInfo", "Informação publicada com sucesso.");
+        }
+
+        document.getElementById("infoTitulo").value = "";
+        document.getElementById("infoTexto").value = "";
+        await carregarInformacoesAdmin();
+      } catch (error) {
+        console.error(error);
+        setStatus("statusInfo", "Erro ao salvar informação.", false);
+      }
     }
 
-    document.getElementById("infoTitulo").value = "";
-    document.getElementById("infoTexto").value = "";
-    await carregarInformacoesAdmin();
-  } catch (error) {
-    console.error(error);
-    setStatus("statusInfo", "Erro ao salvar informação.", false);
-  }
-}
-
     async function carregarInformacoesAdmin() {
-  const container = document.getElementById("listaInfoAdmin");
-  const snapshot = await get(ref(db, "informacoes"));
-  const dados = snapshot.val() || {};
+      const container = document.getElementById("listaInfoAdmin");
+      const snapshot = await get(ref(db, "informacoes"));
+      const dados = snapshot.val() || {};
 
-  const itens = Object.entries(dados);
+      informacoesCache = Object.entries(dados)
+        .map(([id, info]) => ({ id, ...info }))
+        .sort((a, b) => (a.ordem || 0) - (b.ordem || 0));
 
-  if (!itens.length) {
-    container.innerHTML = "Nenhuma informação cadastrada.";
-    return;
-  }
+      if (!informacoesCache.length) {
+        container.innerHTML = "Nenhuma informação cadastrada.";
+        return;
+      }
 
-  container.innerHTML = itens.map(([id, info]) => `
-    <div class="item">
-      <strong>${info.titulo || ""}</strong><br>
-      <span class="muted">${info.texto || ""}</span>
-      <div class="row">
-        <button class="secondary" onclick="editarInformacao('${id}')">Editar</button>
-        <button class="danger" onclick="excluirInformacao('${id}')">Excluir</button>
-      </div>
-    </div>
-  `).join("");
-}
+      container.innerHTML = informacoesCache.map((info, index) => `
+        <div class="item">
+          <strong>${info.titulo || ""}</strong><br>
+          <span class="muted">${info.texto || ""}</span>
+          <div class="row">
+            <button class="secondary" onclick="subirInformacao('${info.id}')">⬆</button>
+            <button class="secondary" onclick="descerInformacao('${info.id}')">⬇</button>
+            <button class="secondary" onclick="editarInformacao('${info.id}')">Editar</button>
+            <button class="danger" onclick="excluirInformacao('${info.id}')">Excluir</button>
+          </div>
+        </div>
+      `).join("");
+    }
 
     async function editarInformacao(id) {
-  const snapshot = await get(ref(db, `informacoes/${id}`));
-  const info = snapshot.val();
+      const snapshot = await get(ref(db, `informacoes/${id}`));
+      const info = snapshot.val();
 
-  if (!info) return;
+      if (!info) return;
 
-  infoEditandoId = id;
-  document.getElementById("infoTitulo").value = info.titulo || "";
-  document.getElementById("infoTexto").value = info.texto || "";
-  setStatus("statusInfo", "Modo edição ativado. Altere os campos e clique em Publicar informação.");
-}
+      infoEditandoId = id;
+      document.getElementById("infoTitulo").value = info.titulo || "";
+      document.getElementById("infoTexto").value = info.texto || "";
+      setStatus("statusInfo", "Modo edição ativado. Altere os campos e clique em Salvar informação.");
+    }
 
     async function excluirInformacao(id) {
-  const confirmar = confirm("Deseja realmente excluir esta informação?");
-  if (!confirmar) return;
+      const confirmar = confirm("Deseja realmente excluir esta informação?");
+      if (!confirmar) return;
 
-  try {
-    await remove(ref(db, `informacoes/${id}`));
-    setStatus("statusInfo", "Informação excluída com sucesso.");
-    await carregarInformacoesAdmin();
-  } catch (error) {
-    console.error(error);
-    setStatus("statusInfo", "Erro ao excluir informação.", false);
-  }
-}
-    
+      try {
+        await remove(ref(db, `informacoes/${id}`));
+        await normalizarOrdensInformacoes();
+        setStatus("statusInfo", "Informação excluída com sucesso.");
+        await carregarInformacoesAdmin();
+      } catch (error) {
+        console.error(error);
+        setStatus("statusInfo", "Erro ao excluir informação.", false);
+      }
+    }
+
+    async function normalizarOrdensInformacoes() {
+      const snapshot = await get(ref(db, "informacoes"));
+      const dados = snapshot.val() || {};
+      const itens = Object.entries(dados).sort((a, b) => (a[1].ordem || 0) - (b[1].ordem || 0));
+      const updates = {};
+
+      itens.forEach(([id], index) => {
+        updates[`informacoes/${id}/ordem`] = index + 1;
+      });
+
+      if (Object.keys(updates).length) {
+        await update(ref(db), updates);
+      }
+    }
+
+    async function subirInformacao(id) {
+      const snapshot = await get(ref(db, "informacoes"));
+      const dados = snapshot.val() || {};
+      const itens = Object.entries(dados).sort((a, b) => (a[1].ordem || 0) - (b[1].ordem || 0));
+      const index = itens.findIndex(([itemId]) => itemId === id);
+
+      if (index <= 0) return;
+
+      const atual = itens[index];
+      const anterior = itens[index - 1];
+
+      await update(ref(db), {
+        [`informacoes/${atual[0]}/ordem`]: index,
+        [`informacoes/${anterior[0]}/ordem`]: index + 1
+      });
+
+      await carregarInformacoesAdmin();
+    }
+
+    async function descerInformacao(id) {
+      const snapshot = await get(ref(db, "informacoes"));
+      const dados = snapshot.val() || {};
+      const itens = Object.entries(dados).sort((a, b) => (a[1].ordem || 0) - (b[1].ordem || 0));
+      const index = itens.findIndex(([itemId]) => itemId === id);
+
+      if (index < 0 || index >= itens.length - 1) return;
+
+      const atual = itens[index];
+      const proximo = itens[index + 1];
+
+      await update(ref(db), {
+        [`informacoes/${atual[0]}/ordem`]: index + 2,
+        [`informacoes/${proximo[0]}/ordem`]: index + 1
+      });
+
+      await carregarInformacoesAdmin();
+    }
+
     async function salvarCulto() {
       const mes = document.getElementById("cultoMes").value.trim();
       const cultoId = document.getElementById("cultoId").value.trim();
@@ -907,47 +983,47 @@ async function salvarInformacao() {
       atualizarBoxMusicaSelecionada();
     }
 
-async function confirmarAdicionarMusica() {
-  const cultoId = document.getElementById("cultoSelect").value;
-  const tom = document.getElementById("tomMusicaCulto").value.trim();
-  const obs = document.getElementById("obsMusicaCulto").value.trim();
+    async function confirmarAdicionarMusica() {
+      const cultoId = document.getElementById("cultoSelect").value;
+      const tom = document.getElementById("tomMusicaCulto").value.trim();
+      const obs = document.getElementById("obsMusicaCulto").value.trim();
 
-  if (!cultoId) {
-    setStatus("statusRepertorio", "Selecione um culto.", false);
-    return;
-  }
+      if (!cultoId) {
+        setStatus("statusRepertorio", "Selecione um culto.", false);
+        return;
+      }
 
-  if (!musicaSelecionadaAtual) {
-    setStatus("statusRepertorio", "Selecione uma música antes de adicionar.", false);
-    return;
-  }
+      if (!musicaSelecionadaAtual) {
+        setStatus("statusRepertorio", "Selecione uma música antes de adicionar.", false);
+        return;
+      }
 
-  try {
-    const snapshot = await get(ref(db, `repertorios/${cultoId}`));
-    const dados = snapshot.val() || {};
-    const ordem = Object.keys(dados).length + 1;
+      try {
+        const snapshot = await get(ref(db, `repertorios/${cultoId}`));
+        const dados = snapshot.val() || {};
+        const ordem = Object.keys(dados).length + 1;
 
-    await push(ref(db, `repertorios/${cultoId}`), {
-      musica: musicaSelecionadaAtual.musica || "",
-      artista: musicaSelecionadaAtual.artista || "",
-      tom: tom,
-      obs: obs,
-      ordem
-    });
+        await push(ref(db, `repertorios/${cultoId}`), {
+          musica: musicaSelecionadaAtual.musica || "",
+          artista: musicaSelecionadaAtual.artista || "",
+          tom: tom,
+          obs: obs,
+          ordem
+        });
 
-    await set(ref(db, `historico/${safeKey(musicaSelecionadaAtual.musica)}/${cultoId}`), true);
+        await set(ref(db, `historico/${safeKey(musicaSelecionadaAtual.musica)}/${cultoId}`), true);
 
-    setStatus("statusRepertorio", "Música adicionada ao culto.");
-    limparSelecaoMusica();
-    document.getElementById("buscaMusicaCulto").value = "";
-    renderResultadoBusca([]);
-    renderSugestoes([]);
-    await carregarRepertorioCulto();
-  } catch (error) {
-    console.error(error);
-    setStatus("statusRepertorio", "Erro ao adicionar música.", false);
-  }
-}
+        setStatus("statusRepertorio", "Música adicionada ao culto.");
+        limparSelecaoMusica();
+        document.getElementById("buscaMusicaCulto").value = "";
+        renderResultadoBusca([]);
+        renderSugestoes([]);
+        await carregarRepertorioCulto();
+      } catch (error) {
+        console.error(error);
+        setStatus("statusRepertorio", "Erro ao adicionar música.", false);
+      }
+    }
 
     async function carregarRepertorioCulto() {
       const cultoId = document.getElementById("cultoSelect").value;
@@ -1086,7 +1162,9 @@ async function confirmarAdicionarMusica() {
     window.salvarMusica = salvarMusica;
     window.salvarInformacao = salvarInformacao;
     window.editarInformacao = editarInformacao;
-window.excluirInformacao = excluirInformacao;
+    window.excluirInformacao = excluirInformacao;
+    window.subirInformacao = subirInformacao;
+    window.descerInformacao = descerInformacao;
     window.salvarCulto = salvarCulto;
     window.gerarSugestoes = gerarSugestoes;
     window.selecionarMusicaBusca = selecionarMusicaBusca;
