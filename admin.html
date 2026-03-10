@@ -846,48 +846,47 @@
       atualizarBoxMusicaSelecionada();
     }
 
-    async function confirmarAdicionarMusica() {
-      const cultoId = document.getElementById("cultoSelect").value;
-      const tom = document.getElementById("tomMusicaCulto").value.trim();
-      const obs = document.getElementById("obsMusicaCulto").value.trim();
+async function confirmarAdicionarMusica() {
+  const cultoId = document.getElementById("cultoSelect").value;
+  const tom = document.getElementById("tomMusicaCulto").value.trim();
+  const obs = document.getElementById("obsMusicaCulto").value.trim();
 
-      if (!cultoId) {
-        setStatus("statusRepertorio", "Selecione um culto.", false);
-        return;
-      }
+  if (!cultoId) {
+    setStatus("statusRepertorio", "Selecione um culto.", false);
+    return;
+  }
 
-      if (!musicaSelecionadaAtual) {
-        setStatus("statusRepertorio", "Selecione uma música antes de adicionar.", false);
-        return;
-      }
+  if (!musicaSelecionadaAtual) {
+    setStatus("statusRepertorio", "Selecione uma música antes de adicionar.", false);
+    return;
+  }
 
-      try {
-        const snapshot = await get(ref(db, `repertorios/${cultoId}`));
-        const dados = snapshot.val() || {};
-        const ordem = Object.keys(dados).length + 1;
-        const itemId = `item${ordem}`;
+  try {
+    const snapshot = await get(ref(db, `repertorios/${cultoId}`));
+    const dados = snapshot.val() || {};
+    const ordem = Object.keys(dados).length + 1;
 
-        await set(ref(db, `repertorios/${cultoId}/${itemId}`), {
-          musica: musicaSelecionadaAtual.musica || "",
-          artista: musicaSelecionadaAtual.artista || "",
-          tom: tom,
-          obs: obs,
-          ordem
-        });
+    await push(ref(db, `repertorios/${cultoId}`), {
+      musica: musicaSelecionadaAtual.musica || "",
+      artista: musicaSelecionadaAtual.artista || "",
+      tom: tom,
+      obs: obs,
+      ordem
+    });
 
-        await set(ref(db, `historico/${safeKey(musicaSelecionadaAtual.musica)}/${cultoId}`), true);
+    await set(ref(db, `historico/${safeKey(musicaSelecionadaAtual.musica)}/${cultoId}`), true);
 
-        setStatus("statusRepertorio", "Música adicionada ao culto.");
-        limparSelecaoMusica();
-        document.getElementById("buscaMusicaCulto").value = "";
-        renderResultadoBusca([]);
-        renderSugestoes([]);
-        await carregarRepertorioCulto();
-      } catch (error) {
-        console.error(error);
-        setStatus("statusRepertorio", "Erro ao adicionar música.", false);
-      }
-    }
+    setStatus("statusRepertorio", "Música adicionada ao culto.");
+    limparSelecaoMusica();
+    document.getElementById("buscaMusicaCulto").value = "";
+    renderResultadoBusca([]);
+    renderSugestoes([]);
+    await carregarRepertorioCulto();
+  } catch (error) {
+    console.error(error);
+    setStatus("statusRepertorio", "Erro ao adicionar música.", false);
+  }
+}
 
     async function carregarRepertorioCulto() {
       const cultoId = document.getElementById("cultoSelect").value;
