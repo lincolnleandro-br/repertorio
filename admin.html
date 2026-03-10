@@ -673,28 +673,48 @@
       bancoMusicas = Object.keys(dados).map(id => ({ id, ...dados[id] }));
     }
 
-    async function carregarCultos() {
-      const mes = document.getElementById("cultoMes").value.trim() || document.getElementById("mesAtivo").value.trim() || "2026-03";
-      const snapshot = await get(ref(db, `escalas/${mes}/cultos`));
-      const dados = snapshot.val() || {};
-      cultosCache = Object.entries(dados).map(([id, culto]) => ({ id, ...culto }));
+async function carregarCultos() {
+  const mes = document.getElementById("cultoMes").value.trim() 
+           || document.getElementById("mesAtivo").value.trim() 
+           || "2026-03";
 
-      const select = document.getElementById("cultoSelect");
-      select.innerHTML = "";
+  const snapshot = await get(ref(db, `escalas/${mes}/cultos`));
+  const dados = snapshot.val() || {};
 
-      cultosCache.forEach(culto => {
-        const opt = document.createElement("option");
-        opt.value = culto.id;
-        opt.textContent = `${culto.label || culto.id} - ${culto.categoria || "Culto"}`;
-        select.appendChild(opt);
-      });
+  cultosCache = Object.entries(dados).map(([id, culto]) => ({
+    id,
+    ...culto
+  }));
 
-      if (cultosCache.length) {
-        await carregarRepertorioCulto();
-      } else {
-        document.getElementById("repertorioCulto").textContent = "Sem cultos cadastrados para este mês.";
-      }
+  // ordenar pela data
+  cultosCache.sort((a, b) => new Date(a.data) - new Date(b.data));
+
+  const select = document.getElementById("cultoSelect");
+  select.innerHTML = "";
+
+  const hoje = new Date();
+  let indexProximoCulto = 0;
+
+  cultosCache.forEach((culto, index) => {
+    const opt = document.createElement("option");
+    opt.value = culto.id;
+    opt.textContent = `${culto.label || culto.id} - ${culto.categoria || "Culto"}`;
+
+    select.appendChild(opt);
+
+    // detectar próximo culto
+    if (new Date(culto.data) >= hoje && indexProximoCulto === 0) {
+      indexProximoCulto = index;
     }
+  });
+
+  // selecionar próximo culto automaticamente
+  if (cultosCache.length) {
+    select.selectedIndex = indexProximoCulto;
+  }
+
+  await carregarRepertorioCulto();
+}
 
     function renderResultadoBusca(lista) {
       const container = document.getElementById("resultadoBusca");
