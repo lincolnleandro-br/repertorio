@@ -627,18 +627,59 @@ function openPage(page) {
 
 window.openPage = openPage;
 
+async function abrirModal(cultoId) {
+  const culto = state.cultosMap[cultoId];
+  const modal = document.getElementById("modalRepertorio");
+  const conteudo = document.getElementById("modalConteudo");
+
+  modal.classList.add("active");
+  document.getElementById("modalTitulo").textContent = "Repertório do Culto";
+  document.getElementById("modalSubtitulo").textContent = culto
+    ? `${culto.categoria || "Culto"} • ${culto.label || culto.data || ""}`
+    : "Culto selecionado";
+
+  conteudo.innerHTML = `<div class="empty-state">Carregando repertório...</div>`;
+
+  onValue(ref(db, `repertorios/${cultoId}`), (snapshot) => {
+    const dados = snapshot.val();
+
+    if (!dados) {
+      conteudo.innerHTML = `<div class="empty-state">Nenhum repertório cadastrado para este culto.</div>`;
+      return;
+    }
+
+    const itens = Object.values(dados).sort((a, b) => (a.ordem || 0) - (b.ordem || 0));
+
+    conteudo.innerHTML = `
+      <div class="modal-list">
+        ${itens.map((item, index) => `
+          <div class="modal-item">
+            <strong>${index + 1}. ${escapeHtml(item.musica || "")}</strong>
+            <div class="muted">Artista: ${escapeHtml(item.artista || "—")}</div>
+            <div class="muted">Tom: ${escapeHtml(item.tom || "—")}</div>
+            ${item.obs ? `<div class="muted">Obs: ${escapeHtml(item.obs)}</div>` : ""}
+          </div>
+        `).join("")}
+      </div>
+    `;
+  });
+}
+
+window.abrirModalDoCulto = abrirModal;
+  
 function fecharModal() {
   document.getElementById("modalRepertorio").classList.remove("active");
 }
 
 window.fecharModal = fecharModal;
 
+
+
 /* =========================
    ESCALA
 ========================= */
 
 function renderEscala(dados, mesAtivo) {
-
   const container = document.getElementById("listaEscala");
   const mesAtivoLabel = document.getElementById("mesAtivoLabel");
 
@@ -651,13 +692,21 @@ function renderEscala(dados, mesAtivo) {
 
   const entries = Object.entries(dados);
 
-  container.innerHTML = entries.map(([id, culto]) => {
+  if (!entries.length) {
+    container.innerHTML = `<div class="empty-state">Nenhuma escala encontrada.</div>`;
+    return;
+  }
 
+  state.cultosMap = {};
+  entries.forEach(([id, culto]) => {
+    state.cultosMap[id] = culto;
+  });
+
+  container.innerHTML = entries.map(([id, culto]) => {
     const vocal = Array.isArray(culto.vocal) ? culto.vocal.join(", ") : (culto.vocal || "");
 
     return `
       <div class="card culto-card">
-
         <div class="culto-topo">
           <span class="culto-categoria">${escapeHtml(culto.categoria || "Culto")}</span>
           <span class="culto-data">${escapeHtml(culto.label || culto.data || "")}</span>
@@ -668,9 +717,9 @@ function renderEscala(dados, mesAtivo) {
         <div class="culto-info"><strong>Bateria:</strong> ${escapeHtml(culto.bateria || "—")}</div>
         <div class="culto-info"><strong>Violão:</strong> ${escapeHtml(culto.violao || "—")}</div>
 
+        <button onclick="abrirModalDoCulto('${id}')">Ver repertório</button>
       </div>
     `;
-
   }).join("");
 }
 
@@ -817,6 +866,7 @@ setupInformacoes();
 
 </body>
 </html>
+
 
 
 
