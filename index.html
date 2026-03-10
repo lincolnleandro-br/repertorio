@@ -3,11 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Milouv 2.0 | Ministério de Louvor IMESC</title>
-
-  <div style="position:absolute;top:20px;right:20px;">
-  <a href="./admin.html" style="color:white;text-decoration:none;">Admin</a>
-</div>
+  <title>Milouv | Ministério de Louvor IMESC</title>
 
   <style>
     :root{
@@ -21,7 +17,6 @@
       --muted:#6b7280;
       --border:#e5e7eb;
       --danger:#b91c1c;
-      --success:#166534;
       --shadow-sm:0 6px 18px rgba(15,23,42,0.06);
       --shadow-md:0 10px 30px rgba(15,23,42,0.08);
       --shadow-lg:0 18px 40px rgba(15,23,42,0.12);
@@ -40,8 +35,14 @@
       line-height:1.5;
     }
 
-    a{ color:inherit; text-decoration:none; }
-    button,input,select,textarea{ font:inherit; }
+    a{
+      color:inherit;
+      text-decoration:none;
+    }
+
+    button,input,select,textarea{
+      font:inherit;
+    }
 
     header{
       background:linear-gradient(135deg,var(--primary),var(--primary-2));
@@ -57,7 +58,23 @@
       font-weight:700;
     }
 
-    header p{ margin:0; opacity:.95; }
+    header p{
+      margin:0;
+      opacity:.95;
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:6px 10px;
+      border-radius:999px;
+      background:rgba(255,255,255,.18);
+      color:#fff;
+      font-size:.85rem;
+      font-weight:700;
+      margin-bottom:14px;
+    }
 
     nav{
       background:rgba(255,255,255,.95);
@@ -103,8 +120,14 @@
       padding:32px 0 56px;
     }
 
-    .page{ display:none; animation:fadeIn .25s ease; }
-    .page.active{ display:block; }
+    .page{
+      display:none;
+      animation:fadeIn .25s ease;
+    }
+
+    .page.active{
+      display:block;
+    }
 
     @keyframes fadeIn{
       from{ opacity:0; transform:translateY(6px); }
@@ -132,10 +155,21 @@
       border-color:#dbe3f0;
     }
 
-    .card h3{ margin:0 0 10px; font-size:1.15rem; }
-    .card p{ margin:0; color:var(--muted); }
+    .card h3{
+      margin:0 0 10px;
+      font-size:1.15rem;
+    }
 
-    h2{ margin:10px 0 18px; font-size:1.6rem; color:var(--text); }
+    .card p{
+      margin:0;
+      color:var(--muted);
+    }
+
+    h2{
+      margin:10px 0 18px;
+      font-size:1.6rem;
+      color:var(--text);
+    }
 
     button{
       border:none;
@@ -148,8 +182,10 @@
       transition:all .2s ease;
     }
 
-    button:hover{ opacity:.96; transform:translateY(-1px); }
-    .card button{ margin-top:14px; }
+    button:hover{
+      opacity:.96;
+      transform:translateY(-1px);
+    }
 
     .btn-secondary{
       background:var(--surface-soft);
@@ -157,10 +193,8 @@
       border:1px solid var(--border);
     }
 
-    .btn-danger{
-      background:#fee2e2;
-      color:var(--danger);
-      border:1px solid #fecaca;
+    .card button{
+      margin-top:14px;
     }
 
     input,select,textarea{
@@ -189,11 +223,34 @@
       margin-top:18px;
     }
 
-    .table{ width:100%; border-collapse:collapse; min-width:760px; }
-    .table th,.table td{ padding:14px 16px; border-bottom:1px solid var(--border); text-align:left; vertical-align:middle; }
-    .table th{ background:var(--surface-soft); color:var(--muted); font-size:.82rem; text-transform:uppercase; letter-spacing:.04em; }
-    .table tr:last-child td{ border-bottom:none; }
-    .table tr:hover td{ background:#fafcff; }
+    .table{
+      width:100%;
+      border-collapse:collapse;
+      min-width:760px;
+    }
+
+    .table th,.table td{
+      padding:14px 16px;
+      border-bottom:1px solid var(--border);
+      text-align:left;
+      vertical-align:middle;
+    }
+
+    .table th{
+      background:var(--surface-soft);
+      color:var(--muted);
+      font-size:.82rem;
+      text-transform:uppercase;
+      letter-spacing:.04em;
+    }
+
+    .table tr:last-child td{
+      border-bottom:none;
+    }
+
+    .table tr:hover td{
+      background:#fafcff;
+    }
 
     .notice{
       background:var(--surface);
@@ -207,19 +264,15 @@
       border-bottom:1px solid var(--border);
     }
 
-    .notice strong{ display:block; margin-bottom:8px; font-size:1rem; }
-    .notice p{ margin:0; color:var(--muted); }
+    .notice strong{
+      display:block;
+      margin-bottom:8px;
+      font-size:1rem;
+    }
 
-    .badge{
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      padding:6px 10px;
-      border-radius:999px;
-      background:var(--primary-soft);
-      color:#1d4ed8;
-      font-size:.8rem;
-      font-weight:700;
+    .notice p{
+      margin:0;
+      color:var(--muted);
     }
 
     .empty-state{
@@ -232,15 +285,53 @@
       box-shadow:var(--shadow-sm);
     }
 
-    .culto-card{ display:flex; flex-direction:column; gap:12px; }
-    .culto-topo{ display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; }
-    .culto-categoria{ background:var(--primary-soft); color:#1d4ed8; padding:6px 10px; border-radius:999px; font-size:.78rem; font-weight:700; }
-    .culto-data{ color:var(--primary); font-size:1.05rem; font-weight:700; }
-    .culto-info{ color:var(--muted); }
-    .culto-info strong{ color:var(--text); }
+    .culto-card{
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
 
-    .toolbar{ display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:20px; }
-    .search-box,.panel{
+    .culto-topo{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .culto-categoria{
+      background:var(--primary-soft);
+      color:#1d4ed8;
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:.78rem;
+      font-weight:700;
+    }
+
+    .culto-data{
+      color:var(--primary);
+      font-size:1.05rem;
+      font-weight:700;
+    }
+
+    .culto-info{
+      color:var(--muted);
+    }
+
+    .culto-info strong{
+      color:var(--text);
+    }
+
+    .toolbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-bottom:20px;
+    }
+
+    .search-box{
       background:var(--surface);
       border:1px solid var(--border);
       border-radius:14px;
@@ -249,8 +340,13 @@
       margin-bottom:18px;
     }
 
-    .home-lead{ margin-bottom:24px; }
-    .muted{ color:var(--muted); }
+    .home-lead{
+      margin-bottom:24px;
+    }
+
+    .muted{
+      color:var(--muted);
+    }
 
     .modal{
       display:none;
@@ -263,10 +359,12 @@
       justify-content:center;
     }
 
-    .modal.active{ display:flex; }
+    .modal.active{
+      display:flex;
+    }
 
     .modal-box{
-      width:min(920px,100%);
+      width:min(860px,100%);
       max-height:92vh;
       overflow:auto;
       background:var(--surface);
@@ -288,9 +386,17 @@
       z-index:2;
     }
 
-    .modal-header h3{ margin:0 0 6px; }
-    .modal-header p{ margin:0; }
-    .modal-body{ padding:18px 20px 20px; }
+    .modal-header h3{
+      margin:0 0 6px;
+    }
+
+    .modal-header p{
+      margin:0;
+    }
+
+    .modal-body{
+      padding:18px 20px 20px;
+    }
 
     .modal-close{
       background:#fee2e2;
@@ -300,7 +406,11 @@
       padding:8px 12px;
     }
 
-    .modal-list{ display:grid; gap:12px; }
+    .modal-list{
+      display:grid;
+      gap:12px;
+      margin-top:16px;
+    }
 
     .modal-item{
       background:var(--surface-soft);
@@ -309,85 +419,69 @@
       padding:14px;
     }
 
-    .modal-item strong{ display:block; margin-bottom:6px; }
-
-    .modal-actions{ display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
-
-    .form-grid{
-      display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:12px;
+    .modal-item strong{
+      display:block;
+      margin-bottom:6px;
     }
 
-    .form-field-full{ grid-column:1 / -1; }
-
-    .search-results{
-      margin-top:10px;
-      border:1px solid var(--border);
-      border-radius:12px;
-      overflow:hidden;
-      background:white;
-      max-height:260px;
-      overflow-y:auto;
-    }
-
-    .search-results:empty{ display:none; }
-
-    .search-item{
-      padding:12px;
-      border-bottom:1px solid var(--border);
-      cursor:pointer;
-    }
-
-    .search-item:last-child{ border-bottom:none; }
-    .search-item:hover{ background:#eff6ff; }
-
-    .selected-music{
-      background:#ecfeff;
-      border:1px solid #bae6fd;
-      color:#0f172a;
-      padding:12px;
-      border-radius:12px;
-      margin-top:12px;
-    }
-
-    .status-inline{
-      font-size:.92rem;
-      color:var(--muted);
+    .modal-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
       margin-top:8px;
     }
 
     @media (max-width:768px){
-      header{ padding:36px 18px; }
-      nav{ justify-content:flex-start; overflow-x:auto; white-space:nowrap; }
-      .container{ width:min(94%, var(--container)); padding:24px 0 48px; }
-      .grid{ grid-template-columns:1fr; }
-      .card{ padding:18px; }
-      .table{ min-width:620px; }
-      .form-grid{ grid-template-columns:1fr; }
+      header{
+        padding:36px 18px;
+      }
+
+      nav{
+        justify-content:flex-start;
+        overflow-x:auto;
+        white-space:nowrap;
+      }
+
+      .container{
+        width:min(94%, var(--container));
+        padding:24px 0 48px;
+      }
+
+      .grid{
+        grid-template-columns:1fr;
+      }
+
+      .card{
+        padding:18px;
+      }
+
+      .table{
+        min-width:620px;
+      }
     }
   </style>
 </head>
 <body>
   <header>
-    <div class="badge">Milouv 2.0</div>
+    <div class="badge">Milouv</div>
     <h1>Portal do Ministério de Louvor</h1>
     <p>Escalas, repertórios e informações em um só lugar.</p>
   </header>
 
-<nav>
-  <button data-page="home">Início</button>
-  <button data-page="escala">Escala do Mês</button>
-  <button data-page="repertorio">Repertório</button>
-  <button data-page="informacoes">Informações</button>
-  <button data-page="estatisticas">Estatísticas</button>
-
+  <nav>
+    <button data-page="home" class="active" onclick="openPage('home')">Início</button>
+    <button data-page="escala" onclick="openPage('escala')">Escala do Mês</button>
+    <button data-page="repertorio" onclick="openPage('repertorio')">Repertório</button>
+    <button data-page="informacoes" onclick="openPage('informacoes')">Informações</button>
+    <button data-page="estatisticas" onclick="openPage('estatisticas')">Estatísticas</button>
+    <button onclick="window.location.href='./admin.html'">Admin</button>
+  </nav>
 
   <main class="container">
     <section class="page active" id="home">
       <div class="home-lead">
-        <h2>Bem-vindo ao Milouv 2.0</h2>
-        <p class="muted">Agora com fluxo de repertório por culto: pesquisar no banco, selecionar e adicionar diretamente ao culto.</p>
+        <h2>Bem-vindo ao Milouv</h2>
+        <p class="muted">Acompanhe a escala atual, consulte o repertório completo e veja os avisos do ministério.</p>
       </div>
 
       <div class="grid">
@@ -445,35 +539,35 @@
     </section>
 
     <section class="page" id="estatisticas">
-  <h2>Estatísticas do Ministério</h2>
+      <h2>Estatísticas do Ministério</h2>
 
-  <div class="grid">
-    <div class="card">
-      <h3>Músicas cadastradas</h3>
-      <p id="statTotalMusicas">0</p>
-    </div>
+      <div class="grid">
+        <div class="card">
+          <h3>Músicas cadastradas</h3>
+          <p id="statTotalMusicas">0</p>
+        </div>
 
-    <div class="card">
-      <h3>Cultos no mês</h3>
-      <p id="statTotalCultos">0</p>
-    </div>
+        <div class="card">
+          <h3>Cultos no mês</h3>
+          <p id="statTotalCultos">0</p>
+        </div>
 
-    <div class="card">
-      <h3>Músicas no histórico</h3>
-      <p id="statHistorico">0</p>
-    </div>
-  </div>
+        <div class="card">
+          <h3>Músicas no histórico</h3>
+          <p id="statHistorico">0</p>
+        </div>
+      </div>
 
-  <div class="card" style="margin-top:20px;">
-    <h3>Músicas mais cantadas</h3>
-    <div id="listaMaisCantadas" class="muted">Carregando...</div>
-  </div>
+      <div class="card" style="margin-top:20px;">
+        <h3>Músicas mais cantadas</h3>
+        <div id="listaMaisCantadas" class="muted">Carregando...</div>
+      </div>
 
-  <div class="card" style="margin-top:20px;">
-    <h3>Perfis mais cadastrados</h3>
-    <div id="listaPerfis" class="muted">Carregando...</div>
-  </div>
-</section>
+      <div class="card" style="margin-top:20px;">
+        <h3>Perfis mais cadastrados</h3>
+        <div id="listaPerfis" class="muted">Carregando...</div>
+      </div>
+    </section>
   </main>
 
   <div class="modal" id="modalRepertorio">
@@ -487,65 +581,8 @@
       </div>
 
       <div class="modal-body">
-        <div class="panel">
-          <h3>Adicionar música ao culto</h3>
-
-          <div class="panel">
-  <h3>Sugestões automáticas por perfil</h3>
-
-  <div class="form-grid">
-    <div>
-      <label for="perfilSugestao" class="muted">Perfil</label>
-      <select id="perfilSugestao">
-        <option value="">Selecione</option>
-        <option value="ADORAÇÃO">ADORAÇÃO</option>
-        <option value="CLAMOR">CLAMOR</option>
-        <option value="ENTREGA">ENTREGA</option>
-        <option value="CEIA">CEIA</option>
-        <option value="CONGREGACIONAL">CONGREGACIONAL</option>
-        <option value="CELEBRAÇÃO">CELEBRAÇÃO</option>
-        <option value="OFERTA">OFERTA</option>
-        <option value="PROMESSA">PROMESSA</option>
-        <option value="GUERRA">GUERRA</option>
-        <option value="EXALTAÇÃO">EXALTAÇÃO</option>
-      </select>
-    </div>
-
-    <div style="display:flex; align-items:end;">
-      <button onclick="gerarSugestoes()">Gerar sugestões</button>
-    </div>
-  </div>
-
-  <div id="listaSugestoes" class="search-results" style="margin-top:12px;"></div>
-</div>
-
-          <div class="form-grid">
-            <div class="form-field-full">
-              <label for="buscarMusicaCulto" class="muted">Pesquisar no banco</label>
-              <input id="buscarMusicaCulto" type="text" placeholder="Digite nome da música ou artista...">
-              <div id="resultadoBuscaCulto" class="search-results"></div>
-            </div>
-
-            <div>
-              <label for="tomCulto" class="muted">Tom do culto</label>
-              <input id="tomCulto" type="text" placeholder="Ex.: G, A, C, D">
-            </div>
-
-            <div>
-              <label for="obsCulto" class="muted">Observação</label>
-              <input id="obsCulto" type="text" placeholder="Abertura, ministração, ceia...">
-            </div>
-
-            <div class="form-field-full">
-              <div id="musicaSelecionadaBox" class="selected-music" style="display:none;"></div>
-            </div>
-          </div>
-
-          <div class="modal-actions">
-            <button onclick="salvarMusicaNoCulto()">Adicionar ao repertório</button>
-            <button class="btn-secondary" onclick="limparSelecaoMusica()">Limpar seleção</button>
-          </div>
-          <div class="status-inline" id="statusAdicao"></div>
+        <div class="modal-actions">
+          <button class="btn-secondary" onclick="copiarRepertorioAtual()">Copiar repertório</button>
         </div>
 
         <div id="modalConteudo">
@@ -557,7 +594,7 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getDatabase, ref, onValue, get, set } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+    import { getDatabase, ref, onValue, get } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDpFm6Q9KeQFuRgHwYD5OfFMJ9SYvdOW_Y",
@@ -573,14 +610,13 @@
     const db = getDatabase(app);
 
     const state = {
-  musicas: [],
-  mesAtivo: null,
-  cultosMap: {},
-  cultoAtualId: null,
-  musicaSelecionada: null,
-  resultadosBuscaAtual: [],
-  historico: {}
-};
+      musicas: [],
+      mesAtivo: null,
+      cultosMap: {},
+      historico: {},
+      repertorioAtualModal: [],
+      cultoAtualModal: null
+    };
 
     function escapeHtml(value = "") {
       return String(value)
@@ -595,17 +631,47 @@
       document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
       document.getElementById(page).classList.add("active");
       document.querySelectorAll("nav button").forEach(b => b.classList.remove("active"));
+
       const botao = document.querySelector(`nav button[data-page="${page}"]`);
       if (botao) botao.classList.add("active");
     }
+
     window.openPage = openPage;
 
     function fecharModal() {
       document.getElementById("modalRepertorio").classList.remove("active");
-      limparSelecaoMusica();
-      document.getElementById("statusAdicao").textContent = "";
+      state.repertorioAtualModal = [];
+      state.cultoAtualModal = null;
     }
+
     window.fecharModal = fecharModal;
+
+    function copiarRepertorioAtual() {
+      if (!state.repertorioAtualModal.length) {
+        alert("Nenhum repertório carregado para copiar.");
+        return;
+      }
+
+      const titulo = state.cultoAtualModal
+        ? `${state.cultoAtualModal.categoria || "Culto"} - ${state.cultoAtualModal.label || state.cultoAtualModal.data || ""}`
+        : "Repertório do Culto";
+
+      let texto = `🎶 ${titulo}\n\n`;
+
+      state.repertorioAtualModal.forEach((item, index) => {
+        texto += `${index + 1}. ${item.musica || ""}`;
+        if (item.artista) texto += ` - ${item.artista}`;
+        if (item.tom) texto += ` (Tom ${item.tom})`;
+        if (item.obs) texto += ` | ${item.obs}`;
+        texto += `\n`;
+      });
+
+      navigator.clipboard.writeText(texto)
+        .then(() => alert("Repertório copiado."))
+        .catch(() => alert("Não foi possível copiar o repertório."));
+    }
+
+    window.copiarRepertorioAtual = copiarRepertorioAtual;
 
     function renderEscala(dados, mesAtivo) {
       const container = document.getElementById("listaEscala");
@@ -619,26 +685,32 @@
       }
 
       const entries = Object.entries(dados);
+
       if (!entries.length) {
         container.innerHTML = `<div class="empty-state">Nenhuma escala encontrada.</div>`;
         return;
       }
 
       state.cultosMap = {};
-      entries.forEach(([id, culto]) => { state.cultosMap[id] = culto; });
+      entries.forEach(([id, culto]) => {
+        state.cultosMap[id] = culto;
+      });
 
       container.innerHTML = entries.map(([id, culto]) => {
         const vocal = Array.isArray(culto.vocal) ? culto.vocal.join(", ") : (culto.vocal || "");
+
         return `
           <div class="card culto-card">
             <div class="culto-topo">
               <span class="culto-categoria">${escapeHtml(culto.categoria || "Culto")}</span>
               <span class="culto-data">${escapeHtml(culto.label || culto.data || "")}</span>
             </div>
+
             <div class="culto-info"><strong>Líder:</strong> ${escapeHtml(culto.lider || "—")}</div>
             <div class="culto-info"><strong>Vocal:</strong> ${escapeHtml(vocal || "—")}</div>
             <div class="culto-info"><strong>Bateria:</strong> ${escapeHtml(culto.bateria || "—")}</div>
             <div class="culto-info"><strong>Violão:</strong> ${escapeHtml(culto.violao || "—")}</div>
+
             <button onclick="abrirModalDoCulto('${id}')">Ver repertório</button>
           </div>
         `;
@@ -647,6 +719,7 @@
 
     function renderRepertorio(lista) {
       const container = document.getElementById("repertorioContainer");
+
       if (!lista.length) {
         container.innerHTML = `<div class="empty-state">Nenhuma música encontrada.</div>`;
         return;
@@ -684,11 +757,19 @@
 
     function renderInformacoes(dados) {
       const container = document.getElementById("listaInformacoes");
+
       if (!dados) {
         container.innerHTML = `<div class="empty-state">Nenhuma informação cadastrada.</div>`;
         return;
       }
+
       const infos = Object.values(dados);
+
+      if (!infos.length) {
+        container.innerHTML = `<div class="empty-state">Nenhuma informação cadastrada.</div>`;
+        return;
+      }
+
       container.innerHTML = infos.map(info => `
         <div class="notice">
           <strong>${escapeHtml(info.titulo || "")}</strong>
@@ -696,127 +777,6 @@
         </div>
       `).join("");
     }
-
-    function renderResultadoBuscaCulto(lista) {
-      const container = document.getElementById("resultadoBuscaCulto");
-      container.innerHTML = lista.map((m, index) => `
-        <div class="search-item" onclick="selecionarMusicaDoBanco(${index})">
-          <strong>${escapeHtml(m.musica || "")}</strong><br>
-          <span class="muted">${escapeHtml(m.artista || "")} • ${escapeHtml(m.perfil || "")} • ${escapeHtml(m.andamento || "")}</span>
-        </div>
-      `).join("");
-    }
-
-    function atualizarBoxMusicaSelecionada() {
-      const box = document.getElementById("musicaSelecionadaBox");
-      if (!state.musicaSelecionada) {
-        box.style.display = "none";
-        box.innerHTML = "";
-        return;
-      }
-
-      box.style.display = "block";
-      box.innerHTML = `
-        <strong>Música selecionada:</strong><br>
-        ${escapeHtml(state.musicaSelecionada.musica || "")} — ${escapeHtml(state.musicaSelecionada.artista || "")}<br>
-        <span class="muted">Perfil: ${escapeHtml(state.musicaSelecionada.perfil || "")} • Andamento: ${escapeHtml(state.musicaSelecionada.andamento || "")}</span>
-      `;
-    }
-
-    function limparSelecaoMusica() {
-      state.musicaSelecionada = null;
-      document.getElementById("buscarMusicaCulto").value = "";
-      document.getElementById("resultadoBuscaCulto").innerHTML = "";
-      document.getElementById("tomCulto").value = "";
-      document.getElementById("obsCulto").value = "";
-      atualizarBoxMusicaSelecionada();
-    }
-    window.limparSelecaoMusica = limparSelecaoMusica;
-
-    function gerarSugestoes() {
-  const perfil = document.getElementById("perfilSugestao").value;
-  const container = document.getElementById("listaSugestoes");
-
-  if (!perfil) {
-    container.innerHTML = "";
-    return;
-  }
-
-  const filtradas = state.musicas
-    .filter(m => (m.perfil || "").toUpperCase() === perfil.toUpperCase())
-    .slice(0, 8);
-
-  if (!filtradas.length) {
-    container.innerHTML = `<div class="search-item">Nenhuma sugestão encontrada.</div>`;
-    return;
-  }
-
-  state.resultadosBuscaAtual = filtradas;
-
-  container.innerHTML = filtradas.map((m, index) => `
-    <div class="search-item" onclick="selecionarSugestao(${index})">
-      <strong>${escapeHtml(m.musica || "")}</strong><br>
-      <span class="muted">${escapeHtml(m.artista || "")} • ${escapeHtml(m.andamento || "")}</span>
-    </div>
-  `).join("");
-}
-
-function selecionarSugestao(index) {
-  const musica = (state.resultadosBuscaAtual || [])[index];
-  if (!musica) return;
-
-  state.musicaSelecionada = musica;
-  document.getElementById("buscarMusicaCulto").value = `${musica.musica} - ${musica.artista}`;
-  document.getElementById("tomCulto").value = musica.tomMasculino || musica.tomFeminino || "";
-  atualizarBoxMusicaSelecionada();
-  document.getElementById("listaSugestoes").innerHTML = "";
-}
-
-window.gerarSugestoes = gerarSugestoes;
-window.selecionarSugestao = selecionarSugestao;
-
-    function renderEstatisticas() {
-  document.getElementById("statTotalMusicas").textContent = state.musicas.length;
-
-  const totalCultos = Object.keys(state.cultosMap || {}).length;
-  document.getElementById("statTotalCultos").textContent = totalCultos;
-
-  const historico = state.historico || {};
-  const totalHistorico = Object.keys(historico).length;
-  document.getElementById("statHistorico").textContent = totalHistorico;
-
-  const ranking = Object.entries(historico)
-    .map(([musica, cultos]) => ({
-      musica,
-      total: Object.keys(cultos || {}).length
-    }))
-    .sort((a, b) => b.total - a.total)
-    .slice(0, 10);
-
-  document.getElementById("listaMaisCantadas").innerHTML = ranking.length
-    ? ranking.map((item, index) => `<div>${index + 1}. ${escapeHtml(item.musica)} (${item.total}x)</div>`).join("")
-    : "Nenhuma música registrada no histórico.";
-
-  const perfis = {};
-  state.musicas.forEach(m => {
-    const perfil = (m.perfil || "SEM PERFIL").toUpperCase();
-    perfis[perfil] = (perfis[perfil] || 0) + 1;
-  });
-
-  const rankingPerfis = Object.entries(perfis)
-    .sort((a, b) => b[1] - a[1]);
-
-  document.getElementById("listaPerfis").innerHTML = rankingPerfis.length
-    ? rankingPerfis.map(([perfil, total]) => `<div>${escapeHtml(perfil)} (${total})</div>`).join("")
-    : "Nenhum perfil encontrado.";
-}
-
-function setupHistorico() {
-  onValue(ref(db, "historico"), (snapshot) => {
-    state.historico = snapshot.val() || {};
-    renderEstatisticas();
-  });
-}
 
     async function carregarRepertorioDoCulto(cultoId) {
       const conteudo = document.getElementById("modalConteudo");
@@ -827,165 +787,135 @@ function setupHistorico() {
         const dados = snapshot.val();
 
         if (!dados) {
+          state.repertorioAtualModal = [];
           conteudo.innerHTML = `<div class="empty-state">Nenhum repertório cadastrado para este culto.</div>`;
           return;
         }
 
         const itens = Object.values(dados).sort((a, b) => (a.ordem || 0) - (b.ordem || 0));
+        state.repertorioAtualModal = itens;
+
         if (!itens.length) {
           conteudo.innerHTML = `<div class="empty-state">Nenhum repertório cadastrado para este culto.</div>`;
           return;
         }
 
-      conteudo.innerHTML = `
-<div class="modal-list">
-${itens.map((item,index)=>`
-<div class="modal-item">
-
-<strong>${index+1}. ${item.musica}</strong>
-
-<div class="muted">Artista: ${item.artista||"—"}</div>
-<div class="muted">Tom: ${item.tom||"—"}</div>
-<div class="muted">${item.obs||""}</div>
-
-<div class="modal-actions">
-
-<button onclick="subirMusica('${cultoId}',${index})">
-⬆
-</button>
-
-<button onclick="descerMusica('${cultoId}',${index})">
-⬇
-</button>
-
-<button class="btn-danger"
-onclick="removerMusica('${cultoId}','item${index+1}')">
-❌ Remover
-</button>
-
-</div>
-
-</div>
-`).join("")}
-</div>
-`;
+        conteudo.innerHTML = `
+          <div class="modal-list">
+            ${itens.map((item, index) => `
+              <div class="modal-item">
+                <strong>${index + 1}. ${escapeHtml(item.musica || "")}</strong>
+                <div class="muted">Artista: ${escapeHtml(item.artista || "—")}</div>
+                <div class="muted">Tom: ${escapeHtml(item.tom || "—")}</div>
+                ${item.obs ? `<div class="muted">Obs: ${escapeHtml(item.obs)}</div>` : ""}
+              </div>
+            `).join("")}
+          </div>
+        `;
       } catch (error) {
         console.error(error);
+        state.repertorioAtualModal = [];
         conteudo.innerHTML = `<div class="empty-state">Erro ao carregar repertório.</div>`;
       }
     }
 
-async function removerMusica(cultoId,itemId){
-
-if(!confirm("Remover música do repertório?")) return;
-
-await set(ref(db,`repertorios/${cultoId}/${itemId}`),null);
-
-carregarRepertorioDoCulto(cultoId);
-
-}
-
-
-    async function subirMusica(cultoId,index){
-
-const snapshot = await get(ref(db,`repertorios/${cultoId}`));
-const dados = snapshot.val();
-
-const itens = Object.entries(dados);
-
-if(index===0) return;
-
-const atual = itens[index];
-const anterior = itens[index-1];
-
-await set(ref(db,`repertorios/${cultoId}/${atual[0]}/ordem`),index);
-await set(ref(db,`repertorios/${cultoId}/${anterior[0]}/ordem`),index+1);
-
-carregarRepertorioDoCulto(cultoId);
-
-}
-
-
-    async function descerMusica(cultoId,index){
-
-const snapshot = await get(ref(db,`repertorios/${cultoId}`));
-const dados = snapshot.val();
-
-const itens = Object.entries(dados);
-
-if(index===itens.length-1) return;
-
-const atual = itens[index];
-const proxima = itens[index+1];
-
-await set(ref(db,`repertorios/${cultoId}/${atual[0]}/ordem`),index+2);
-await set(ref(db,`repertorios/${cultoId}/${proxima[0]}/ordem`),index+1);
-
-carregarRepertorioDoCulto(cultoId);
-
-}
-    
     async function abrirModal(cultoId) {
       const culto = state.cultosMap[cultoId];
-      state.cultoAtualId = cultoId;
+      state.cultoAtualModal = culto || null;
+
       document.getElementById("modalRepertorio").classList.add("active");
       document.getElementById("modalTitulo").textContent = "Repertório do Culto";
       document.getElementById("modalSubtitulo").textContent = culto
         ? `${culto.categoria || "Culto"} • ${culto.label || culto.data || ""}`
         : "Culto selecionado";
-      document.getElementById("statusAdicao").textContent = "";
-      limparSelecaoMusica();
+
       await carregarRepertorioDoCulto(cultoId);
     }
+
     window.abrirModalDoCulto = abrirModal;
 
-    function setupEscala() {
-  onValue(ref(db, "config/mesAtivo"), (configSnapshot) => {
-    const mesAtivo = configSnapshot.val();
-    state.mesAtivo = mesAtivo;
+    function renderEstatisticas() {
+      document.getElementById("statTotalMusicas").textContent = state.musicas.length;
 
-    if (!mesAtivo) {
-      renderEscala(null, null);
-      renderEstatisticas();
-      return;
+      const totalCultos = Object.keys(state.cultosMap || {}).length;
+      document.getElementById("statTotalCultos").textContent = totalCultos;
+
+      const historico = state.historico || {};
+      const totalHistorico = Object.keys(historico).length;
+      document.getElementById("statHistorico").textContent = totalHistorico;
+
+      const ranking = Object.entries(historico)
+        .map(([musica, cultos]) => ({
+          musica,
+          total: Object.keys(cultos || {}).length
+        }))
+        .sort((a, b) => b.total - a.total)
+        .slice(0, 10);
+
+      document.getElementById("listaMaisCantadas").innerHTML = ranking.length
+        ? ranking.map((item, index) => `<div>${index + 1}. ${escapeHtml(item.musica)} (${item.total}x)</div>`).join("")
+        : "Nenhuma música registrada no histórico.";
+
+      const perfis = {};
+      state.musicas.forEach(m => {
+        const perfil = (m.perfil || "SEM PERFIL").toUpperCase();
+        perfis[perfil] = (perfis[perfil] || 0) + 1;
+      });
+
+      const rankingPerfis = Object.entries(perfis).sort((a, b) => b[1] - a[1]);
+
+      document.getElementById("listaPerfis").innerHTML = rankingPerfis.length
+        ? rankingPerfis.map(([perfil, total]) => `<div>${escapeHtml(perfil)} (${total})</div>`).join("")
+        : "Nenhum perfil encontrado.";
     }
 
-    onValue(ref(db, `escalas/${mesAtivo}/cultos`), (snapshot) => {
-      renderEscala(snapshot.val(), mesAtivo);
-      renderEstatisticas();
-    });
-  });
-}
+    function setupEscala() {
+      onValue(ref(db, "config/mesAtivo"), (configSnapshot) => {
+        const mesAtivo = configSnapshot.val();
+        state.mesAtivo = mesAtivo;
+
+        if (!mesAtivo) {
+          renderEscala(null, null);
+          renderEstatisticas();
+          return;
+        }
+
+        onValue(ref(db, `escalas/${mesAtivo}/cultos`), (snapshot) => {
+          renderEscala(snapshot.val(), mesAtivo);
+          renderEstatisticas();
+        });
+      });
+    }
 
     function setupRepertorio() {
-  onValue(ref(db, "musicas"), (snapshot) => {
-    const dados = snapshot.val();
+      onValue(ref(db, "musicas"), (snapshot) => {
+        const dados = snapshot.val();
 
-    if (!dados) {
-      state.musicas = [];
-      renderRepertorio([]);
-      renderEstatisticas();
-      return;
+        if (!dados) {
+          state.musicas = [];
+          renderRepertorio([]);
+          renderEstatisticas();
+          return;
+        }
+
+        const lista = Object.keys(dados).map(id => ({ id, ...dados[id] }));
+        state.musicas = lista;
+
+        renderRepertorio(lista);
+        renderEstatisticas();
+      });
+
+      document.getElementById("buscarMusica").addEventListener("input", (e) => {
+        const termo = e.target.value.toLowerCase().trim();
+
+        const filtradas = state.musicas.filter(m =>
+          (m.musica || "").toLowerCase().includes(termo) ||
+          (m.artista || "").toLowerCase().includes(termo)
+        );
+
+        renderRepertorio(filtradas);
+      });
     }
-
-    const lista = Object.keys(dados).map(id => ({ id, ...dados[id] }));
-    state.musicas = lista;
-
-    renderRepertorio(lista);
-    renderEstatisticas();
-  });
-
-  document.getElementById("buscarMusica").addEventListener("input", (e) => {
-    const termo = e.target.value.toLowerCase().trim();
-
-    const filtradas = state.musicas.filter(m =>
-      (m.musica || "").toLowerCase().includes(termo) ||
-      (m.artista || "").toLowerCase().includes(termo)
-    );
-
-    renderRepertorio(filtradas);
-  });
-}
 
     function setupInformacoes() {
       onValue(ref(db, "informacoes"), (snapshot) => {
@@ -993,95 +923,26 @@ carregarRepertorioDoCulto(cultoId);
       });
     }
 
-    function setupBuscaNoModal() {
-      document.getElementById("buscarMusicaCulto").addEventListener("input", (e) => {
-        const termo = e.target.value.toLowerCase().trim();
-        if (!termo) {
-          document.getElementById("resultadoBuscaCulto").innerHTML = "";
-          return;
-        }
-        const resultados = state.musicas.filter(m =>
-          (m.musica || "").toLowerCase().includes(termo) ||
-          (m.artista || "").toLowerCase().includes(termo)
-        ).slice(0, 10);
-        state.resultadosBuscaAtual = resultados;
-        renderResultadoBuscaCulto(resultados);
+    function setupHistorico() {
+      onValue(ref(db, "historico"), (snapshot) => {
+        state.historico = snapshot.val() || {};
+        renderEstatisticas();
       });
     }
-
-    function selecionarMusicaDoBanco(index) {
-      const musica = (state.resultadosBuscaAtual || [])[index];
-      if (!musica) return;
-      state.musicaSelecionada = musica;
-      document.getElementById("resultadoBuscaCulto").innerHTML = "";
-      document.getElementById("buscarMusicaCulto").value = `${musica.musica} - ${musica.artista}`;
-      if (!document.getElementById("tomCulto").value) {
-        document.getElementById("tomCulto").value = musica.tomMasculino || musica.tomFeminino || "";
-      }
-      atualizarBoxMusicaSelecionada();
-    }
-    window.selecionarMusicaDoBanco = selecionarMusicaDoBanco;
-
-    async function salvarMusicaNoCulto() {
-  const status = document.getElementById("statusAdicao");
-
-  if (!state.cultoAtualId) {
-    status.textContent = "Nenhum culto selecionado.";
-    return;
-  }
-
-  if (!state.musicaSelecionada) {
-    status.textContent = "Selecione uma música no banco antes de adicionar.";
-    return;
-  }
-
-  const tom = document.getElementById("tomCulto").value.trim();
-  const obs = document.getElementById("obsCulto").value.trim();
-
-  try {
-    const repertorioRef = ref(db, `repertorios/${state.cultoAtualId}`);
-    const snapshot = await get(repertorioRef);
-    const dados = snapshot.val() || {};
-    const proximaOrdem = Object.keys(dados).length + 1;
-    const novoId = `item${proximaOrdem}`;
-
-    await set(ref(db, `repertorios/${state.cultoAtualId}/${novoId}`), {
-      musica: state.musicaSelecionada.musica || "",
-      artista: state.musicaSelecionada.artista || "",
-      tom: tom,
-      obs: obs,
-      ordem: proximaOrdem
-    });
-
-    const historicoRef = ref(db, `historico/${state.musicaSelecionada.musica}/${state.cultoAtualId}`);
-    await set(historicoRef, true);
-
-    status.textContent = "Música adicionada ao repertório com sucesso.";
-    limparSelecaoMusica();
-    await carregarRepertorioDoCulto(state.cultoAtualId);
-  } catch (error) {
-    console.error(error);
-    status.textContent = "Erro ao adicionar música ao repertório.";
-  }
-}
-    window.salvarMusicaNoCulto = salvarMusicaNoCulto;
 
     const modal = document.getElementById("modalRepertorio");
     if (modal) {
       modal.addEventListener("click", (e) => {
-        if (e.target.id === "modalRepertorio") fecharModal();
+        if (e.target.id === "modalRepertorio") {
+          fecharModal();
+        }
       });
     }
 
     setupEscala();
-setupRepertorio();
-setupInformacoes();
-setupBuscaNoModal();
-setupHistorico();
+    setupRepertorio();
+    setupInformacoes();
+    setupHistorico();
   </script>
 </body>
 </html>
-
-
-
-
