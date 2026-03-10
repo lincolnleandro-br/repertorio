@@ -546,37 +546,44 @@
     <section class="page" id="repertorio">
       <h2>SetList do Ministério</h2>
 
-      <div class="search-box">
-  <div class="grid">
-    <div>
-      <label for="buscarMusica" class="muted">Buscar música ou artista</label>
-      <input id="buscarMusica" type="text" placeholder="Ex.: Bondade de Deus, Hillsong...">
+<section class="page" id="repertorio">
+  <h2>Setlist do Ministério</h2>
+
+  <div class="search-box">
+    <div class="grid">
+      <div>
+        <label for="buscarMusica" class="muted">Buscar música ou artista</label>
+        <input id="buscarMusica" type="text" placeholder="Ex.: Bondade de Deus, Hillsong...">
+      </div>
+
+      <div>
+        <label for="filtroPerfil" class="muted">Filtrar por perfil</label>
+        <select id="filtroPerfil">
+          <option value="">Todos</option>
+          <option value="ADORAÇÃO">ADORAÇÃO</option>
+          <option value="CLAMOR">CLAMOR</option>
+          <option value="ENTREGA">ENTREGA</option>
+          <option value="CEIA">CEIA</option>
+          <option value="CONGREGACIONAL">CONGREGACIONAL</option>
+          <option value="CELEBRAÇÃO">CELEBRAÇÃO</option>
+          <option value="OFERTA">OFERTA</option>
+          <option value="PROMESSA">PROMESSA</option>
+          <option value="GUERRA">GUERRA</option>
+          <option value="EXALTAÇÃO">EXALTAÇÃO</option>
+          <option value="PEDIDO">PEDIDO</option>
+        </select>
+      </div>
     </div>
 
-    <div>
-      <label for="filtroPerfil" class="muted">Filtrar por perfil</label>
-      <select id="filtroPerfil">
-        <option value="">Todos</option>
-        <option value="ADORAÇÃO">ADORAÇÃO</option>
-        <option value="CLAMOR">CLAMOR</option>
-        <option value="ENTREGA">ENTREGA</option>
-        <option value="CEIA">CEIA</option>
-        <option value="CONGREGACIONAL">CONGREGACIONAL</option>
-        <option value="CELEBRAÇÃO">CELEBRAÇÃO</option>
-        <option value="OFERTA">OFERTA</option>
-        <option value="PROMESSA">PROMESSA</option>
-        <option value="GUERRA">GUERRA</option>
-        <option value="EXALTAÇÃO">EXALTAÇÃO</option>
-        <option value="PEDIDO">PEDIDO</option>
-      </select>
+    <div class="row">
+      <button class="btn-secondary" onclick="limparFiltrosSetlist()">Limpar filtros</button>
     </div>
   </div>
-</div>
 
-      <div id="repertorioContainer">
-        <div class="empty-state">Carregando repertório...</div>
-      </div>
-    </section>
+  <div id="repertorioContainer">
+    <div class="empty-state">Carregando setlist...</div>
+  </div>
+</section>
 
     <section class="page" id="informacoes">
       <h2>Informações do Ministério</h2>
@@ -858,6 +865,14 @@ function aplicarFiltrosSetlist() {
 
   renderRepertorio(filtradas);
 }
+
+function limparFiltrosSetlist() {
+  document.getElementById("buscarMusica").value = "";
+  document.getElementById("filtroPerfil").value = "";
+  renderRepertorio(state.musicas);
+}
+
+window.limparFiltrosSetlist = limparFiltrosSetlist;
 function renderInformacoes(dados) {
   const container = document.getElementById("listaInformacoes");
 
@@ -990,7 +1005,7 @@ function renderInformacoes(dados) {
       });
     }
 
-    function setupRepertorio() {
+function setupRepertorio() {
   onValue(ref(db, "musicas"), (snapshot) => {
     const dados = snapshot.val();
 
@@ -1041,6 +1056,7 @@ function renderInformacoes(dados) {
   </script>
 </body>
 </html>
+
 
 
 
