@@ -755,28 +755,28 @@
       `;
     }
 
-    function renderInformacoes(dados) {
-      const container = document.getElementById("listaInformacoes");
+function renderInformacoes(dados) {
+  const container = document.getElementById("listaInformacoes");
 
-      if (!dados) {
-        container.innerHTML = `<div class="empty-state">Nenhuma informação cadastrada.</div>`;
-        return;
-      }
+  if (!dados) {
+    container.innerHTML = `<div class="empty-state">Nenhuma informação cadastrada.</div>`;
+    return;
+  }
 
-      const infos = Object.values(dados);
+  const infos = Object.values(dados).sort((a, b) => (a.ordem || 0) - (b.ordem || 0));
 
-      if (!infos.length) {
-        container.innerHTML = `<div class="empty-state">Nenhuma informação cadastrada.</div>`;
-        return;
-      }
+  if (!infos.length) {
+    container.innerHTML = `<div class="empty-state">Nenhuma informação cadastrada.</div>`;
+    return;
+  }
 
-      container.innerHTML = infos.map(info => `
-        <div class="notice">
-          <strong>${escapeHtml(info.titulo || "")}</strong>
-          <p>${escapeHtml(info.texto || "")}</p>
-        </div>
-      `).join("");
-    }
+  container.innerHTML = infos.map(info => `
+    <div class="notice">
+      <strong>${escapeHtml(info.titulo || "")}</strong>
+      <p>${escapeHtml(info.texto || "")}</p>
+    </div>
+  `).join("");
+}
 
     async function carregarRepertorioDoCulto(cultoId) {
       const conteudo = document.getElementById("modalConteudo");
@@ -946,4 +946,5 @@
   </script>
 </body>
 </html>
+
 
