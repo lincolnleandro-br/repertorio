@@ -376,6 +376,7 @@
     <button data-page="escala" onclick="openPage('escala')">Escala do Mês</button>
     <button data-page="repertorio" onclick="openPage('repertorio')">Repertório</button>
     <button data-page="informacoes" onclick="openPage('informacoes')">Informações</button>
+    <button data-page="estatisticas" onclick="openPage('estatisticas')">Estatísticas</button>
   </nav>
 
   <main class="container">
@@ -438,6 +439,37 @@
         <div class="empty-state">Carregando informações...</div>
       </div>
     </section>
+
+    <section class="page" id="estatisticas">
+  <h2>Estatísticas do Ministério</h2>
+
+  <div class="grid">
+    <div class="card">
+      <h3>Músicas cadastradas</h3>
+      <p id="statTotalMusicas">0</p>
+    </div>
+
+    <div class="card">
+      <h3>Cultos no mês</h3>
+      <p id="statTotalCultos">0</p>
+    </div>
+
+    <div class="card">
+      <h3>Músicas no histórico</h3>
+      <p id="statHistorico">0</p>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:20px;">
+    <h3>Músicas mais cantadas</h3>
+    <div id="listaMaisCantadas" class="muted">Carregando...</div>
+  </div>
+
+  <div class="card" style="margin-top:20px;">
+    <h3>Perfis mais cadastrados</h3>
+    <div id="listaPerfis" class="muted">Carregando...</div>
+  </div>
+</section>
   </main>
 
   <div class="modal" id="modalRepertorio">
@@ -453,6 +485,35 @@
       <div class="modal-body">
         <div class="panel">
           <h3>Adicionar música ao culto</h3>
+
+          <div class="panel">
+  <h3>Sugestões automáticas por perfil</h3>
+
+  <div class="form-grid">
+    <div>
+      <label for="perfilSugestao" class="muted">Perfil</label>
+      <select id="perfilSugestao">
+        <option value="">Selecione</option>
+        <option value="ADORAÇÃO">ADORAÇÃO</option>
+        <option value="CLAMOR">CLAMOR</option>
+        <option value="ENTREGA">ENTREGA</option>
+        <option value="CEIA">CEIA</option>
+        <option value="CONGREGACIONAL">CONGREGACIONAL</option>
+        <option value="CELEBRAÇÃO">CELEBRAÇÃO</option>
+        <option value="OFERTA">OFERTA</option>
+        <option value="PROMESSA">PROMESSA</option>
+        <option value="GUERRA">GUERRA</option>
+        <option value="EXALTAÇÃO">EXALTAÇÃO</option>
+      </select>
+    </div>
+
+    <div style="display:flex; align-items:end;">
+      <button onclick="gerarSugestoes()">Gerar sugestões</button>
+    </div>
+  </div>
+
+  <div id="listaSugestoes" class="search-results" style="margin-top:12px;"></div>
+</div>
 
           <div class="form-grid">
             <div class="form-field-full">
@@ -508,12 +569,14 @@
     const db = getDatabase(app);
 
     const state = {
-      musicas: [],
-      mesAtivo: null,
-      cultosMap: {},
-      cultoAtualId: null,
-      musicaSelecionada: null
-    };
+  musicas: [],
+  mesAtivo: null,
+  cultosMap: {},
+  cultoAtualId: null,
+  musicaSelecionada: null,
+  resultadosBuscaAtual: [],
+  historico: {}
+};
 
     function escapeHtml(value = "") {
       return String(value)
@@ -666,6 +729,91 @@
     }
     window.limparSelecaoMusica = limparSelecaoMusica;
 
+    function gerarSugestoes() {
+  const perfil = document.getElementById("perfilSugestao").value;
+  const container = document.getElementById("listaSugestoes");
+
+  if (!perfil) {
+    container.innerHTML = "";
+    return;
+  }
+
+  const filtradas = state.musicas
+    .filter(m => (m.perfil || "").toUpperCase() === perfil.toUpperCase())
+    .slice(0, 8);
+
+  if (!filtradas.length) {
+    container.innerHTML = `<div class="search-item">Nenhuma sugestão encontrada.</div>`;
+    return;
+  }
+
+  state.resultadosBuscaAtual = filtradas;
+
+  container.innerHTML = filtradas.map((m, index) => `
+    <div class="search-item" onclick="selecionarSugestao(${index})">
+      <strong>${escapeHtml(m.musica || "")}</strong><br>
+      <span class="muted">${escapeHtml(m.artista || "")} • ${escapeHtml(m.andamento || "")}</span>
+    </div>
+  `).join("");
+}
+
+function selecionarSugestao(index) {
+  const musica = (state.resultadosBuscaAtual || [])[index];
+  if (!musica) return;
+
+  state.musicaSelecionada = musica;
+  document.getElementById("buscarMusicaCulto").value = `${musica.musica} - ${musica.artista}`;
+  document.getElementById("tomCulto").value = musica.tomMasculino || musica.tomFeminino || "";
+  atualizarBoxMusicaSelecionada();
+  document.getElementById("listaSugestoes").innerHTML = "";
+}
+
+window.gerarSugestoes = gerarSugestoes;
+window.selecionarSugestao = selecionarSugestao;
+
+    function renderEstatisticas() {
+  document.getElementById("statTotalMusicas").textContent = state.musicas.length;
+
+  const totalCultos = Object.keys(state.cultosMap || {}).length;
+  document.getElementById("statTotalCultos").textContent = totalCultos;
+
+  const historico = state.historico || {};
+  const totalHistorico = Object.keys(historico).length;
+  document.getElementById("statHistorico").textContent = totalHistorico;
+
+  const ranking = Object.entries(historico)
+    .map(([musica, cultos]) => ({
+      musica,
+      total: Object.keys(cultos || {}).length
+    }))
+    .sort((a, b) => b.total - a.total)
+    .slice(0, 10);
+
+  document.getElementById("listaMaisCantadas").innerHTML = ranking.length
+    ? ranking.map((item, index) => `<div>${index + 1}. ${escapeHtml(item.musica)} (${item.total}x)</div>`).join("")
+    : "Nenhuma música registrada no histórico.";
+
+  const perfis = {};
+  state.musicas.forEach(m => {
+    const perfil = (m.perfil || "SEM PERFIL").toUpperCase();
+    perfis[perfil] = (perfis[perfil] || 0) + 1;
+  });
+
+  const rankingPerfis = Object.entries(perfis)
+    .sort((a, b) => b[1] - a[1]);
+
+  document.getElementById("listaPerfis").innerHTML = rankingPerfis.length
+    ? rankingPerfis.map(([perfil, total]) => `<div>${escapeHtml(perfil)} (${total})</div>`).join("")
+    : "Nenhum perfil encontrado.";
+}
+
+function setupHistorico() {
+  onValue(ref(db, "historico"), (snapshot) => {
+    state.historico = snapshot.val() || {};
+    renderEstatisticas();
+  });
+}
+
     async function carregarRepertorioDoCulto(cultoId) {
       const conteudo = document.getElementById("modalConteudo");
       conteudo.innerHTML = `<div class="empty-state">Carregando repertório...</div>`;
@@ -788,41 +936,52 @@ carregarRepertorioDoCulto(cultoId);
     window.abrirModalDoCulto = abrirModal;
 
     function setupEscala() {
-      onValue(ref(db, "config/mesAtivo"), (configSnapshot) => {
-        const mesAtivo = configSnapshot.val();
-        state.mesAtivo = mesAtivo;
-        if (!mesAtivo) {
-          renderEscala(null, null);
-          return;
-        }
-        onValue(ref(db, `escalas/${mesAtivo}/cultos`), (snapshot) => {
-          renderEscala(snapshot.val(), mesAtivo);
-        });
-      });
+  onValue(ref(db, "config/mesAtivo"), (configSnapshot) => {
+    const mesAtivo = configSnapshot.val();
+    state.mesAtivo = mesAtivo;
+
+    if (!mesAtivo) {
+      renderEscala(null, null);
+      renderEstatisticas();
+      return;
     }
+
+    onValue(ref(db, `escalas/${mesAtivo}/cultos`), (snapshot) => {
+      renderEscala(snapshot.val(), mesAtivo);
+      renderEstatisticas();
+    });
+  });
+}
 
     function setupRepertorio() {
-      onValue(ref(db, "musicas"), (snapshot) => {
-        const dados = snapshot.val();
-        if (!dados) {
-          state.musicas = [];
-          renderRepertorio([]);
-          return;
-        }
-        const lista = Object.keys(dados).map(id => ({ id, ...dados[id] }));
-        state.musicas = lista;
-        renderRepertorio(lista);
-      });
+  onValue(ref(db, "musicas"), (snapshot) => {
+    const dados = snapshot.val();
 
-      document.getElementById("buscarMusica").addEventListener("input", (e) => {
-        const termo = e.target.value.toLowerCase().trim();
-        const filtradas = state.musicas.filter(m =>
-          (m.musica || "").toLowerCase().includes(termo) ||
-          (m.artista || "").toLowerCase().includes(termo)
-        );
-        renderRepertorio(filtradas);
-      });
+    if (!dados) {
+      state.musicas = [];
+      renderRepertorio([]);
+      renderEstatisticas();
+      return;
     }
+
+    const lista = Object.keys(dados).map(id => ({ id, ...dados[id] }));
+    state.musicas = lista;
+
+    renderRepertorio(lista);
+    renderEstatisticas();
+  });
+
+  document.getElementById("buscarMusica").addEventListener("input", (e) => {
+    const termo = e.target.value.toLowerCase().trim();
+
+    const filtradas = state.musicas.filter(m =>
+      (m.musica || "").toLowerCase().includes(termo) ||
+      (m.artista || "").toLowerCase().includes(termo)
+    );
+
+    renderRepertorio(filtradas);
+  });
+}
 
     function setupInformacoes() {
       onValue(ref(db, "informacoes"), (snapshot) => {
@@ -860,43 +1019,47 @@ carregarRepertorioDoCulto(cultoId);
     window.selecionarMusicaDoBanco = selecionarMusicaDoBanco;
 
     async function salvarMusicaNoCulto() {
-      const status = document.getElementById("statusAdicao");
-      if (!state.cultoAtualId) {
-        status.textContent = "Nenhum culto selecionado.";
-        return;
-      }
-      if (!state.musicaSelecionada) {
-        status.textContent = "Selecione uma música no banco antes de adicionar.";
-        return;
-      }
+  const status = document.getElementById("statusAdicao");
 
-      const tom = document.getElementById("tomCulto").value.trim();
-      const obs = document.getElementById("obsCulto").value.trim();
+  if (!state.cultoAtualId) {
+    status.textContent = "Nenhum culto selecionado.";
+    return;
+  }
 
-      try {
-        const repertorioRef = ref(db, `repertorios/${state.cultoAtualId}`);
-        const snapshot = await get(repertorioRef);
-        const dados = snapshot.val() || {};
-        const itens = Object.entries(dados);
-        const proximaOrdem = itens.length + 1;
-        const novoId = `item${proximaOrdem}`;
+  if (!state.musicaSelecionada) {
+    status.textContent = "Selecione uma música no banco antes de adicionar.";
+    return;
+  }
 
-        await set(ref(db, `repertorios/${state.cultoAtualId}/${novoId}`), {
-          musica: state.musicaSelecionada.musica || "",
-          artista: state.musicaSelecionada.artista || "",
-          tom: tom,
-          obs: obs,
-          ordem: proximaOrdem
-        });
+  const tom = document.getElementById("tomCulto").value.trim();
+  const obs = document.getElementById("obsCulto").value.trim();
 
-        status.textContent = "Música adicionada ao repertório com sucesso.";
-        limparSelecaoMusica();
-        await carregarRepertorioDoCulto(state.cultoAtualId);
-      } catch (error) {
-        console.error(error);
-        status.textContent = "Erro ao adicionar música ao repertório.";
-      }
-    }
+  try {
+    const repertorioRef = ref(db, `repertorios/${state.cultoAtualId}`);
+    const snapshot = await get(repertorioRef);
+    const dados = snapshot.val() || {};
+    const proximaOrdem = Object.keys(dados).length + 1;
+    const novoId = `item${proximaOrdem}`;
+
+    await set(ref(db, `repertorios/${state.cultoAtualId}/${novoId}`), {
+      musica: state.musicaSelecionada.musica || "",
+      artista: state.musicaSelecionada.artista || "",
+      tom: tom,
+      obs: obs,
+      ordem: proximaOrdem
+    });
+
+    const historicoRef = ref(db, `historico/${state.musicaSelecionada.musica}/${state.cultoAtualId}`);
+    await set(historicoRef, true);
+
+    status.textContent = "Música adicionada ao repertório com sucesso.";
+    limparSelecaoMusica();
+    await carregarRepertorioDoCulto(state.cultoAtualId);
+  } catch (error) {
+    console.error(error);
+    status.textContent = "Erro ao adicionar música ao repertório.";
+  }
+}
     window.salvarMusicaNoCulto = salvarMusicaNoCulto;
 
     const modal = document.getElementById("modalRepertorio");
@@ -907,10 +1070,12 @@ carregarRepertorioDoCulto(cultoId);
     }
 
     setupEscala();
-    setupRepertorio();
-    setupInformacoes();
-    setupBuscaNoModal();
+setupRepertorio();
+setupInformacoes();
+setupBuscaNoModal();
+setupHistorico();
   </script>
 </body>
 </html>
+
 
