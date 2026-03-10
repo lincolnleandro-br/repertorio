@@ -247,7 +247,6 @@
     const auth = getAuth(app);
     const provider = new GoogleAuthProvider();
 
-    // Troque pelos emails dos líderes autorizados
     const ALLOWED_EMAILS = [
       "lincolnleandro@gmail.com"
       // "lider2@gmail.com",
@@ -268,6 +267,10 @@
       return ALLOWED_EMAILS.includes((email || "").toLowerCase());
     }
 
+    function safeKey(value = "") {
+      return String(value).replace(/[.#$[\]/]/g, "_");
+    }
+
     function showAdmin(user) {
       document.getElementById("authCard").classList.add("hidden");
       document.getElementById("adminArea").classList.remove("hidden");
@@ -285,10 +288,6 @@
       box.textContent = "";
       document.getElementById("authStatus").textContent = message;
     }
-
-    function safeKey(value = "") {
-  return String(value).replace(/[.#$\\[\\]/]/g, "_");
-}
 
     async function loginComGoogle() {
       try {
@@ -310,11 +309,11 @@
     }
 
     async function preloadAdminData() {
-  await carregarMesAtivoAtual();
-  await carregarMusicasBanco();
-  await carregarCultos();
-  await carregarRepertorioCulto();
-}
+      await carregarMesAtivoAtual();
+      await carregarMusicasBanco();
+      await carregarCultos();
+      await carregarRepertorioCulto();
+    }
 
     async function carregarMesAtivoAtual() {
       const snapshot = await get(ref(db, "config/mesAtivo"));
@@ -325,21 +324,21 @@
     }
 
     async function salvarMesAtivo() {
-  const mesAtivo = document.getElementById("mesAtivo").value.trim();
-  if (!mesAtivo) {
-    setStatus("statusMes", "Informe o mês ativo.", false);
-    return;
-  }
-  try {
-    await set(ref(db, "config/mesAtivo"), mesAtivo);
-    document.getElementById("cultoMes").value = mesAtivo;
-    await carregarCultos();
-    setStatus("statusMes", "Mês ativo salvo com sucesso.");
-  } catch (error) {
-    console.error(error);
-    setStatus("statusMes", "Erro ao salvar mês ativo.", false);
-  }
-}
+      const mesAtivo = document.getElementById("mesAtivo").value.trim();
+      if (!mesAtivo) {
+        setStatus("statusMes", "Informe o mês ativo.", false);
+        return;
+      }
+      try {
+        await set(ref(db, "config/mesAtivo"), mesAtivo);
+        document.getElementById("cultoMes").value = mesAtivo;
+        await carregarCultos();
+        setStatus("statusMes", "Mês ativo salvo com sucesso.");
+      } catch (error) {
+        console.error(error);
+        setStatus("statusMes", "Erro ao salvar mês ativo.", false);
+      }
+    }
 
     async function salvarMusica() {
       const musica = document.getElementById("musicaNome").value.trim();
@@ -451,27 +450,27 @@
     }
 
     async function carregarCultos() {
-  const mes = document.getElementById("cultoMes").value.trim() || document.getElementById("mesAtivo").value.trim() || "2026-03";
-  const snapshot = await get(ref(db, `escalas/${mes}/cultos`));
-  const dados = snapshot.val() || {};
-  cultosCache = Object.entries(dados).map(([id, culto]) => ({ id, ...culto }));
+      const mes = document.getElementById("cultoMes").value.trim() || document.getElementById("mesAtivo").value.trim() || "2026-03";
+      const snapshot = await get(ref(db, `escalas/${mes}/cultos`));
+      const dados = snapshot.val() || {};
+      cultosCache = Object.entries(dados).map(([id, culto]) => ({ id, ...culto }));
 
-  const select = document.getElementById("cultoSelect");
-  select.innerHTML = "";
+      const select = document.getElementById("cultoSelect");
+      select.innerHTML = "";
 
-  cultosCache.forEach(culto => {
-    const opt = document.createElement("option");
-    opt.value = culto.id;
-    opt.textContent = `${culto.label || culto.id} - ${culto.categoria || "Culto"}`;
-    select.appendChild(opt);
-  });
+      cultosCache.forEach(culto => {
+        const opt = document.createElement("option");
+        opt.value = culto.id;
+        opt.textContent = `${culto.label || culto.id} - ${culto.categoria || "Culto"}`;
+        select.appendChild(opt);
+      });
 
-  if (cultosCache.length) {
-    await carregarRepertorioCulto();
-  } else {
-    document.getElementById("repertorioCulto").textContent = "Sem cultos cadastrados para este mês.";
-  }
-}
+      if (cultosCache.length) {
+        await carregarRepertorioCulto();
+      } else {
+        document.getElementById("repertorioCulto").textContent = "Sem cultos cadastrados para este mês.";
+      }
+    }
 
     function renderResultadoBusca(lista) {
       const container = document.getElementById("resultadoBusca");
@@ -479,6 +478,7 @@
         container.innerHTML = "";
         return;
       }
+
       container.innerHTML = lista.map((m, index) => `
         <div class="search-item">
           <div>
@@ -488,12 +488,14 @@
           <button onclick="adicionarMusicaCulto(${index})">Adicionar</button>
         </div>
       `).join("");
+
       window._resultadoBusca = lista;
     }
 
     async function carregarRepertorioCulto() {
       const cultoId = document.getElementById("cultoSelect").value;
       const container = document.getElementById("repertorioCulto");
+
       if (!cultoId) {
         container.textContent = "Selecione um culto.";
         return;
@@ -541,6 +543,7 @@
       });
 
       await set(ref(db, `historico/${safeKey(musica.musica)}/${cultoId}`), true);
+
       document.getElementById("buscaMusicaCulto").value = "";
       document.getElementById("resultadoBusca").innerHTML = "";
       setStatus("statusRepertorio", "Música adicionada ao culto.");
@@ -550,6 +553,7 @@
     async function removerMusicaDoCulto(itemId) {
       const cultoId = document.getElementById("cultoSelect").value;
       if (!cultoId) return;
+
       await remove(ref(db, `repertorios/${cultoId}/${itemId}`));
       await normalizarOrdens(cultoId);
       setStatus("statusRepertorio", "Música removida do culto.");
@@ -561,9 +565,11 @@
       const dados = snapshot.val() || {};
       const itens = Object.entries(dados).sort((a,b) => (a[1].ordem || 0) - (b[1].ordem || 0));
       const updates = {};
+
       itens.forEach(([id], index) => {
         updates[`repertorios/${cultoId}/${id}/ordem`] = index + 1;
       });
+
       if (Object.keys(updates).length) {
         await update(ref(db), updates);
       }
@@ -575,13 +581,17 @@
       const dados = snapshot.val() || {};
       const itens = Object.entries(dados).sort((a,b) => (a[1].ordem || 0) - (b[1].ordem || 0));
       const index = itens.findIndex(([id]) => id === itemId);
+
       if (index <= 0) return;
+
       const atual = itens[index];
       const anterior = itens[index - 1];
+
       await update(ref(db), {
         [`repertorios/${cultoId}/${atual[0]}/ordem`]: index,
         [`repertorios/${cultoId}/${anterior[0]}/ordem`]: index + 1
       });
+
       await carregarRepertorioCulto();
     }
 
@@ -591,13 +601,17 @@
       const dados = snapshot.val() || {};
       const itens = Object.entries(dados).sort((a,b) => (a[1].ordem || 0) - (b[1].ordem || 0));
       const index = itens.findIndex(([id]) => id === itemId);
+
       if (index < 0 || index >= itens.length - 1) return;
+
       const atual = itens[index];
       const proximo = itens[index + 1];
+
       await update(ref(db), {
         [`repertorios/${cultoId}/${atual[0]}/ordem`]: index + 2,
         [`repertorios/${cultoId}/${proximo[0]}/ordem`]: index + 1
       });
+
       await carregarRepertorioCulto();
     }
 
@@ -605,16 +619,20 @@
     document.getElementById("btnLogout").addEventListener("click", logout);
     document.getElementById("cultoMes").addEventListener("change", carregarCultos);
     document.getElementById("cultoSelect").addEventListener("change", carregarRepertorioCulto);
+
     document.getElementById("buscaMusicaCulto").addEventListener("input", (e) => {
       const termo = e.target.value.toLowerCase().trim();
+
       if (!termo) {
         renderResultadoBusca([]);
         return;
       }
+
       const resultado = bancoMusicas.filter(m =>
         (m.musica || "").toLowerCase().includes(termo) ||
         (m.artista || "").toLowerCase().includes(termo)
       ).slice(0, 10);
+
       renderResultadoBusca(resultado);
     });
 
@@ -623,11 +641,13 @@
         showAuth("");
         return;
       }
+
       if (!isAllowed(user.email)) {
         await signOut(auth);
         showAuth(`Acesso negado para ${user.email}. Adicione este email na lista ALLOWED_EMAILS.`);
         return;
       }
+
       showAdmin(user);
     });
 
