@@ -5,18 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Milouv | Ministério de Louvor IMESC</title>
 
-<link rel="icon" type="image/png" href="img/logo.png">
-<link rel="icon" type="image/png" href="logo.png">
-<link rel="apple-touch-icon" href="logo2.png">
+  <link rel="icon" type="image/png" href="img/logo.png">
+  <link rel="icon" type="image/png" href="logo.png">
+  <link rel="apple-touch-icon" href="logo2.png">
 
   <meta name="theme-color" content="#a00000">
 
-<meta property="og:title" content="Ministério de Louvor IMESC">
-<meta property="og:description" content="Portal do Ministério de Louvor.">
-<meta property="og:image" content="https://repertorio-fawn.vercel.app/louvorimesc2.png">
-<meta property="og:url" content="https://repertorio-fawn.vercel.app">
-<meta property="og:type" content="website">
-
+  <meta property="og:title" content="Ministério de Louvor IMESC">
+  <meta property="og:description" content="Portal do Ministério de Louvor.">
+  <meta property="og:image" content="https://repertorio-fawn.vercel.app/louvorimesc2.png">
+  <meta property="og:url" content="https://repertorio-fawn.vercel.app">
+  <meta property="og:type" content="website">
 
   <style>
     :root{
@@ -467,6 +466,19 @@
       font-weight:700;
     }
 
+    .historico-card{
+      cursor:pointer;
+    }
+
+    .historico-card:hover{
+      border-color:#c7d2fe;
+    }
+
+    .historico-card.ativo{
+      border:2px solid #93c5fd;
+      background:linear-gradient(180deg,#ffffff 0%,#f8fbff 100%);
+    }
+
     @media (max-width:768px){
       header{
         padding:36px 18px;
@@ -542,24 +554,28 @@
     </section>
 
     <section class="page" id="escala">
-  <div class="toolbar">
-    <div>
-      <h2>Escala do mês</h2>
-      <p class="muted" id="mesAtivoLabel">Carregando mês ativo...</p>
-    </div>
-  </div>
+      <div class="toolbar">
+        <div>
+          <h2>Escala do mês</h2>
+          <p class="muted" id="mesAtivoLabel">Carregando mês ativo...</p>
+        </div>
+      </div>
 
-  <div class="grid" id="listaEscala">
-    <div class="empty-state">Carregando escala...</div>
-  </div>
+      <div class="grid" id="listaEscala">
+        <div class="empty-state">Carregando escala...</div>
+      </div>
 
-  <div style="margin-top:32px;">
-    <h2>Histórico de meses</h2>
-    <div class="grid" id="historicoEscalas">
-      <div class="empty-state">Carregando histórico...</div>
-    </div>
-  </div>
-</section>
+      <div style="margin-top:32px;">
+        <h2>Histórico de meses</h2>
+        <div class="grid" id="historicoEscalas">
+          <div class="empty-state">Carregando histórico...</div>
+        </div>
+
+        <div id="detalheHistorico" style="margin-top:20px;">
+          <div class="empty-state">Clique em um mês do histórico para ver os cultos.</div>
+        </div>
+      </div>
+    </section>
 
     <section class="page" id="repertorio">
       <h2>Setlist do Ministério</h2>
@@ -684,7 +700,8 @@
       cultosMap: {},
       historico: {},
       repertorioAtualModal: [],
-      cultoAtualModal: null
+      cultoAtualModal: null,
+      todasEscalas: {}
     };
 
     function escapeHtml(value = "") {
@@ -742,6 +759,17 @@
 
     window.copiarRepertorioAtual = copiarRepertorioAtual;
 
+    function formatarMes(chaveMes = "") {
+      const [ano, mes] = chaveMes.split("-");
+      const meses = [
+        "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+        "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+      ];
+
+      if (!ano || !mes) return chaveMes;
+      return `${meses[Number(mes) - 1]} ${ano}`;
+    }
+
     function renderEscala(dados, mesAtivo) {
       const container = document.getElementById("listaEscala");
       const mesAtivoLabel = document.getElementById("mesAtivoLabel");
@@ -750,6 +778,7 @@
 
       if (!dados) {
         container.innerHTML = `<div class="empty-state">Nenhuma escala encontrada.</div>`;
+        state.cultosMap = {};
         return;
       }
 
@@ -760,6 +789,7 @@
 
       if (!entries.length) {
         container.innerHTML = `<div class="empty-state">Nenhuma escala encontrada.</div>`;
+        state.cultosMap = {};
         return;
       }
 
@@ -812,6 +842,113 @@
             <div class="culto-info"><strong>Violão:</strong> ${escapeHtml(culto.violao || "—")}</div>
 
             <button onclick="abrirModalDoCulto('${culto.id}')">🎵 Ver Setlist</button>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function renderCultosHistorico(cultosObj, mes) {
+      const container = document.getElementById("detalheHistorico");
+
+      if (!cultosObj || !Object.keys(cultosObj).length) {
+        container.innerHTML = `<div class="empty-state">Nenhum culto encontrado em ${escapeHtml(formatarMes(mes))}.</div>`;
+        return;
+      }
+
+      const entries = Object.entries(cultosObj).map(([id, culto]) => ({
+        id,
+        ...culto
+      }));
+
+      entries.sort((a, b) => {
+        const da = new Date(`${a.data}T00:00:00`);
+        const db = new Date(`${b.data}T00:00:00`);
+        return da - db;
+      });
+
+      entries.forEach(culto => {
+        state.cultosMap[culto.id] = culto;
+      });
+
+      container.innerHTML = `
+        <div class="toolbar">
+          <div>
+            <h2 style="margin-bottom:6px;">${escapeHtml(formatarMes(mes))}</h2>
+            <p class="muted">Cultos do histórico</p>
+          </div>
+        </div>
+
+        <div class="grid">
+          ${entries.map((culto) => {
+            const vocal = Array.isArray(culto.vocal) ? culto.vocal.join(", ") : (culto.vocal || "");
+
+            return `
+              <div class="card culto-card">
+                <div class="culto-topo">
+                  <span class="culto-categoria">${escapeHtml(culto.categoria || "Culto")}</span>
+                  <span class="culto-data">${escapeHtml(culto.label || culto.data || "")}</span>
+                </div>
+
+                <div class="culto-info"><strong>Líder:</strong> ${escapeHtml(culto.lider || "—")}</div>
+                <div class="culto-info"><strong>Vocal:</strong> ${escapeHtml(vocal || "—")}</div>
+                <div class="culto-info"><strong>Bateria:</strong> ${escapeHtml(culto.bateria || "—")}</div>
+                <div class="culto-info"><strong>Violão:</strong> ${escapeHtml(culto.violao || "—")}</div>
+
+                <button onclick="abrirModalDoCulto('${culto.id}')">🎵 Ver Setlist</button>
+              </div>
+            `;
+          }).join("")}
+        </div>
+      `;
+    }
+
+    function abrirHistoricoMes(mes) {
+      const todasEscalas = state.todasEscalas || {};
+      const cultos = todasEscalas?.[mes]?.cultos || {};
+
+      document.querySelectorAll(".historico-card").forEach(card => {
+        card.classList.remove("ativo");
+      });
+
+      const cardAtivo = document.querySelector(`[data-historico-mes="${mes}"]`);
+      if (cardAtivo) {
+        cardAtivo.classList.add("ativo");
+      }
+
+      renderCultosHistorico(cultos, mes);
+    }
+
+    window.abrirHistoricoMes = abrirHistoricoMes;
+
+    function renderHistoricoEscalas(todasEscalas, mesAtivo) {
+      const container = document.getElementById("historicoEscalas");
+
+      if (!todasEscalas) {
+        container.innerHTML = `<div class="empty-state">Nenhum histórico encontrado.</div>`;
+        return;
+      }
+
+      const meses = Object.keys(todasEscalas)
+        .filter(mes => mes !== mesAtivo)
+        .sort()
+        .reverse();
+
+      if (!meses.length) {
+        container.innerHTML = `<div class="empty-state">Nenhum mês anterior no histórico.</div>`;
+        document.getElementById("detalheHistorico").innerHTML =
+          `<div class="empty-state">Nenhum mês disponível para visualização.</div>`;
+        return;
+      }
+
+      container.innerHTML = meses.map(mes => {
+        const cultosObj = todasEscalas[mes]?.cultos || {};
+        const cultos = Object.values(cultosObj);
+
+        return `
+          <div class="card historico-card" data-historico-mes="${mes}" onclick="abrirHistoricoMes('${mes}')">
+            <h3>${escapeHtml(formatarMes(mes))}</h3>
+            <p class="muted">${cultos.length} culto(s)</p>
+            <button class="btn-secondary" style="margin-top:12px;">Ver cultos</button>
           </div>
         `;
       }).join("");
@@ -1000,66 +1137,34 @@
     }
 
     window.limparFiltrosSetlist = limparFiltrosSetlist;
-function formatarMes(chaveMes = "") {
-  const [ano, mes] = chaveMes.split("-");
-  const meses = [
-    "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
-    "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
-  ];
 
-  if (!ano || !mes) return chaveMes;
-  return `${meses[Number(mes) - 1]} ${ano}`;
-}
-
-function renderHistoricoEscalas(todasEscalas, mesAtivo) {
-  const container = document.getElementById("historicoEscalas");
-
-  if (!todasEscalas) {
-    container.innerHTML = `<div class="empty-state">Nenhum histórico encontrado.</div>`;
-    return;
-  }
-
-  const meses = Object.keys(todasEscalas)
-    .filter(mes => mes !== mesAtivo)
-    .sort()
-    .reverse();
-
-  if (!meses.length) {
-    container.innerHTML = `<div class="empty-state">Nenhum mês anterior.</div>`;
-    return;
-  }
-
-  container.innerHTML = meses.map(mes => {
-    const cultosObj = todasEscalas[mes]?.cultos || {};
-    const cultos = Object.values(cultosObj);
-
-    return `
-      <div class="card">
-        <h3>${formatarMes(mes)}</h3>
-        <p class="muted">${cultos.length} culto(s)</p>
-      </div>
-    `;
-  }).join("");
-}
     function setupEscala() {
-  onValue(ref(db, "config/mesAtivo"), (configSnapshot) => {
-    const mesAtivo = configSnapshot.val();
-    state.mesAtivo = mesAtivo;
+      onValue(ref(db, "config/mesAtivo"), (configSnapshot) => {
+        const mesAtivo = configSnapshot.val();
+        state.mesAtivo = mesAtivo;
 
-    if (!mesAtivo) {
-      renderEscala(null, null);
-      return;
+        if (!mesAtivo) {
+          renderEscala(null, null);
+          document.getElementById("historicoEscalas").innerHTML =
+            `<div class="empty-state">Nenhum mês ativo configurado.</div>`;
+          document.getElementById("detalheHistorico").innerHTML =
+            `<div class="empty-state">Nenhum mês disponível para visualização.</div>`;
+          renderEstatisticas();
+          return;
+        }
+
+        onValue(ref(db, "escalas"), (snapshot) => {
+          const todasEscalas = snapshot.val() || {};
+          state.todasEscalas = todasEscalas;
+
+          const escalaAtiva = todasEscalas?.[mesAtivo]?.cultos || null;
+
+          renderEscala(escalaAtiva, formatarMes(mesAtivo));
+          renderHistoricoEscalas(todasEscalas, mesAtivo);
+          renderEstatisticas();
+        });
+      });
     }
-
-    onValue(ref(db, "escalas"), (snapshot) => {
-      const todasEscalas = snapshot.val() || {};
-      const escalaAtual = todasEscalas?.[mesAtivo]?.cultos || null;
-
-      renderEscala(escalaAtual, formatarMes(mesAtivo));
-      renderHistoricoEscalas(todasEscalas, mesAtivo);
-    });
-  });
-}
 
     function setupRepertorio() {
       onValue(ref(db, "musicas"), (snapshot) => {
