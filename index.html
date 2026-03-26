@@ -542,17 +542,24 @@
     </section>
 
     <section class="page" id="escala">
-      <div class="toolbar">
-        <div>
-          <h2>Escala do mês</h2>
-          <p class="muted" id="mesAtivoLabel">Carregando mês ativo...</p>
-        </div>
-      </div>
+  <div class="toolbar">
+    <div>
+      <h2>Escala do mês</h2>
+      <p class="muted" id="mesAtivoLabel">Carregando mês ativo...</p>
+    </div>
+  </div>
 
-      <div class="grid" id="listaEscala">
-        <div class="empty-state">Carregando escala...</div>
-      </div>
-    </section>
+  <div class="grid" id="listaEscala">
+    <div class="empty-state">Carregando escala...</div>
+  </div>
+
+  <div style="margin-top:32px;">
+    <h2>Histórico de meses</h2>
+    <div class="grid" id="historicoEscalas">
+      <div class="empty-state">Carregando histórico...</div>
+    </div>
+  </div>
+</section>
 
     <section class="page" id="repertorio">
       <h2>Setlist do Ministério</h2>
@@ -993,24 +1000,66 @@
     }
 
     window.limparFiltrosSetlist = limparFiltrosSetlist;
+function formatarMes(chaveMes = "") {
+  const [ano, mes] = chaveMes.split("-");
+  const meses = [
+    "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+    "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+  ];
 
+  if (!ano || !mes) return chaveMes;
+  return `${meses[Number(mes) - 1]} ${ano}`;
+}
+
+function renderHistoricoEscalas(todasEscalas, mesAtivo) {
+  const container = document.getElementById("historicoEscalas");
+
+  if (!todasEscalas) {
+    container.innerHTML = `<div class="empty-state">Nenhum histórico encontrado.</div>`;
+    return;
+  }
+
+  const meses = Object.keys(todasEscalas)
+    .filter(mes => mes !== mesAtivo)
+    .sort()
+    .reverse();
+
+  if (!meses.length) {
+    container.innerHTML = `<div class="empty-state">Nenhum mês anterior.</div>`;
+    return;
+  }
+
+  container.innerHTML = meses.map(mes => {
+    const cultosObj = todasEscalas[mes]?.cultos || {};
+    const cultos = Object.values(cultosObj);
+
+    return `
+      <div class="card">
+        <h3>${formatarMes(mes)}</h3>
+        <p class="muted">${cultos.length} culto(s)</p>
+      </div>
+    `;
+  }).join("");
+}
     function setupEscala() {
-      onValue(ref(db, "config/mesAtivo"), (configSnapshot) => {
-        const mesAtivo = configSnapshot.val();
-        state.mesAtivo = mesAtivo;
+  onValue(ref(db, "config/mesAtivo"), (configSnapshot) => {
+    const mesAtivo = configSnapshot.val();
+    state.mesAtivo = mesAtivo;
 
-        if (!mesAtivo) {
-          renderEscala(null, null);
-          renderEstatisticas();
-          return;
-        }
-
-        onValue(ref(db, `escalas/${mesAtivo}/cultos`), (snapshot) => {
-          renderEscala(snapshot.val(), mesAtivo);
-          renderEstatisticas();
-        });
-      });
+    if (!mesAtivo) {
+      renderEscala(null, null);
+      return;
     }
+
+    onValue(ref(db, "escalas"), (snapshot) => {
+      const todasEscalas = snapshot.val() || {};
+      const escalaAtual = todasEscalas?.[mesAtivo]?.cultos || null;
+
+      renderEscala(escalaAtual, formatarMes(mesAtivo));
+      renderHistoricoEscalas(todasEscalas, mesAtivo);
+    });
+  });
+}
 
     function setupRepertorio() {
       onValue(ref(db, "musicas"), (snapshot) => {
