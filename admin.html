@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Milouv Admin 3.6</title>
+  <title>Milouv Admin 3.7</title>
   <link rel="icon" type="image/png" href="logo.png">
   <style>
     :root{
@@ -226,7 +226,7 @@
 </head>
 <body>
   <header>
-    <h1>Milouv Admin 3.6</h1>
+    <h1>Milouv Admin 3.7</h1>
     <p>Painel protegido com login do Google</p>
   </header>
 
@@ -264,7 +264,7 @@
         <div class="grid">
           <div>
             <label for="mesAtivo">Mês ativo</label>
-            <input id="mesAtivo" type="text" placeholder="Ex.: 2026-03">
+            <input id="mesAtivo" type="month">
           </div>
         </div>
         <div class="row">
@@ -417,25 +417,30 @@
 
       <section class="card">
         <h3>Criar culto</h3>
+
+        <div class="section-note">
+          Cadastre cada culto dentro do mês correto. Exemplo: cultos de abril devem ficar em <strong>2026-04</strong>. Isso mantém março no histórico sem apagar nada.
+        </div>
+
         <div class="grid">
           <div>
             <label for="cultoMes">Mês</label>
-            <input id="cultoMes" type="text" placeholder="Ex.: 2026-03">
+            <input id="cultoMes" type="month">
           </div>
 
           <div>
             <label for="cultoId">ID do culto</label>
-            <input id="cultoId" type="text" placeholder="Ex.: 08-03-2026-manha">
+            <input id="cultoId" type="text" placeholder="Ex.: 06-04-2026-domingo-noite">
           </div>
 
           <div>
             <label for="cultoData">Data ISO</label>
-            <input id="cultoData" type="text" placeholder="Ex.: 2026-03-08">
+            <input id="cultoData" type="date">
           </div>
 
           <div>
             <label for="cultoLabel">Data exibida</label>
-            <input id="cultoLabel" type="text" placeholder="Ex.: 08/03/2026">
+            <input id="cultoLabel" type="text" placeholder="Ex.: 06/04/2026">
           </div>
 
           <div>
@@ -470,6 +475,8 @@
 
         <div class="row">
           <button onclick="salvarCulto()">Salvar culto</button>
+          <button class="secondary" onclick="usarMesAtivoNoCulto()">Usar mês ativo</button>
+          <button class="secondary" onclick="preencherDadosCulto()">Preencher ID e data exibida</button>
         </div>
         <div id="statusCulto" class="status"></div>
       </section>
@@ -498,8 +505,6 @@
 
     const ALLOWED_EMAILS = [
       "lincolnleandro@gmail.com"
-      // "lider2@gmail.com",
-      // "lider3@gmail.com"
     ];
 
     let bancoMusicas = [];
@@ -523,6 +528,45 @@
 
     function safeKey(value = "") {
       return String(value).replace(/[.#$[\]/]/g, "_");
+    }
+
+    function formatarDataBR(dataISO = "") {
+      if (!dataISO || !dataISO.includes("-")) return "";
+      const [ano, mes, dia] = dataISO.split("-");
+      return `${dia}/${mes}/${ano}`;
+    }
+
+    function slugCategoria(categoria = "") {
+      return categoria
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/\s+/g, "-");
+    }
+
+    function usarMesAtivoNoCulto() {
+      const mesAtivo = document.getElementById("mesAtivo").value.trim();
+      document.getElementById("cultoMes").value = mesAtivo || "";
+    }
+
+    function preencherDadosCulto() {
+      const data = document.getElementById("cultoData").value.trim();
+      const categoria = document.getElementById("cultoCategoria").value.trim();
+
+      if (!data) {
+        setStatus("statusCulto", "Escolha a data do culto para preencher automaticamente.", false);
+        return;
+      }
+
+      const dataLabel = formatarDataBR(data);
+      document.getElementById("cultoLabel").value = dataLabel;
+
+      const [ano, mes, dia] = data.split("-");
+      const categoriaSlug = slugCategoria(categoria || "culto");
+      document.getElementById("cultoId").value = `${dia}-${mes}-${ano}-${categoriaSlug}`;
+      document.getElementById("cultoMes").value = `${ano}-${mes}`;
+
+      setStatus("statusCulto", "ID, data exibida e mês preenchidos automaticamente.");
     }
 
     function showAdmin(user) {
@@ -573,10 +617,11 @@
 
     async function carregarMesAtivoAtual() {
       const snapshot = await get(ref(db, "config/mesAtivo"));
-      document.getElementById("mesAtivo").value = snapshot.val() || "";
+      const mesAtivo = snapshot.val() || "";
+      document.getElementById("mesAtivo").value = mesAtivo;
 
       if (!document.getElementById("cultoMes").value) {
-        document.getElementById("cultoMes").value = snapshot.val() || "";
+        document.getElementById("cultoMes").value = mesAtivo;
       }
     }
 
@@ -592,7 +637,7 @@
         await set(ref(db, "config/mesAtivo"), mesAtivo);
         document.getElementById("cultoMes").value = mesAtivo;
         await carregarCultos();
-        setStatus("statusMes", "Mês ativo salvo com sucesso.");
+        setStatus("statusMes", `Mês ativo alterado para ${mesAtivo} com sucesso.`);
       } catch (error) {
         console.error(error);
         setStatus("statusMes", "Erro ao salvar mês ativo.", false);
@@ -699,7 +744,7 @@
         return;
       }
 
-      container.innerHTML = informacoesCache.map((info, index) => `
+      container.innerHTML = informacoesCache.map((info) => `
         <div class="item">
           <strong>${info.titulo || ""}</strong><br>
           <span class="muted">${info.texto || ""}</span>
@@ -809,6 +854,12 @@
         return;
       }
 
+      const mesDaData = data.slice(0, 7);
+      if (mes !== mesDaData) {
+        setStatus("statusCulto", "O mês informado e a data do culto não coincidem.", false);
+        return;
+      }
+
       const vocal = vocalTexto
         ? vocalTexto.split(",").map(item => item.trim()).filter(Boolean)
         : [];
@@ -833,7 +884,7 @@
         document.getElementById("cultoViolao").value = "";
 
         await carregarCultos();
-        setStatus("statusCulto", "Culto salvo com sucesso.");
+        setStatus("statusCulto", `Culto salvo com sucesso em ${mes}.`);
       } catch (error) {
         console.error(error);
         setStatus("statusCulto", "Erro ao salvar culto.", false);
@@ -847,18 +898,26 @@
     }
 
     async function carregarCultos() {
-      const mes = document.getElementById("cultoMes").value.trim() || document.getElementById("mesAtivo").value.trim() || "2026-03";
+      const mes = document.getElementById("cultoMes").value.trim() || document.getElementById("mesAtivo").value.trim();
+
+      if (!mes) {
+        cultosCache = [];
+        document.getElementById("cultoSelect").innerHTML = "";
+        document.getElementById("repertorioCulto").textContent = "Selecione ou informe um mês.";
+        return;
+      }
+
       const snapshot = await get(ref(db, `escalas/${mes}/cultos`));
       const dados = snapshot.val() || {};
 
       cultosCache = Object.entries(dados)
         .map(([id, culto]) => ({ id, ...culto }))
-        .sort((a, b) => new Date(a.data) - new Date(b.data));
+        .sort((a, b) => new Date(`${a.data}T00:00:00`) - new Date(`${b.data}T00:00:00`));
 
       const select = document.getElementById("cultoSelect");
       select.innerHTML = "";
 
-      let indexProximoCulto = 0;
+      let indexProximoCulto = -1;
       const hoje = new Date();
       const hojeSemHora = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
 
@@ -869,13 +928,13 @@
         select.appendChild(opt);
 
         const dataCulto = new Date(`${culto.data}T00:00:00`);
-        if (dataCulto >= hojeSemHora && indexProximoCulto === 0) {
+        if (dataCulto >= hojeSemHora && indexProximoCulto === -1) {
           indexProximoCulto = index;
         }
       });
 
       if (cultosCache.length) {
-        select.selectedIndex = indexProximoCulto;
+        select.selectedIndex = indexProximoCulto >= 0 ? indexProximoCulto : 0;
         await carregarRepertorioCulto();
       } else {
         document.getElementById("repertorioCulto").textContent = "Sem cultos cadastrados para este mês.";
@@ -1007,8 +1066,8 @@
         await push(ref(db, `repertorios/${cultoId}`), {
           musica: musicaSelecionadaAtual.musica || "",
           artista: musicaSelecionadaAtual.artista || "",
-          tom: tom,
-          obs: obs,
+          tom,
+          obs,
           ordem
         });
 
@@ -1167,6 +1226,8 @@
     window.subirInformacao = subirInformacao;
     window.descerInformacao = descerInformacao;
     window.salvarCulto = salvarCulto;
+    window.usarMesAtivoNoCulto = usarMesAtivoNoCulto;
+    window.preencherDadosCulto = preencherDadosCulto;
     window.gerarSugestoes = gerarSugestoes;
     window.selecionarMusicaBusca = selecionarMusicaBusca;
     window.selecionarMusicaSugestao = selecionarMusicaSugestao;
